@@ -10,59 +10,59 @@ import 'select_class.dart';
 import 'leaderboard.dart';
 import 'announcement.dart';
 
-class Navigation extends StatelessWidget {
+class Coach extends StatelessWidget {
 
-  static const String id = '/navigation';
+  static const String id = '/coach';
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Colors.white, Color(0xFFDB5D38), Color(0xFFDB5D38), Color(0xFFE78466), Colors.white])),
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Colors.white, Color(0xFFDB5D38), Color(0xFFDB5D38), Color(0xFFE78466), Colors.white])),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
-          title: Text('Home'),
-      ),
+            title: Text('Home'),
+          ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch, // make the items in each row to stretch itself to fit as much space in the screen
             children: <Widget>[
               Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: ReusableCard(
-                          onPress: () {
-                            Navigator.pushNamed(context, StudentProfile.id);
-                          },
-                          // USE TERNARY OPERATOR HERE
-                          // CHANGE THE COLOR OF CARD WHEN SWITCHING BETWEEN TAPPING
-                          colour: Colors.white,
-                          cardChild: IconContent(
-                            icon: FontAwesomeIcons.idCard,
-                            label: 'MY PROFILE',
-                          ),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: ReusableCard(
+                        onPress: () {
+                          Navigator.pushNamed(context, StudentProfile.id);
+                        },
+                        // USE TERNARY OPERATOR HERE
+                        // CHANGE THE COLOR OF CARD WHEN SWITCHING BETWEEN TAPPING
+                        colour: Colors.white,
+                        cardChild: IconContent(
+                          icon: FontAwesomeIcons.idCard,
+                          label: 'MY PROFILE',
                         ),
                       ),
-                      Expanded(
-                        child: ReusableCard(
-                          onPress: () {
-                            Navigator.pushNamed(context, ViewExp.id);
-                          },
-                          // USE TERNARY OPERATOR HERE
-                          // CHANGE THE COLOR OF CARD WHEN SWITCHING BETWEEN TAPPING
-                          colour: Colors.white,
-                          cardChild: IconContent(
-                            icon: FontAwesomeIcons.eye,
-                            label: 'VIEW EXP',
-                          ),
+                    ),
+                    Expanded(
+                      child: ReusableCard(
+                        onPress: () {
+                          Navigator.pushNamed(context, ViewExp.id);
+                        },
+                        // USE TERNARY OPERATOR HERE
+                        // CHANGE THE COLOR OF CARD WHEN SWITCHING BETWEEN TAPPING
+                        colour: Colors.white,
+                        cardChild: IconContent(
+                          icon: FontAwesomeIcons.eye,
+                          label: 'VIEW EXP',
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
               ),
               Expanded(
                 child: ReusableCard(
@@ -113,7 +113,7 @@ class Navigation extends StatelessWidget {
             ],
           )
 
-        ),
+      ),
     );
   }
 }
