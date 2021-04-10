@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "413966296722",
+    "project_id": "mahathiracademyapp",
+    "storage_bucket": "mahathiracademyapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413966296722:android:8d7b934fc89b0bfd7f684b",
+        "android_client_info": {
+          "package_name": "icube.mahathir_academy_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413966296722-edsjo9a634laq1jfrlplho3toq7ogt0b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdj3YIf2yi6TEyznEfFNcU6JFXb2EDKjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "413966296722-edsjo9a634laq1jfrlplho3toq7ogt0b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
