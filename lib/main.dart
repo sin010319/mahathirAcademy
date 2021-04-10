@@ -3,14 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:mahathir_academy_app/screens/select_class.dart';
 import 'package:mahathir_academy_app/screens/leaderboard.dart';
 import 'package:mahathir_academy_app/screens/login_screen.dart';
-import 'package:mahathir_academy_app/screens/coach.dart';
+import 'package:mahathir_academy_app/screens/coach/coach.dart';
 import 'package:mahathir_academy_app/screens/student_profile.dart';
 import 'package:mahathir_academy_app/screens/view_exp.dart';
 import 'package:mahathir_academy_app/screens/announcement.dart';
 import 'package:mahathir_academy_app/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mahathir_academy_app/screens/award_exp.dart';
-import 'package:mahathir_academy_app/screens/student.dart';
+import 'package:mahathir_academy_app/screens/student/student.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

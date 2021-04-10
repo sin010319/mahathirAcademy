@@ -4,11 +4,11 @@ import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/components/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'student_profile.dart';
-import 'view_exp.dart';
-import 'select_class.dart';
-import 'leaderboard.dart';
-import 'announcement.dart';
+import '../student_profile.dart';
+import '../view_exp.dart';
+import '../select_class.dart';
+import '../leaderboard.dart';
+import '../announcement.dart';
 
 class Student extends StatelessWidget {
 

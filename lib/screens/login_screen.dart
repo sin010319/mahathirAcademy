@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mahathir_academy_app/screens/coach.dart';
+import 'package:mahathir_academy_app/screens/coach/coach.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'student.dart';
+import 'student/student.dart';
 
 //
 // class LoginPage extends StatelessWidget {

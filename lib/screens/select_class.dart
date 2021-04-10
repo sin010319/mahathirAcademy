@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mahathir_academy_app/screens/coach.dart';
+import 'package:mahathir_academy_app/screens/coach/coach.dart';
 import 'award_exp.dart';
 
 
