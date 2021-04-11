@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mahathir_academy_app/screens/navigation.dart';
+import 'package:mahathir_academy_app/screens/coach/coach.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'student/student.dart';
 
 //
 // class LoginPage extends StatelessWidget {
@@ -60,17 +61,37 @@ class _LoginScreenState extends State<LoginScreen> {
                 welcomeText(),
                 loginText(),
                 Container(
-                  margin: EdgeInsets.only(
-                      left: _width / 12.0,
-                      right: _width / 12.0,
-                      top: _height / 15.0),
-                child: Column(children: <Widget> [
-                  emailBox(),
-                  SizedBox(height: _height / 40.0),
-                  passwordBox(),])
+                    margin: EdgeInsets.only(
+                        left: _width / 12.0,
+                        right: _width / 12.0,
+                        top: _height / 15.0),
+                    child: Column(children: <Widget> [
+                      emailBox(),
+                      SizedBox(height: _height / 40.0),
+                      passwordBox(),])
                 ),
                 SizedBox(height: _height / 12),
-                button(),
+                Column(
+                  children: [
+                    Text('Sign in as:'),
+                    SizedBox(height: 10,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CoachButton(),
+                        SizedBox(width: 20),
+                        StudentButton(),
+                      ],
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 10),
+                Text('Are you admin? Click here.',
+                  style: TextStyle(
+                      fontSize: 13
+                  ),
+                )
               ],
             ),
           ),
@@ -81,13 +102,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget image(){
     return Container(
-      margin: EdgeInsets.only(top: _height / 15.0),
-      height: 100.0,
-      width: 100.0,
-      decoration: new BoxDecoration(
-        shape: BoxShape.circle,
-      ),
-      child: new Image.asset('images/login.png'));
+        margin: EdgeInsets.only(top: _height / 15.0),
+        height: 100.0,
+        width: 100.0,
+        decoration: new BoxDecoration(
+          shape: BoxShape.circle,
+        ),
+        child: new Image.asset('images/login.png'));
   }
 
   Widget welcomeText(){
@@ -198,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget button() {
+  Widget CoachButton() {
     return RaisedButton(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
@@ -212,14 +233,14 @@ class _LoginScreenState extends State<LoginScreen> {
           Scaffold.of(context).showSnackBar(SnackBar(content: Text('Enter a Valid Email')));
         }else{
           setState((){showSpinner = true;});
-          signIn();
+          CoachSignIn();
         }
       },
       textColor: Colors.white,
       padding: EdgeInsets.all(0.0),
       child: Container(
         alignment: Alignment.center,
-        width: _width/2,
+        width: _width / 3,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           gradient: LinearGradient(
@@ -227,16 +248,66 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text('SIGN IN',style: TextStyle(fontSize: 15)),
+        child: Text('COACH',style: TextStyle(fontSize: 15)),
       ),
     );
   }
 
-  Future<void> signIn() async {
+
+  Widget StudentButton() {
+    String name;
+    return RaisedButton(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      onPressed: (){
+        RegExp regExp = new RegExp(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
+        if(_email == null || _email.isEmpty){
+          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email Cannot be empty')));
+        }else if(_password == null || _password.length < 6){
+          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Password needs to be at least six characters')));
+        }else if(!regExp.hasMatch(_email)){
+          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Enter a Valid Email')));
+        }else{
+          setState((){showSpinner = true;});
+          StudentSignIn();
+        }
+      },
+      textColor: Colors.white,
+      padding: EdgeInsets.all(0.0),
+      child: Container(
+        alignment: Alignment.center,
+        width: _width/3,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          gradient: LinearGradient(
+            colors: <Color>[Colors.red[900], Colors.yellow[900]],
+          ),
+        ),
+        padding: const EdgeInsets.all(12.0),
+        child: Text('STUDENT',style: TextStyle(fontSize: 15)),
+      ),
+    );
+  }
+
+  Future<void> CoachSignIn() async {
     try{
       final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
       if (user != null){
-        Navigator.pushNamed(context, Navigation.id);
+        Navigator.pushNamed(context, Coach.id);
+        setState((){showSpinner = false;});
+      }
+    }catch(e){
+      setState((){showSpinner = false;});
+      print(e.message);
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+    }
+  }
+
+  Future<void> StudentSignIn() async {
+    try{
+      final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
+      if (user != null){
+        Navigator.pushNamed(context, Student.id);
         setState((){showSpinner = false;});
       }
     }catch(e){

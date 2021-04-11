@@ -3,13 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:mahathir_academy_app/screens/select_class.dart';
 import 'package:mahathir_academy_app/screens/leaderboard.dart';
 import 'package:mahathir_academy_app/screens/login_screen.dart';
-import 'package:mahathir_academy_app/screens/navigation.dart';
+import 'package:mahathir_academy_app/screens/coach/coach.dart';
 import 'package:mahathir_academy_app/screens/student_profile.dart';
 import 'package:mahathir_academy_app/screens/view_exp.dart';
 import 'package:mahathir_academy_app/screens/announcement.dart';
 import 'package:mahathir_academy_app/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mahathir_academy_app/screens/award_exp.dart';
+import 'package:mahathir_academy_app/screens/student/student.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +34,8 @@ class MyApp extends StatelessWidget {
         LoginScreen.id: (context) => LoginScreen(),
         SelectClass.id: (context) => SelectClass(),
         Leaderboard.id: (context) => Leaderboard(),
-        Navigation.id: (context) => Navigation(),
+        Coach.id: (context) => Coach(),
+        Student.id: (context) => Student(),
         StudentProfile.id: (context) => StudentProfile(),
         ViewExp.id: (context) => ViewExp(),
         Announcement.id: (context) => Announcement(),
