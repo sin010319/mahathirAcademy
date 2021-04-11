@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">413966296722-edsjo9a634laq1jfrlplho3toq7ogt0b.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">413966296722</string>
+    <string name="google_api_key" translatable="false">AIzaSyDdj3YIf2yi6TEyznEfFNcU6JFXb2EDKjw</string>
+    <string name="google_app_id" translatable="false">1:413966296722:android:8d7b934fc89b0bfd7f684b</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDdj3YIf2yi6TEyznEfFNcU6JFXb2EDKjw</string>
+    <string name="google_storage_bucket" translatable="false">mahathiracademyapp.appspot.com</string>
+    <string name="project_id" translatable="false">mahathiracademyapp</string>
+</resources>
