@@ -110,6 +110,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_speed_dial",
+      "rootUri": "file:///C:/Users/User/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_speed_dial-3.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_svg",
+      "rootUri": "file:///C:/Users/User/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_svg-0.21.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///C:/Users/User/FlutterSDK/flutter/packages/flutter_test",
       "packageUri": "lib/",
@@ -118,6 +130,12 @@
     {
       "name": "flutter_web_plugins",
       "rootUri": "file:///C:/Users/User/FlutterSDK/flutter/packages/flutter_web_plugins",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "fluttertoast",
+      "rootUri": "file:///C:/Users/User/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/fluttertoast-8.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -166,6 +184,24 @@
     {
       "name": "path",
       "rootUri": "file:///C:/Users/User/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "path_drawing",
+      "rootUri": "file:///C:/Users/User/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/path_drawing-0.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "path_parsing",
+      "rootUri": "file:///C:/Users/User/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/path_parsing-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "petitparser",
+      "rootUri": "file:///C:/Users/User/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/petitparser-4.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -230,13 +266,19 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "xml",
+      "rootUri": "file:///C:/Users/User/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/xml-5.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "mahathir_academy_app",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-04-10T07:04:13.735831Z",
+  "generated": "2021-04-15T06:32:54.732740Z",
   "generator": "pub",
   "generatorVersion": "2.12.2"
 }

@@ -1,23 +1,12 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mahathir_academy_app/screens/coach/coach.dart';
+import 'file:///D:/Documents/iCube%20Tech%20Consulting%20Project%202.0/git_mahathir_academy/lib/screens/admin/admin_login_screen.dart';
+import 'package:mahathir_academy_app/screens/coach/coach_navigation.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'student/student.dart';
-
-//
-// class LoginPage extends StatelessWidget {
-//
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: LoginScreen(),
-//     );
-//   }
-// }
-
+import 'student/student_navigation.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -87,9 +76,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 SizedBox(height: 10),
-                Text('Are you admin? Click here.',
-                  style: TextStyle(
-                      fontSize: 13
+                RichText(
+                  text: TextSpan(
+                      style: TextStyle(
+                          fontSize: 13
+                      ),
+                    children: <TextSpan>[
+                      TextSpan(text: 'Are you an admin? ',
+                      style: TextStyle(
+                        color: Colors.black
+                      )),
+                      TextSpan(
+                        text: 'Click here.',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.redAccent,
+                          decoration: TextDecoration.underline
+                      ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => Navigator.pushNamed(context, AdminLoginScreen.id)
+                      )
+                    ]
                   ),
                 )
               ],
@@ -108,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
         decoration: new BoxDecoration(
           shape: BoxShape.circle,
         ),
-        child: new Image.asset('images/login.png'));
+        child: new Image.asset('assets/images/login.png'));
   }
 
   Widget welcomeText(){
@@ -248,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text('COACH',style: TextStyle(fontSize: 15)),
+        child: Text('COACH',style: TextStyle(fontSize: 12)),
       ),
     );
   }
@@ -284,7 +291,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text('STUDENT',style: TextStyle(fontSize: 15)),
+        child: Text('STUDENT',style: TextStyle(fontSize: 12)),
       ),
     );
   }
@@ -293,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try{
       final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
       if (user != null){
-        Navigator.pushNamed(context, Coach.id);
+        Navigator.pushNamed(context, CoachNavigation.id);
         setState((){showSpinner = false;});
       }
     }catch(e){
@@ -307,7 +314,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try{
       final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
       if (user != null){
-        Navigator.pushNamed(context, Student.id);
+        Navigator.pushNamed(context, StudentNavigation.id);
         setState((){showSpinner = false;});
       }
     }catch(e){

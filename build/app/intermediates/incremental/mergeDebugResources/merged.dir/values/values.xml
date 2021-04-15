@@ -102,13 +102,14 @@
     <string name="common_open_on_phone">Open on phone</string>
     <string name="common_signin_button_text">Sign in</string>
     <string name="common_signin_button_text_long">Sign in with Google</string>
-    <string name="default_web_client_id" translatable="false">413966296722-edsjo9a634laq1jfrlplho3toq7ogt0b.apps.googleusercontent.com</string>
-    <string name="gcm_defaultSenderId" translatable="false">413966296722</string>
-    <string name="google_api_key" translatable="false">AIzaSyDdj3YIf2yi6TEyznEfFNcU6JFXb2EDKjw</string>
-    <string name="google_app_id" translatable="false">1:413966296722:android:8d7b934fc89b0bfd7f684b</string>
-    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDdj3YIf2yi6TEyznEfFNcU6JFXb2EDKjw</string>
-    <string name="google_storage_bucket" translatable="false">mahathiracademyapp.appspot.com</string>
-    <string name="project_id" translatable="false">mahathiracademyapp</string>
+    <string name="default_web_client_id" translatable="false">880362156926-uc1deuksr0fl193p6v7rd1u4pbo9e2h6.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://flash-chat-b5aa7-default-rtdb.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">880362156926</string>
+    <string name="google_api_key" translatable="false">AIzaSyAG35kaHXo9i_NrOzVRsrQMID19at_k7qs</string>
+    <string name="google_app_id" translatable="false">1:880362156926:android:e0d298308431fe58f2b92f</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAG35kaHXo9i_NrOzVRsrQMID19at_k7qs</string>
+    <string name="google_storage_bucket" translatable="false">flash-chat-b5aa7.appspot.com</string>
+    <string name="project_id" translatable="false">flash-chat-b5aa7</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <!-- Show a splash screen on the activity. Automatically removed when

@@ -19,3 +19,25 @@ const kLargeButtonTextStyle = TextStyle(
   fontSize: 25.0,
   fontWeight: FontWeight.bold,
 );
+
+const kCoachStudentLabelTextStyle = TextStyle(
+  fontSize: 25.0,
+  fontWeight: FontWeight.bold,
+  color: Color(0xFF8A1501)
+);
+
+const kExpTextStyle = TextStyle(
+  fontSize: 20.0,
+    fontWeight: FontWeight.bold,
+  color: Colors.redAccent
+);
+
+const kListItemsTextStyle = TextStyle(
+    fontSize: 18.0,
+);
+
+const kTitleTextStyle = TextStyle(
+    color: Color(0xFF8A1501),
+    fontWeight: FontWeight.w700,
+    fontSize: 23.0
+);

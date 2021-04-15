@@ -1,34 +1,42 @@
 {
   "project_info": {
-    "project_number": "413966296722",
-    "project_id": "mahathiracademyapp",
-    "storage_bucket": "mahathiracademyapp.appspot.com"
+    "project_number": "880362156926",
+    "firebase_url": "https://flash-chat-b5aa7-default-rtdb.firebaseio.com",
+    "project_id": "flash-chat-b5aa7",
+    "storage_bucket": "flash-chat-b5aa7.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:413966296722:android:8d7b934fc89b0bfd7f684b",
+        "mobilesdk_app_id": "1:880362156926:android:e0d298308431fe58f2b92f",
         "android_client_info": {
           "package_name": "icube.mahathir_academy_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "413966296722-edsjo9a634laq1jfrlplho3toq7ogt0b.apps.googleusercontent.com",
+          "client_id": "880362156926-uc1deuksr0fl193p6v7rd1u4pbo9e2h6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDdj3YIf2yi6TEyznEfFNcU6JFXb2EDKjw"
+          "current_key": "AIzaSyAG35kaHXo9i_NrOzVRsrQMID19at_k7qs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "413966296722-edsjo9a634laq1jfrlplho3toq7ogt0b.apps.googleusercontent.com",
+              "client_id": "880362156926-uc1deuksr0fl193p6v7rd1u4pbo9e2h6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "880362156926-8759rj7mlvvd2n3gl1ekgfqdrkfqrieo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ginseng.flashChat"
+              }
             }
           ]
         }
