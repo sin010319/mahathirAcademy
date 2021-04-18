@@ -6,12 +6,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/view_franchise_screen.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
+import 'package:mahathir_academy_app/screens/admin/viewFranchiseStudents.dart';
+import 'package:mahathir_academy_app/screens/coach/select_class.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
 import 'package:mahathir_academy_app/template/select_class_template.dart';
 
 import '../student/student_profile.dart';
 import '../coach/view_students.dart';
-import '../coach/select_class.dart';
 import '../leaderboard.dart';
 import '../announcement.dart';
 
@@ -37,15 +38,17 @@ class franchiseAdminNavigation extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch, // make the items in each row to stretch itself to fit as much space in the screen
               children: <Widget>[
-                Expanded(
+            Expanded(
+            child: Row(children: <Widget>[
+            Expanded(
                   child: ReusableCard(
                     onPress: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SelectClassTemplate(
-                                textForDisplay: "Please select the class that you want to view the leaderboard: ",
-                                function: (){
+                            builder: (context) => SelectClass(
+                                textForDisplay: "Please select the class that you want to view the student ranking: ",
+                                classFunction: (){
                                   Navigator.pushNamed(context, Category.id);
                                 }),
                           ));
@@ -53,10 +56,24 @@ class franchiseAdminNavigation extends StatelessWidget {
                     colour: Colors.white,
                     cardChild: IconContent(
                       icon: FontAwesomeIcons.trophy,
-                      label: 'LEADERBOARD',
+                      label: 'STUDENT RANKING',
                     ),
                   ),
                 ),
+              Expanded(
+                child: ReusableCard(
+                  onPress: () {
+                    Navigator.pushNamed(
+                        context, ViewFranchiseStudents.id);
+                  },
+                  colour: Colors.white,
+                  cardChild: IconContent(
+                    icon: FontAwesomeIcons.users,
+                    label: 'VIEW FRANCHISE STUDENTS',
+                  ),
+                ),
+              ),
+            ])),
                 Expanded(
                   child: Row(
                     children: <Widget>[

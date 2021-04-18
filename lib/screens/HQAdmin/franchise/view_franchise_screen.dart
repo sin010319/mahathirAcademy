@@ -5,7 +5,7 @@ import 'package:mahathir_academy_app/screens/HQAdmin/franchise_admin/view_admin_
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/edit_franchise_bottomSheet.dart';
-import 'package:mahathir_academy_app/template/SelectFranchiseTemplate.dart';
+import 'package:mahathir_academy_app/template/select_franchise_template.dart';
 
 class ViewFranchiseScreen extends StatefulWidget {
 
@@ -21,7 +21,7 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
   @override
   Widget build(BuildContext context) {
     return SelectFranchiseTemplate(
-      fab: FloatingActionButton(
+      franchiseFab: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
               context: context,
@@ -33,7 +33,8 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
         backgroundColor: Color(0xFF8A1501),
         child: Icon(Icons.add),
       ),
-      myItemBuilder: (context, index) {
+        contentTitle: 'Please select a franchise to view or modify admin info:',
+      franchiseItemBuilder: (context, index) {
         return Card(
           child: Center(
               child: ListTile(

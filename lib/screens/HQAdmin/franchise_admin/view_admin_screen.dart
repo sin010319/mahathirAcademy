@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/view_coaches_students.dart';
 import 'package:mahathir_academy_app/screens/leaderboard.dart';
+import 'package:mahathir_academy_app/template/select_view_template.dart';
 import 'edit_admin_bottomSheet.dart';
 import 'add_admin_bottomSheet.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -26,6 +27,12 @@ class ViewAdminScreen extends StatefulWidget {
 class _ViewAdminScreenState extends State<ViewAdminScreen> {
   @override
   Widget build(BuildContext context) {
+
+    String adminAppBarTitle = 'Franchise Admin';
+    String adminImageIconLocation = 'assets/icons/admin.png';
+    String adminContentTitle = '${widget.franchiseName} \n${widget.franchiseLocation}';
+    int adminInfoItemLength = widget.adminInfo.length;
+
     return Scaffold(
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_home,
@@ -90,72 +97,22 @@ class _ViewAdminScreenState extends State<ViewAdminScreen> {
               labelBackgroundColor: Color(0xFFFF3700)),
         ],
       ),
-        appBar: AppBar(title: Text('Franchise Admin')),
-        backgroundColor: Color(0xFFDB5D38),
-        body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(30.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    // wrap the icon in a circle avatar
-                CircleAvatar(
-                backgroundColor: Colors.white,
-                  backgroundImage: AssetImage("assets/icons/admin.png"),
-                  radius: 30.0,
-                ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Text(
-                      widget.franchiseName,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18.0),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Text(
-                      widget.franchiseLocation,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18.0),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                  child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      // container must have a child to get shown up on screen
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20.0),
-                              topRight: Radius.circular(20.0))),
-                      child: Column(children: [
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: widget.adminInfo.length,
-                            itemBuilder: (context, index) {
-                              String key = widget.adminInfo.keys.elementAt(index);
-                              return Card(
-                                child: Center(
-                                    child: ListTile(
-                                        title: Text(key),
-                                        subtitle: Text('${widget.adminInfo[key]}'),)),
-                              );
-                            })
-                      ])))
-            ]));
+      body: SelectViewTemplate(
+      appBarTitle: adminAppBarTitle,
+      imageIconLocation: adminImageIconLocation,
+      contentTitle: adminContentTitle,
+    itemLength: adminInfoItemLength,
+    myItemBuilder: (context, index) {
+      String key = widget.adminInfo.keys.elementAt(index);
+      return Card(
+        child: Center(
+            child: ListTile(
+              title: Text(key),
+              subtitle: Text('${widget.adminInfo[key]}'),)),
+      );
+    }
+    )
+    );
   }
 }
 

@@ -14,6 +14,7 @@ String identifier;
 class ViewCoachStudent extends StatefulWidget {
   static const String id = '/viewCoachStudent';
   String coach = 'Coach1';
+  String facilitator = 'Facilitator1';
   List<String> students = ['Student1', 'Student2', 'Student3'];
   List<int> exp = [230, 40, 100];
 
@@ -53,7 +54,43 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
                   color: Colors.white,
                   fontSize: 16.0),
               labelBackgroundColor: Color(0xFFFF3700)),
-          // FAB 2
+          // FAB 3
+          SpeedDialChild(
+              child: Icon(Icons.person_add_alt, color: Colors.white),
+              backgroundColor: Color(0xFFC61F00),
+              onTap: () {
+                setState(() {
+                  showModalBottomSheet(
+                      context: context,
+                      // builder here needs a method to return widget
+                      builder: facilitatorBuildBottomSheet,
+                      isScrollControlled:
+                      true // enable the modal take up the full screen
+                  );
+                });
+              },
+              label: 'Add Facilitator',
+              labelStyle: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                  fontSize: 16.0),
+              labelBackgroundColor: Color(0xFFFF3700)),
+          // FAB 3
+          SpeedDialChild(
+              child: Icon(FontAwesomeIcons.peopleArrows, color: Colors.white),
+              backgroundColor: Color(0xFFC61F00),
+              onTap: () {
+                setState(() {
+                  // do smt
+                });
+              },
+              label: 'Upgrade Facilitator',
+              labelStyle: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                  fontSize: 16.0),
+              labelBackgroundColor: Color(0xFFFF3700)),
+          // FAB 3
           SpeedDialChild(
               child: Icon(Icons.person_add_alt_1, color: Colors.white),
               backgroundColor: Color(0xFFC61F00),
@@ -123,84 +160,110 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20.0),
                   topRight: Radius.circular(20.0))),
-          child: Column(children: [
-            Text('Coach', style: kCoachStudentLabelTextStyle),
-            Container(
-                child: Card(
-              child: Center(
-                child: ListTile(
-                  title: Text(widget.coach, style: kListItemsTextStyle),
-                  trailing: GestureDetector(
-                    child: Icon(
-                      Icons.delete,
-                      color: Color(0xFF8A1501),
+          child: SingleChildScrollView(
+            child: Column(children: [
+              Text('Coach', style: kCoachStudentLabelTextStyle),
+              Container(
+                  child: Card(
+                child: Center(
+                  child: ListTile(
+                    title: Text(widget.coach, style: kListItemsTextStyle),
+                    trailing: GestureDetector(
+                      child: Icon(
+                        Icons.delete,
+                        color: Color(0xFF8A1501),
+                      ),
+                      onTap: () {
+                        deleteDialog(context, widget.coach);
+                      },
                     ),
                     onTap: () {
-                      deleteDialog(context, widget.coach);
+                      Navigator.pushNamed(context, CoachProfile.id);
                     },
                   ),
-                  onTap: () {
-                    Navigator.pushNamed(context, CoachProfile.id);
-                  },
                 ),
+              )),
+              SizedBox(
+                height: 15.0,
               ),
-            )),
-            SizedBox(
-              height: 15.0,
-            ),
-            Text('${widget.students.length} Students',
-                style: kCoachStudentLabelTextStyle),
-            Container(
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.students.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Center(
-                        child: ListTile(
-                          title: Text(widget.students[index],
-                              style: kListItemsTextStyle),
-                          trailing: Wrap(
-                            spacing: 8,
-                            children: [
-                              Container(
-                                  child: Text(widget.exp[index].toString(),
-                                      style: kExpTextStyle)),
-                              GestureDetector(
-                                child: Icon(
-                                  Icons.edit,
-                                  color: Color(0xFF8A1501),
-                                ),
-                                onTap: () {
-                                  showModalBottomSheet(
-                                      context: context,
-                                      // builder here needs a method to return widget
-                                      builder: amendExpBuildBottomSheet,
-                                      isScrollControlled:
-                                          true // enable the modal take up the full screen
-                                      );
-                                },
-                              ),
-                              GestureDetector(
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Color(0xFF8A1501),
-                                ),
-                                onTap: () {
-                                  deleteDialog(context, widget.students[index]);
-                                },
-                              )
-                            ],
+              Text('Facilitator', style: kCoachStudentLabelTextStyle),
+              Container(
+                  child: Card(
+                    child: Center(
+                      child: ListTile(
+                        title: Text(widget.facilitator, style: kListItemsTextStyle),
+                        trailing: GestureDetector(
+                          child: Icon(
+                            Icons.delete,
+                            color: Color(0xFF8A1501),
                           ),
                           onTap: () {
-                            Navigator.pushNamed(context, StudentProfile.id);
+                            deleteDialog(context, widget.facilitator);
                           },
                         ),
+                        onTap: () {
+                          Navigator.pushNamed(context, CoachProfile.id);
+                        },
                       ),
-                    );
-                  }),
-            ),
-          ]),
+                    ),
+                  )),
+              SizedBox(
+                height: 15.0,
+              ),
+              Text('${widget.students.length} Students',
+                  style: kCoachStudentLabelTextStyle),
+              Container(
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: widget.students.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: Center(
+                          child: ListTile(
+                            title: Text(widget.students[index],
+                                style: kListItemsTextStyle),
+                            trailing: Wrap(
+                              spacing: 8,
+                              children: [
+                                Container(
+                                    child: Text(widget.exp[index].toString(),
+                                        style: kExpTextStyle)),
+                                GestureDetector(
+                                  child: Icon(
+                                    Icons.edit,
+                                    color: Color(0xFF8A1501),
+                                  ),
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        // builder here needs a method to return widget
+                                        builder: amendExpBuildBottomSheet,
+                                        isScrollControlled:
+                                            true // enable the modal take up the full screen
+                                        );
+                                  },
+                                ),
+                                GestureDetector(
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Color(0xFF8A1501),
+                                  ),
+                                  onTap: () {
+                                    deleteDialog(context, widget.students[index]);
+                                  },
+                                )
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.pushNamed(context, StudentProfile.id);
+                            },
+                          ),
+                        ),
+                      );
+                    }),
+              ),
+            ]),
+          ),
         ))
       ]),
     );
@@ -297,6 +360,19 @@ Widget coachBuildBottomSheet(BuildContext context) {
     child: Container(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
+      child: AddCoachStudentBottomSheet(identifier: identifier),
+    ),
+  );
+}
+
+Widget facilitatorBuildBottomSheet(BuildContext context) {
+  String identifier = 'Facilitator';
+
+  return SingleChildScrollView(
+    child: Container(
+      padding:
+      EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
       child: AddCoachStudentBottomSheet(identifier: identifier),
     ),

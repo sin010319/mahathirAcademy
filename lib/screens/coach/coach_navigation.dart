@@ -5,11 +5,11 @@ import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/components/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/screens/coach/award_exp.dart';
+import 'package:mahathir_academy_app/screens/coach/select_class.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
 
 import '../student/student_profile.dart';
 import 'view_students.dart';
-import 'select_class.dart';
 import '../leaderboard.dart';
 import '../announcement.dart';
 import 'coach_profile.dart';
@@ -57,9 +57,9 @@ class CoachNavigation extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SelectClassTemplate(
+                                builder: (context) => SelectClass(
                                     textForDisplay: "Please select the class that you want to view the students: ",
-                                    function: (){
+                                    classFunction: (){
                                       Navigator.pushNamed(context, ViewStudents.id);
                                     }),
                               ));
@@ -82,9 +82,9 @@ class CoachNavigation extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SelectClassTemplate(
-                              textForDisplay: "Please select the class that you want to view the leaderboard: ",
-                              function: (){
+                          builder: (context) => SelectClass(
+                              textForDisplay: "Please select the class that you want to view the student ranking: ",
+                              classFunction: (){
                                 Navigator.pushNamed(context, Category.id);
                               }),
                         ));
@@ -92,7 +92,7 @@ class CoachNavigation extends StatelessWidget {
                   colour: Colors.white,
                   cardChild: IconContent(
                     icon: FontAwesomeIcons.trophy,
-                    label: 'LEADERBOARD',
+                    label: 'STUDENT RANKING',
                   ),
                 ),
               ),
@@ -105,9 +105,9 @@ class CoachNavigation extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SelectClassTemplate(
-                                  textForDisplay: "Please select the class you want to award EXP to: ",
-                                  function: (){
+                                builder: (context) => SelectClass(
+                                  textForDisplay: "Please select the class you want to award EXP or acknowledgment to: ",
+                                  classFunction: (){
                                     Navigator.pushNamed(context, AwardExp.id);
                                   }),
                               ));
@@ -117,7 +117,7 @@ class CoachNavigation extends StatelessWidget {
                         colour: Colors.white,
                         cardChild: IconContent(
                           icon: FontAwesomeIcons.award,
-                          label: 'AWARD EXP',
+                          label: 'AWARD EXP\nand\nACKNOWLEDGEMENT',
                         ),
                       ),
                     ),

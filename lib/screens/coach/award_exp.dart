@@ -36,6 +36,21 @@ class _AwardExpState extends State<AwardExp> {
           children: [
             // FAB 1
             SpeedDialChild(
+                child: Icon(FontAwesomeIcons.question, color: Colors.white),
+                backgroundColor: Color(0xFFC61F00),
+                onTap: () {
+                  setState(() {
+                    // do something
+                  });
+                },
+                label: 'Award EXP Guidelines',
+                labelStyle: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                    fontSize: 16.0),
+                labelBackgroundColor: Color(0xFFFF3700)),
+            // FAB 2
+            SpeedDialChild(
                 child: Icon(FontAwesomeIcons.award, color: Colors.white),
                 backgroundColor: Color(0xFFC61F00),
                 onTap: () {
@@ -49,7 +64,7 @@ class _AwardExpState extends State<AwardExp> {
                     color: Colors.white,
                     fontSize: 16.0),
                 labelBackgroundColor: Color(0xFFFF3700)),
-            // FAB 2
+            // FAB 3
             SpeedDialChild(
                 child: Icon(FontAwesomeIcons.stamp, color: Colors.white),
                 backgroundColor: Color(0xFFC61F00),
@@ -66,7 +81,7 @@ class _AwardExpState extends State<AwardExp> {
                 labelBackgroundColor: Color(0xFFFF3700)),
           ],
         ),
-      appBar: AppBar(title: Text('Award EXP')),
+      appBar: AppBar(title: Text('Award EXP and Acknowledgment')),
       backgroundColor: Color(0xFFDB5D38),
       body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

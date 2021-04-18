@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 // extract repeated widget out here as a stateless widget class
 class ReusableCard extends StatelessWidget {
@@ -40,8 +41,14 @@ class ReusableCard extends StatelessWidget {
       // onPress here is a variable which stores a function
       onTap: onPress,
       child: Container(
-        child: cardChild,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            cardChild,
+          ],
+        ),
         margin: EdgeInsets.all(10.0),   // set margin for all sides
+        padding: EdgeInsets.all(2.0),
         // to make our boxes to have rounded corner, we use BoxDecoration
         decoration: BoxDecoration(
           // need to specify the color of the container inside this BoxDecoration if we have one and not inside the container nia
@@ -52,13 +59,3 @@ class ReusableCard extends StatelessWidget {
     );
   }
 }
-
-
-// EXTRA NOTE
-// specify theme for this particular FAB by wrapping it in a Theme widget
-// floatingActionButton: Theme(
-//   data: ThemeData(accentColor: Colors.purple),
-//   child: FloatingActionButton(
-//     child: Icon(Icons.add),
-//   ),
-// )

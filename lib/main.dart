@@ -3,13 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/amend_exp.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/view_franchise_screen.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise_admin/view_admin_screen.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/selectFranchiseForLeaderBoard.dart';
+import 'package:mahathir_academy_app/screens/HQAdmin/select_franchise_for_leaderboard.dart';
+import 'package:mahathir_academy_app/screens/HQAdmin/select_franchise_to_view_all_students.dart';
 import 'package:mahathir_academy_app/screens/admin/HQAdmin_navigation.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/view_coaches_students.dart';
+import 'package:mahathir_academy_app/screens/admin/viewFranchiseStudents.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
 import 'screens/admin/admin_login_screen.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_profile.dart';
-import 'screens/coach/select_class.dart';
 import 'package:mahathir_academy_app/screens/leaderboard.dart';
 import 'package:mahathir_academy_app/screens/login_screen.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_navigation.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
         franchiseAdminNavigation.id: (context) => franchiseAdminNavigation(),
         HQAdminNavigation.id: (context) => HQAdminNavigation(),
         ViewFranchiseScreen.id: (context) => ViewFranchiseScreen(),
+        ViewFranchiseStudents.id: (context) => ViewFranchiseStudents(),
         AmendExpScreen.id: (context) => AmendExpScreen(),
         CoachNavigation.id: (context) => CoachNavigation(),
         StudentNavigation.id: (context) => StudentNavigation(),
@@ -61,7 +63,8 @@ class MyApp extends StatelessWidget {
         Announcement.id: (context) => Announcement(),
         AwardExp.id: (context) => AwardExp(),
         Category.id: (context) => Category(),
-        SelectFranchiseForLeaderBoard.id: (context) => SelectFranchiseForLeaderBoard()
+        SelectFranchiseForLeaderBoard.id: (context) => SelectFranchiseForLeaderBoard(),
+        SelectFranchiseToViewAllStudents.id: (context) => SelectFranchiseToViewAllStudents()
       },
     );
   }

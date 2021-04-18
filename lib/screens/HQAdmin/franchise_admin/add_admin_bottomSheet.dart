@@ -5,7 +5,7 @@ import 'package:mahathir_academy_app/components/input_box.dart';
 import 'package:mahathir_academy_app/components/round_button.dart';
 
 import 'package:mahathir_academy_app/constants.dart';
-import 'package:mahathir_academy_app/components/add_amend_bottomSheet.dart';
+import 'file:///D:/Documents/iCube%20Tech%20Consulting%20Project%202.0/git_mahathir_academy/lib/template/add_amend_bottomSheet_template.dart';
 
 class AddAdminBottomSheet extends StatelessWidget {
 
@@ -49,6 +49,6 @@ class AddAdminBottomSheet extends StatelessWidget {
       }),
     ];
 
-    return AddAmendScreen(identifier: identifier, content: retContent);
+    return AddAmendTemplate(identifier: identifier, content: retContent);
   }
 }

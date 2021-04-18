@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/view_coaches_students.dart';
 import 'package:mahathir_academy_app/screens/leaderboard.dart';
+import 'package:mahathir_academy_app/template/select_class_template.dart';
 import 'edit_class_bottomSheet.dart';
 import 'add_class_bottomSheet.dart';
 
@@ -16,119 +17,67 @@ class ViewClassScreen extends StatefulWidget {
 class _ViewClassScreenState extends State<ViewClassScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-                context: context,
-                // builder here needs a method to return widget
-                builder: addClassBuildBottomSheet,
-                isScrollControlled:
-                    true // enable the modal take up the full screen
-                );
-          },
-          backgroundColor: Color(0xFF8A1501),
-          child: Icon(Icons.add),
+
+    int classItemLength = widget.classes.length;
+    String classContentTitle = 'Franchise1 \n$classItemLength Classes: ';
+
+    return SelectClassTemplate(
+        myFab: FloatingActionButton(
+        onPressed: () {
+      showModalBottomSheet(
+          context: context,
+          // builder here needs a method to return widget
+          builder: addClassBuildBottomSheet,
+          isScrollControlled:
+          true // enable the modal take up the full screen
+      );
+    },
+    backgroundColor: Color(0xFF8A1501),
+    child: Icon(Icons.add),
         ),
-        appBar: AppBar(title: Text('Classes')),
-        backgroundColor: Color(0xFFDB5D38),
-        body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(30.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    // wrap the icon in a circle avatar
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: AssetImage("assets/icons/classroom.png"),
-                      radius: 30.0,
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Text(
-                      'Franchise1 ',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18.0),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Text(
-                      '${widget.classes.length} Classes: ',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18.0),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                  child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      // container must have a child to get shown up on screen
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20.0),
-                              topRight: Radius.circular(20.0))),
-                      child: Column(children: [
-                        SizedBox(
-                          height: 10.0,
+        textForDisplay: classContentTitle,
+        classItemBuilder: (context, index) {
+          return Card(
+            child: Center(
+                child: ListTile(
+                    title: Text(widget.classes[index]),
+                    trailing: Wrap(
+                      spacing: 8,
+                      children: [
+                        GestureDetector(
+                          child: Icon(
+                            Icons.edit,
+                            color: Color(0xFF8A1501),
+                          ),
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                // builder here needs a method to return widget
+                                builder:
+                                editClassBuildBottomSheet,
+                                isScrollControlled:
+                                true // enable the modal take up the full screen
+                            );
+                          },
                         ),
-                        ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: widget.classes.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                child: Center(
-                                    child: ListTile(
-                                        title: Text(widget.classes[index]),
-                                        trailing: Wrap(
-                                          spacing: 8,
-                                          children: [
-                                            GestureDetector(
-                                              child: Icon(
-                                                Icons.edit,
-                                                color: Color(0xFF8A1501),
-                                              ),
-                                              onTap: () {
-                                                showModalBottomSheet(
-                                                    context: context,
-                                                    // builder here needs a method to return widget
-                                                    builder:
-                                                        editClassBuildBottomSheet,
-                                                    isScrollControlled:
-                                                        true // enable the modal take up the full screen
-                                                    );
-                                              },
-                                            ),
-                                            GestureDetector(
-                                              child: Icon(
-                                                Icons.delete,
-                                                color: Color(0xFF8A1501),
-                                              ),
-                                              onTap: () {
-                                                deleteDialog(context,
-                                                    widget.classes[index]);
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context, ViewCoachStudent.id);
-                                      })),
-                              );
-                            })
-                      ])))
-            ]));
+                        GestureDetector(
+                          child: Icon(
+                            Icons.delete,
+                            color: Color(0xFF8A1501),
+                          ),
+                          onTap: () {
+                            deleteDialog(context,
+                                widget.classes[index]);
+                          },
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, ViewCoachStudent.id);
+                    })),
+          );
+        });
   }
 }
 

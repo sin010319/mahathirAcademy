@@ -6,17 +6,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/view_franchise_screen.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/view_franchise_screen.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bottomSheet.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/selectFranchiseForLeaderBoard.dart';
-import 'package:mahathir_academy_app/template/SelectFranchiseTemplate.dart';
+import 'package:mahathir_academy_app/screens/HQAdmin/select_franchise_for_leaderboard.dart';
+import 'package:mahathir_academy_app/screens/HQAdmin/select_franchise_to_view_all_students.dart';
+import 'package:mahathir_academy_app/template/select_franchise_template.dart';
 
 import '../student/student_profile.dart';
 import '../coach/view_students.dart';
-import '../coach/select_class.dart';
 import '../leaderboard.dart';
 import '../announcement.dart';
 
 class HQAdminNavigation extends StatelessWidget {
-
   static const String id = '/HQadmin';
 
   @override
@@ -26,36 +25,62 @@ class HQAdminNavigation extends StatelessWidget {
           gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Colors.white, Color(0xFFDB5D38), Color(0xFFDB5D38), Color(0xFFE78466), Colors.white])),
+              colors: [
+            Colors.white,
+            Color(0xFFDB5D38),
+            Color(0xFFDB5D38),
+            Color(0xFFE78466),
+            Colors.white
+          ])),
       child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: Text('HQ Admin Dashboard'),
           ),
           body: Container(
-            margin: EdgeInsets.only(top: 80.0, bottom: 80.0, right: 25.0, left: 25.0),
+            margin: EdgeInsets.only(
+                top: 80.0, bottom: 80.0, right: 25.0, left: 25.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch, // make the items in each row to stretch itself to fit as much space in the screen
+              crossAxisAlignment: CrossAxisAlignment
+                  .stretch, // make the items in each row to stretch itself to fit as much space in the screen
               children: <Widget>[
                 Expanded(
-                  child: ReusableCard(
-                    onPress: () {
-                      Navigator.pushNamed(context, SelectFranchiseForLeaderBoard.id);
-                    },
-                    colour: Colors.white,
-                    cardChild: IconContent(
-                      icon: FontAwesomeIcons.trophy,
-                      label: 'LEADERBOARD',
+                    child: Row(children: <Widget>[
+                  Expanded(
+                    child: ReusableCard(
+                      onPress: () {
+                        Navigator.pushNamed(
+                            context, SelectFranchiseForLeaderBoard.id);
+                      },
+                      colour: Colors.white,
+                      cardChild: IconContent(
+                        icon: FontAwesomeIcons.trophy,
+                        label: 'STUDENT RANKING',
+                      ),
                     ),
                   ),
-                ),
+                  Expanded(
+                    child: ReusableCard(
+                      onPress: () {
+                        Navigator.pushNamed(
+                            context, SelectFranchiseToViewAllStudents.id);
+                      },
+                      colour: Colors.white,
+                      cardChild: IconContent(
+                        icon: FontAwesomeIcons.users,
+                        label: 'VIEW FRANCHISE STUDENTS',
+                      ),
+                    ),
+                  ),
+                ])),
                 Expanded(
                   child: Row(
                     children: <Widget>[
                       Expanded(
                         child: ReusableCard(
                           onPress: () {
-                            Navigator.pushNamed(context, ViewFranchiseScreen.id);
+                            Navigator.pushNamed(
+                                context, ViewFranchiseScreen.id);
                           },
                           colour: Colors.white,
                           cardChild: IconContent(
@@ -83,9 +108,7 @@ class HQAdminNavigation extends StatelessWidget {
                 ),
               ],
             ),
-          )
-
-      ),
+          )),
     );
   }
 }

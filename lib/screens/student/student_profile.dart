@@ -23,7 +23,7 @@ class StudentProfile extends StatelessWidget {
                 press: () => {},
               ),
               ProfileMenu(
-                text: "Franchise: Franchise1",
+                text: "Location: Location1",
                 icon: "assets/icons/school.svg",
                 press: () {},
               ),

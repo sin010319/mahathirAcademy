@@ -22,7 +22,7 @@ class _LeaderboardState extends State<Leaderboard> {
     var r = TextStyle(color: Colors.yellow, fontSize: 34);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Leaderboard')),
+      appBar: AppBar(title: Text('Student Ranking')),
       backgroundColor: Color(0xFFDB5D38),
       body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

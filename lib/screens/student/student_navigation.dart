@@ -7,7 +7,6 @@ import 'package:mahathir_academy_app/template/category_template.dart';
 
 import 'student_profile.dart';
 import '../coach/view_students.dart';
-import '../coach/select_class.dart';
 import '../leaderboard.dart';
 import '../announcement.dart';
 
@@ -41,7 +40,7 @@ class StudentNavigation extends StatelessWidget {
                     colour: Colors.white,
                     cardChild: IconContent(
                       icon: FontAwesomeIcons.trophy,
-                      label: 'LEADERBOARD',
+                      label: 'STUDENT RANKING',
                     ),
                   ),
                 ),
