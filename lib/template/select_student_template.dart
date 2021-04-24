@@ -17,7 +17,7 @@ class SelectStudentTemplate extends StatefulWidget {
 
   static const String id = '/selectStudentTemplate';
   String coach = 'Coach1';
-  List<String> students = ['Student1', 'Student2', 'Student3'];
+  List<String> students = ['Student1', 'Student2'];
   List<int> exp = [230, 40, 100];
 
   @override

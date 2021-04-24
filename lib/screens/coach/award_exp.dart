@@ -3,25 +3,44 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:mahathir_academy_app/models/student.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 double _width;
+
+// for storing data into cloud firebase
+final _firestore = FirebaseFirestore.instance;
 
 class AwardExp extends StatefulWidget {
   static const String id = '/award_exp';
 
   List<String> students = ['Student1', 'Student2', 'Student3'];
   List<String> points = ['2002', '1242', '3304'];
+  String contentTitle;
+
+  AwardExp({this.contentTitle});
 
   @override
   _AwardExpState createState() => _AwardExpState();
+
+  Future retrievedStudents;
 }
 
 class _AwardExpState extends State<AwardExp> {
   List<TextEditingController> _controllers = new List();
   bool isChecked = false;
+  List <bool> state = [];
+  List <Student> tickedStudents = [];
 
-  String awardExpMessage = 'Are you sure you want to award the allocated EXP to the student?';
-  String acknowledgementMessage = 'Are you sure you want to acknowledge the selected student?';
+  String awardExpMessage =
+      'Are you sure you want to award the allocated EXP to the student?';
+  String acknowledgementMessage =
+      'Are you sure you want to acknowledge the selected student?';
+
+  @override
+  void initState() {
+    widget.retrievedStudents = callStuFunc();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,41 +100,40 @@ class _AwardExpState extends State<AwardExp> {
                 labelBackgroundColor: Color(0xFFFF3700)),
           ],
         ),
-      appBar: AppBar(title: Text('Award EXP and Acknowledgment')),
-      backgroundColor: Color(0xFFDB5D38),
-      body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(30.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  // wrap the icon in a circle avatar
-                  CircleAvatar(
-                    radius: 30.0,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      FontAwesomeIcons.award,
-                      size: 30.0,
-                      color: Color(0xFF8A1501),
-                    ),
+        appBar: AppBar(title: Text('Award EXP and Acknowledgment')),
+        backgroundColor: Color(0xFFDB5D38),
+        body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+            Widget>[
+          Container(
+            padding: EdgeInsets.all(30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                // wrap the icon in a circle avatar
+                CircleAvatar(
+                  radius: 30.0,
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    FontAwesomeIcons.award,
+                    size: 30.0,
+                    color: Color(0xFF8A1501),
                   ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Text(
-                    'Class 1',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 18.0),
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  widget.contentTitle,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18.0),
+                ),
+              ],
             ),
-            Expanded(
-              child: Container(
+          ),
+          Expanded(
+            child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 // container must have a child to get shown up on screen
                 decoration: BoxDecoration(
@@ -124,82 +142,173 @@ class _AwardExpState extends State<AwardExp> {
                         topLeft: Radius.circular(20.0),
                         topRight: Radius.circular(20.0))),
                 child: SingleChildScrollView(
-                  child: Column(
+                  child: Column(children: <Widget>[
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    FutureBuilder(
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        return ListView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 10.0,),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: widget.students.length,
-                      itemBuilder: (context, index) {
-                        return IntrinsicHeight(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                flex: 1,
-                                child: Checkbox(
-                                  // When this checkboxState value changes, it is going to trigger this callback and pass in the latest state of checkbox
-                                  activeColor: Colors.orangeAccent,  // color of tick
-                                  value: isChecked, // if true, checked; else unchecked
-                                  // once the user clicks on the checkbox, swap the state
-                                  onChanged: (bool newValue) {
-                                    setState(() {
-                                      isChecked = newValue;
-                                    });
-                                    },
-                                ),
+                    Expanded(
+                      flex: 1,
+                      child: Checkbox(
+                        // When this checkboxState value changes, it is going to trigger this callback and pass in the latest state of checkbox
+                        activeColor: Colors
+                            .orangeAccent,
+                        // color of tick
+                        value : state[index],
+                        // if true, checked; else unchecked
+                        // once the user clicks on the checkbox, swap the state
+                        onChanged: (bool newValue) {
+                          setState(() {
+                            state[index] = !state[index];
+                            Student studentObj = snapshot.data[index];
+                            if (state[index] && !tickedStudents.contains(studentObj)) {
+                              tickedStudents.add(studentObj);
+                            }
+                            else if(!state[index]){
+                              tickedStudents.remove(studentObj);
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      flex: 7,
+                      child: Container(
+                        height: 70.0,
+                        child: Card(
+                          child: Center(
+                            child: ListTile(
+                              title: Text(
+                                snapshot.data[index].studentName,
+                                style: kListItemsTextStyle,
                               ),
-                              Expanded(
-                                flex: 7, child:
-                              Container(
-                                height: 70.0,
-                                child: Card(
-                                child: Center(
-                                child: ListTile(
-                                title: Text(widget.students[index], style: kListItemsTextStyle,),
-                                  subtitle: Text("Points: " + widget.points[index], style: TextStyle(color: Colors.black, fontSize: 13)),
-                                ),
-                                ),
-
-                                ),
-                              ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget> [Card(
-                                    child: TextFormField(
-                                      style: kExpTextStyle,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: <TextInputFormatter>[
-                                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                      ],
-                                      textAlign: TextAlign.center,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                      ),
-                                    ),
-                                  )
-                          ],
-                                ),
-                              ),
-                            ],
+                              subtitle: Text(
+                                  "Points: " +
+                                      snapshot.data[index].exp.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13)),
+                            ),
                           ),
-                        );
-                      }),
-    ]
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        mainAxisAlignment:
+                        MainAxisAlignment.start,
+                        crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Card(
+                            child: TextFormField(
+                              style: kExpTextStyle,
+                              keyboardType:
+                              TextInputType.number,
+                              inputFormatters: <
+                                  TextInputFormatter>[
+                                FilteringTextInputFormatter
+                                    .allow(RegExp(r'[0-9]')),
+                              ],
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                )
-              ),
-            )]
-    )
-    );
+              );
+            });
+      } else {
+        print('error3');
+        return Center(child: CircularProgressIndicator());
+      }
+    },
+                      future: widget.retrievedStudents),
+                  ]),
+                )),
+          )
+        ]));
+  }
+
+  Future<List<Student>> studentData() async {
+    var selectedClassId;
+    List<Student> studentList = [];
+
+    await _firestore
+        .collection('classes')
+        .where('className', isEqualTo: widget.contentTitle)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        selectedClassId = doc['classId'];
+      });
+    });
+
+    await _firestore
+        .collection('students')
+        .where('classId', isEqualTo: selectedClassId)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        String name = doc['studentName'];
+        int exp = doc['exp'];
+        print(name);
+        print(exp);
+        var student = Student(name, exp);
+        print(studentList);
+        studentList.add(student);
+      });
+    });
+    state = List.filled(studentList.length, false);
+    return studentList;
+  }
+
+  callStuFunc() async {
+    return await studentData();
+  }
+
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+  Future update(List<int> cartNumbers) async {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    _firestore.collection("students").get().then((querySnapshot) {
+      querySnapshot.docs.forEach((document) {
+        try {
+          // Only if DocumentID has only numbers
+          if (cartNumbers.contains(int.parse(document.id))) {
+            batch.update(document.reference,
+                {"quantity": document.data()["quantity"] - 1});
+          }
+        } on FormatException catch (error) {
+
+          // If a document ID is unparsable. Example "lRt931gu83iukSSLwyei" is unparsable.
+          print("The document ${error.source} could not be parsed.");
+          return null;
+        }
+      });
+      return batch.commit();
+    });
   }
 }
 
-popUpDialog(String message, BuildContext context){
+popUpDialog(String message, BuildContext context) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -217,9 +326,9 @@ popUpDialog(String message, BuildContext context){
                     },
                     child: CircleAvatar(
                       child: GestureDetector(
-                        onTap: (){
-                          Navigator. of(context, rootNavigator: true). pop();
-                        },
+                          onTap: () {
+                            Navigator.of(context, rootNavigator: true).pop();
+                          },
                           child: Icon(Icons.close)),
                       backgroundColor: Colors.red,
                     ),
@@ -228,9 +337,7 @@ popUpDialog(String message, BuildContext context){
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text(
-                      message
-                    ),
+                    Text(message),
                     SizedBox(
                       height: 15.0,
                     ),
@@ -251,33 +358,31 @@ popUpDialog(String message, BuildContext context){
 }
 
 Widget button(String text, BuildContext context) {
-
   double _width = MediaQuery.of(context).size.width;
 
   return RaisedButton(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      onPressed: (){
-        if(text == 'Yes'){
-          // do something
-        }else if(text == 'No'){
-          Navigator. of(context, rootNavigator: true). pop();
-        }
-      },
-      textColor: Colors.white,
-      padding: EdgeInsets.all(0.0),
-      child: Container(
-        alignment: Alignment.center,
-        width: _width/5,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          gradient: LinearGradient(
-            colors: <Color>[Colors.orange[200], Colors.pinkAccent],
-          ),
+    elevation: 0,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+    onPressed: () {
+      if (text == 'Yes') {
+        // do something
+      } else if (text == 'No') {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    },
+    textColor: Colors.white,
+    padding: EdgeInsets.all(0.0),
+    child: Container(
+      alignment: Alignment.center,
+      width: _width / 5,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        gradient: LinearGradient(
+          colors: <Color>[Colors.orange[200], Colors.pinkAccent],
         ),
-        padding: const EdgeInsets.all(12.0),
-        child: Text(text ,style: TextStyle(fontSize: 15)),
       ),
+      padding: const EdgeInsets.all(12.0),
+      child: Text(text, style: TextStyle(fontSize: 15)),
+    ),
   );
 }
-

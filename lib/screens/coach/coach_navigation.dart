@@ -6,6 +6,7 @@ import 'package:mahathir_academy_app/components/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/screens/coach/award_exp.dart';
 import 'package:mahathir_academy_app/screens/coach/select_class.dart';
+import 'package:mahathir_academy_app/screens/coach/select_class_general.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
 
 import '../student/student_profile.dart';
@@ -57,12 +58,10 @@ class CoachNavigation extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SelectClass(
+                                builder: (context) => SelectClassGeneral(
                                     textForDisplay: "Please select the class that you want to view the students: ",
-                                    classFunction: (){
-                                      Navigator.pushNamed(context, ViewStudents.id);
-                                    }),
-                              ));
+                                    )),
+                              );
                         },
                         // USE TERNARY OPERATOR HERE
                         // CHANGE THE COLOR OF CARD WHEN SWITCHING BETWEEN TAPPING
@@ -105,11 +104,8 @@ class CoachNavigation extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SelectClass(
-                                  textForDisplay: "Please select the class you want to award EXP or acknowledgment to: ",
-                                  classFunction: (){
-                                    Navigator.pushNamed(context, AwardExp.id);
-                                  }),
+                                builder: (context) => SelectClassGeneral(
+                                  textForDisplay: "Please select the class you want to award EXP or acknowledgment to: "),
                               ));
                         },
                         // USE TERNARY OPERATOR HERE

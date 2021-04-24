@@ -8,7 +8,7 @@ import 'package:mahathir_academy_app/template/select_view_template.dart';
 class SelectClassTemplate extends StatefulWidget {
 
   static const String id = '/selectClassTemplate';
-  List<String> classes = ['Class1', 'Class2', 'Class3'];
+  List<String> classes = ['Class1', 'Class2'];
 
   FloatingActionButton myFab;
   String textForDisplay;
