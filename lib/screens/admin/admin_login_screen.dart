@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,6 +23,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   // create an authentication instance
   // use this auth object to use the associated methods with sign in
   final _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
 
   double _height, _width;
   String _email = '', _password = '';
@@ -178,6 +180,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
               borderSide: BorderSide.none),
         ),
       ),
+
     );
   }
 
@@ -285,7 +288,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   Future<void> franchiseAdminSignIn() async {
     try{
       final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      if (user != null){
+      if (_email.contains("franchise") == false) {
+        showAlertDialog(context);
+      }
+      if (user != null && _email.contains("franchise")){
         Navigator.pushNamed(context, franchiseAdminNavigation.id);
         setState((){showSpinner = false;});
       }
@@ -299,15 +305,47 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   Future<void> HQAdminSignIn() async {
     try{
       final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      if (user != null){
+      if (_email.contains("admin") == false) {
+        showAlertDialog(context);
+      }
+      if (user != null && _email.contains("admin")){
         Navigator.pushNamed(context, HQAdminNavigation.id);
         setState((){showSpinner = false;});
       }
+
     }catch(e){
       setState((){showSpinner = false;});
       print(e.message);
       Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.message)));
     }
+  }
+
+  showAlertDialog(BuildContext c) {
+
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pushNamed(context, AdminLoginScreen.id);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Login Error"),
+      content: Text("Please login using the right admin account."),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
 

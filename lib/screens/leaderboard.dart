@@ -60,8 +60,8 @@ class _LeaderboardState extends State<Leaderboard> {
                     Flexible(
                         child: StreamBuilder<QuerySnapshot>(
                             stream: _firestore
-                                .collection('points')
-                                .orderBy('point', descending: true)
+                                .collection('students')
+                                .orderBy('exp', descending: true)
                                 .snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
@@ -73,9 +73,9 @@ class _LeaderboardState extends State<Leaderboard> {
                                       if (index >= 1) {
                                         print('Greater than 1');
                                         if (snapshot.data.docs[index]
-                                            .data()['point'] ==
+                                            .data()['exp'] ==
                                             snapshot.data.docs[index - 1]
-                                                .data()['point']) {
+                                                .data()['exp']) {
                                           print('Same');
                                         } else {
                                           i++;
@@ -122,7 +122,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                                                 snapshot
                                                                     .data
                                                                     .docs[index]
-                                                                    .data()['name'],
+                                                                    .data()['studentName'],
                                                                 style: TextStyle(
                                                                     color: Colors
                                                                         .deepPurple,
@@ -137,7 +137,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                                               snapshot
                                                                   .data
                                                                   .docs[index]
-                                                                  .data()['point']
+                                                                  .data()['exp']
                                                                   .toString()),
                                                           SizedBox(height: 5,),
                                                         ],

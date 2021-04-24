@@ -74,9 +74,9 @@ class _LevelTemplateState extends State<LevelTemplate> {
                                       itemBuilder: (context, index) {
                                         if (index >= 1) {
                                           if (snapshot.data.docs[index]
-                                              .data()['point'] ==
+                                              .data()['exp'] ==
                                               snapshot.data.docs[index - 1]
-                                                  .data()['point']) {
+                                                  .data()['exp']) {
                                           } else {
                                             i++;
                                           }
@@ -122,7 +122,7 @@ class _LevelTemplateState extends State<LevelTemplate> {
                                                                   snapshot
                                                                       .data
                                                                       .docs[index]
-                                                                      .data()['name'],
+                                                                      .data()['studentName'],
                                                                   style: TextStyle(
                                                                       color: Colors
                                                                           .deepPurple,
@@ -137,7 +137,7 @@ class _LevelTemplateState extends State<LevelTemplate> {
                                                                 snapshot
                                                                     .data
                                                                     .docs[index]
-                                                                    .data()['point']
+                                                                    .data()['exp']
                                                                     .toString()),
                                                             SizedBox(height: 5,),
                                                           ],

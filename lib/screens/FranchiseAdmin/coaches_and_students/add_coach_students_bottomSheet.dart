@@ -4,8 +4,7 @@ import 'package:mahathir_academy_app/components/input_box.dart';
 import 'package:mahathir_academy_app/components/round_button.dart';
 
 import 'package:mahathir_academy_app/constants.dart';
-import 'file:///D:/Documents/iCube%20Tech%20Consulting%20Project%202.0/git_mahathir_academy/lib/template/add_amend_bottomSheet_template.dart';
-
+import 'package:mahathir_academy_app/template/add_amend_bottomSheet_template.dart';
 class AddCoachStudentBottomSheet extends StatelessWidget {
 
   String identifier;

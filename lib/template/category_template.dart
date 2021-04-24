@@ -88,11 +88,12 @@ class _CategoryState extends State<Category> {
                                     builder: (context) => LevelTemplate(
                                         titleForDisplay: "Elite Speaker",
                                         streamList: _firestore
-                                            .collection('points')
-                                            .orderBy('point', descending: true)
-                                            .where('point', isGreaterThanOrEqualTo: 4000)
+                                            .collection('students')
+                                            .orderBy('exp', descending: true)
+                                            .where('exp', isGreaterThanOrEqualTo: 4000)
                                             .snapshots(),
-                                    imageLocation: 'elite')
+                                    imageLocation: 'elite'),
+
                                   ));
                               break;
                             case 1:
@@ -102,9 +103,9 @@ class _CategoryState extends State<Category> {
                                     builder: (context) => LevelTemplate(
                                         titleForDisplay: "Diamond Speaker",
                                         streamList: _firestore
-                                            .collection('points')
-                                            .orderBy('point', descending: true)
-                                            .where('point', isGreaterThanOrEqualTo: 3000, isLessThan: 4000)
+                                            .collection('students')
+                                            .orderBy('exp', descending: true)
+                                            .where('exp', isGreaterThanOrEqualTo: 3000, isLessThan: 4000)
                                             .snapshots(),
                                         imageLocation: 'diamond')
                                   ));
@@ -116,9 +117,9 @@ class _CategoryState extends State<Category> {
                                     builder: (context) => LevelTemplate(
                                         titleForDisplay: "Ruby Speaker",
                                         streamList: _firestore
-                                            .collection('points')
-                                            .orderBy('point', descending: true)
-                                            .where('point', isGreaterThanOrEqualTo: 2000, isLessThan: 3000)
+                                            .collection('students')
+                                            .orderBy('exp', descending: true)
+                                            .where('exp', isGreaterThanOrEqualTo: 2000, isLessThan: 3000)
                                             .snapshots(),
                                         imageLocation: 'ruby')
                                   ));
@@ -130,9 +131,9 @@ class _CategoryState extends State<Category> {
                                     builder: (context) => LevelTemplate(
                                         titleForDisplay: "Platinum Speaker",
                                         streamList: _firestore
-                                            .collection('points')
-                                            .orderBy('point', descending: true)
-                                            .where('point', isGreaterThanOrEqualTo: 1500, isLessThan: 2000)
+                                            .collection('students')
+                                            .orderBy('exp', descending: true)
+                                            .where('exp', isGreaterThanOrEqualTo: 1500, isLessThan: 2000)
                                             .snapshots(),
                                         imageLocation: 'platinum'),
                                   ));
@@ -144,9 +145,9 @@ class _CategoryState extends State<Category> {
                                     builder: (context) => LevelTemplate(
                                         titleForDisplay: "Gold Speaker",
                                         streamList: _firestore
-                                            .collection('points')
-                                            .orderBy('point', descending: true)
-                                            .where('point', isGreaterThanOrEqualTo: 1000, isLessThan: 1500)
+                                            .collection('students')
+                                            .orderBy('exp', descending: true)
+                                            .where('exp', isGreaterThanOrEqualTo: 1000, isLessThan: 1500)
                                             .snapshots(),
                                         imageLocation: 'gold')
                                   ));
@@ -158,9 +159,9 @@ class _CategoryState extends State<Category> {
                                     builder: (context) => LevelTemplate(
                                         titleForDisplay: "Silver Speaker",
                                         streamList: _firestore
-                                            .collection('points')
-                                            .orderBy('point', descending: true)
-                                            .where('point', isGreaterThanOrEqualTo: 500, isLessThan: 1000)
+                                            .collection('students')
+                                            .orderBy('exp', descending: true)
+                                            .where('exp', isGreaterThanOrEqualTo: 500, isLessThan: 1000)
                                             .snapshots(),
                                         imageLocation: 'silver')
                                   ));
@@ -172,9 +173,9 @@ class _CategoryState extends State<Category> {
                                     builder: (context) => LevelTemplate(
                                         titleForDisplay: "Bronze Speaker",
                                         streamList: _firestore
-                                            .collection('points')
-                                            .orderBy('point', descending: true)
-                                            .where('point', isLessThan: 500)
+                                            .collection('students')
+                                            .orderBy('exp', descending: true)
+                                            .where('exp', isLessThan: 500)
                                             .snapshots(),
                                         imageLocation: 'bronze')
                                   ));

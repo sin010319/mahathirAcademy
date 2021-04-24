@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/components/reusable_card.dart';
-import 'file:///D:/Documents/iCube%20Tech%20Consulting%20Project%202.0/git_mahathir_academy/lib/template/select_class_template.dart';
+import 'package:mahathir_academy_app/template/select_class_template.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/components/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
