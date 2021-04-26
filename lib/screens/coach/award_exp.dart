@@ -5,11 +5,17 @@ import 'package:mahathir_academy_app/constants.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:mahathir_academy_app/models/student.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'award_exp_bottomSheet.dart';
+
 
 double _width;
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
+List <bool> state = [];
+bool isChanged = false;
+
+List <Student> tickedStudents = [];
 
 class AwardExp extends StatefulWidget {
   static const String id = '/award_exp';
@@ -29,22 +35,27 @@ class AwardExp extends StatefulWidget {
 class _AwardExpState extends State<AwardExp> {
   List<TextEditingController> _controllers = new List();
   bool isChecked = false;
-  List <bool> state = [];
-  List <Student> tickedStudents = [];
 
-  String awardExpMessage =
-      'Are you sure you want to award the allocated EXP to the student?';
+  String alertMessage =
+      'Please select minimum of one student before awarding EXP.';
   String acknowledgementMessage =
       'Are you sure you want to acknowledge the selected student?';
 
   @override
   void initState() {
+    tickedStudents = [];
     widget.retrievedStudents = callStuFunc();
+    isChanged = true;
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    _width = MediaQuery.of(context).size.width;
+    // widget.retrievedStudents = callStuFunc();
+    _width = MediaQuery
+        .of(context)
+        .size
+        .width;
     return Scaffold(
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_home,
@@ -73,9 +84,12 @@ class _AwardExpState extends State<AwardExp> {
                 child: Icon(FontAwesomeIcons.award, color: Colors.white),
                 backgroundColor: Color(0xFFC61F00),
                 onTap: () {
-                  setState(() {
-                    popUpDialog(awardExpMessage, context);
-                  });
+                  if (tickedStudents.length != 0) {
+                    showModal();
+                  }
+                  else {
+                    popUpAlert(alertMessage, context);
+                  }
                 },
                 label: 'Award EXP',
                 labelStyle: TextStyle(
@@ -146,100 +160,8 @@ class _AwardExpState extends State<AwardExp> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    FutureBuilder(
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        return ListView.builder(
-            shrinkWrap: true,
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              return IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: Checkbox(
-                        // When this checkboxState value changes, it is going to trigger this callback and pass in the latest state of checkbox
-                        activeColor: Colors
-                            .orangeAccent,
-                        // color of tick
-                        value : state[index],
-                        // if true, checked; else unchecked
-                        // once the user clicks on the checkbox, swap the state
-                        onChanged: (bool newValue) {
-                          setState(() {
-                            state[index] = !state[index];
-                            Student studentObj = snapshot.data[index];
-                            if (state[index] && !tickedStudents.contains(studentObj)) {
-                              tickedStudents.add(studentObj);
-                            }
-                            else if(!state[index]){
-                              tickedStudents.remove(studentObj);
-                            }
-                          });
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      flex: 7,
-                      child: Container(
-                        height: 70.0,
-                        child: Card(
-                          child: Center(
-                            child: ListTile(
-                              title: Text(
-                                snapshot.data[index].studentName,
-                                style: kListItemsTextStyle,
-                              ),
-                              subtitle: Text(
-                                  "Points: " +
-                                      snapshot.data[index].exp.toString(),
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 13)),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        mainAxisAlignment:
-                        MainAxisAlignment.start,
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Card(
-                            child: TextFormField(
-                              style: kExpTextStyle,
-                              keyboardType:
-                              TextInputType.number,
-                              inputFormatters: <
-                                  TextInputFormatter>[
-                                FilteringTextInputFormatter
-                                    .allow(RegExp(r'[0-9]')),
-                              ],
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            });
-      } else {
-        print('error3');
-        return Center(child: CircularProgressIndicator());
-      }
-    },
-                      future: widget.retrievedStudents),
+                      returnFutureBuilder()
+                    // future: widget.retrievedStudents),
                   ]),
                 )),
           )
@@ -249,6 +171,7 @@ class _AwardExpState extends State<AwardExp> {
   Future<List<Student>> studentData() async {
     var selectedClassId;
     List<Student> studentList = [];
+
 
     await _firestore
         .collection('classes')
@@ -279,110 +202,259 @@ class _AwardExpState extends State<AwardExp> {
     return studentList;
   }
 
-  callStuFunc() async {
+  Future callStuFunc() async {
     return await studentData();
   }
 
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
-
-  Future update(List<int> cartNumbers) async {
-    WriteBatch batch = FirebaseFirestore.instance.batch();
-
-    _firestore.collection("students").get().then((querySnapshot) {
-      querySnapshot.docs.forEach((document) {
-        try {
-          // Only if DocumentID has only numbers
-          if (cartNumbers.contains(int.parse(document.id))) {
-            batch.update(document.reference,
-                {"quantity": document.data()["quantity"] - 1});
-          }
-        } on FormatException catch (error) {
-
-          // If a document ID is unparsable. Example "lRt931gu83iukSSLwyei" is unparsable.
-          print("The document ${error.source} could not be parsed.");
-          return null;
-        }
-      });
-      return batch.commit();
-    });
+  void showModal() {
+    Future<void> future = showModalBottomSheet(
+        context: context,
+        // builder here needs a method to return widget
+        builder: awardExpBottomSheet,
+        isScrollControlled:
+        true // enable the modal take up the full screen
+    );
+    future.then((void value) => closeModal(value));
   }
-}
 
-popUpDialog(String message, BuildContext context) {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Center(
-          child: AlertDialog(
-            content: Stack(
-              overflow: Overflow.visible,
-              children: <Widget>[
-                Positioned(
-                  right: -40.0,
-                  top: -40.0,
-                  child: InkResponse(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: CircleAvatar(
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context, rootNavigator: true).pop();
+  FutureBuilder<dynamic> closeModal(void value) {
+    print('modal closed');
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => super.widget));
+  }
+
+  FutureBuilder<dynamic> returnFutureBuilder(){
+    return FutureBuilder(
+      future: widget.retrievedStudents,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+          print('error3');
+          return Center(child: CircularProgressIndicator());
+        }
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment
+                        .center,
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: Checkbox(
+                          // When this checkboxState value changes, it is going to trigger this callback and pass in the latest state of checkbox
+                          activeColor: Colors
+                              .orangeAccent,
+                          // color of tick
+                          value: state[index],
+                          // if true, checked; else unchecked
+                          // once the user clicks on the checkbox, swap the state
+                          onChanged: (bool newValue) {
+                            setState(() {
+                              state[index] = !state[index];
+                              Student studentObj = snapshot
+                                  .data[index];
+                              if (state[index] &&
+                                  !tickedStudents.contains(
+                                      studentObj)) {
+                                tickedStudents.add(studentObj);
+                              }
+                              else if (!state[index]) {
+                                tickedStudents.remove(
+                                    studentObj);
+                              }
+                            });
                           },
-                          child: Icon(Icons.close)),
-                      backgroundColor: Colors.red,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 7,
+                        child: Container(
+                          height: 70.0,
+                          child: Card(
+                            child: Center(
+                              child: ListTile(
+                                title: Text(
+                                  snapshot.data[index]
+                                      .studentName,
+                                  style: kListItemsTextStyle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          mainAxisAlignment:
+                          MainAxisAlignment.start,
+                          crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Card(
+                              child: TextFormField(
+                                initialValue:
+                                snapshot.data[index].exp
+                                    .toString(),
+                                style: kExpTextStyle,
+                                enabled: false,
+                                //Not clickable and not editable
+                                readOnly: true,
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              });
+      },);
+  }
+
+  Widget awardExpBottomSheet(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        padding:
+        EdgeInsets.only(bottom: MediaQuery
+            .of(context)
+            .viewInsets
+            .bottom),
+        // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
+        child: AwardExpBottomSheet(tickedStudents: tickedStudents),
+      ),
+    );
+  }
+
+  popUpAlert(String message, BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: AlertDialog(
+              content: Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  Positioned(
+                    right: -40.0,
+                    top: -40.0,
+                    child: InkResponse(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: CircleAvatar(
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context, rootNavigator: true).pop();
+                            },
+                            child: Icon(Icons.close)),
+                        backgroundColor: Colors.red,
+                      ),
                     ),
                   ),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(message),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        button('Yes', context),
-                        button('No', context),
-                      ],
-                    )
-                  ],
-                ),
-              ],
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(message),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
+          );
+        });
+  }
+
+  popUpDialog(String message, BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: AlertDialog(
+              content: Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  Positioned(
+                    right: -40.0,
+                    top: -40.0,
+                    child: InkResponse(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: CircleAvatar(
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context, rootNavigator: true).pop();
+                            },
+                            child: Icon(Icons.close)),
+                        backgroundColor: Colors.red,
+                      ),
+                    ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(message),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          button('Yes', context),
+                          button('No', context),
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Widget button(String text, BuildContext context) {
+    double _width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    return RaisedButton(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      onPressed: () {
+        if (text == 'Yes') {
+          // do something
+        } else if (text == 'No') {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+      },
+      textColor: Colors.white,
+      padding: EdgeInsets.all(0.0),
+      child: Container(
+        alignment: Alignment.center,
+        width: _width / 5,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          gradient: LinearGradient(
+            colors: <Color>[Colors.orange[200], Colors.pinkAccent],
           ),
-        );
-      });
-}
-
-Widget button(String text, BuildContext context) {
-  double _width = MediaQuery.of(context).size.width;
-
-  return RaisedButton(
-    elevation: 0,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-    onPressed: () {
-      if (text == 'Yes') {
-        // do something
-      } else if (text == 'No') {
-        Navigator.of(context, rootNavigator: true).pop();
-      }
-    },
-    textColor: Colors.white,
-    padding: EdgeInsets.all(0.0),
-    child: Container(
-      alignment: Alignment.center,
-      width: _width / 5,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        gradient: LinearGradient(
-          colors: <Color>[Colors.orange[200], Colors.pinkAccent],
         ),
+        padding: const EdgeInsets.all(12.0),
+        child: Text(text, style: TextStyle(fontSize: 15)),
       ),
-      padding: const EdgeInsets.all(12.0),
-      child: Text(text, style: TextStyle(fontSize: 15)),
-    ),
-  );
+    );
+  }
 }

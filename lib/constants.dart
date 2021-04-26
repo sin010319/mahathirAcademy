@@ -27,7 +27,7 @@ const kCoachStudentLabelTextStyle = TextStyle(
 );
 
 const kExpTextStyle = TextStyle(
-  fontSize: 20.0,
+  fontSize: 18.0,
     fontWeight: FontWeight.bold,
   color: Colors.redAccent
 );
@@ -40,4 +40,10 @@ const kTitleTextStyle = TextStyle(
     color: Color(0xFF8A1501),
     fontWeight: FontWeight.w700,
     fontSize: 23.0
+);
+
+const kSubtitleTextStyle = TextStyle(
+    color: Color(0xFF8A1501),
+    fontWeight: FontWeight.w600,
+    fontSize: 20.0
 );
