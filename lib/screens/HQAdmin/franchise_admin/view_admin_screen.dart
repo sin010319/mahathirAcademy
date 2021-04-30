@@ -2,12 +2,22 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mahathir_academy_app/models/admin.dart';
+import 'package:mahathir_academy_app/models/franchise.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/view_coaches_students.dart';
 import 'package:mahathir_academy_app/screens/leaderboard.dart';
 import 'package:mahathir_academy_app/template/select_view_template.dart';
+import 'package:mahathir_academy_app/template/select_view_template_fixed.dart';
 import 'edit_admin_bottomSheet.dart';
 import 'add_admin_bottomSheet.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+// for storing data into cloud firebase
+final _firestore = FirebaseFirestore.instance;
+final _auth = FirebaseAuth.instance;
+String documentId;
 
 class ViewAdminScreen extends StatefulWidget {
   static const String id = '/addAdmin';
@@ -15,22 +25,38 @@ class ViewAdminScreen extends StatefulWidget {
   String franchiseLocation = 'Location1';
   String franchiseAdmin = 'admin1';
   Map<String, String> adminInfo = {
-    'Name': 'admin1',
-    'Email': 'admin1@gmail.com',
-    'Contact Number': '01x-xxx xxxx'
+    'Name': '',
+    'Email': '',
+    'Contact Number': ''
   };
+
+  Franchise franchiseInfo;
+
+  ViewAdminScreen({this.franchiseInfo});
 
   @override
   _ViewAdminScreenState createState() => _ViewAdminScreenState();
+
+  Future retrievedFranchiseAdmin;
 }
 
 class _ViewAdminScreenState extends State<ViewAdminScreen> {
+
+  @override
+  void initState() {
+    documentId = widget.franchiseInfo.franchiseAdminId;
+    print(documentId);
+    widget.retrievedFranchiseAdmin = callFunc();
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
     String adminAppBarTitle = 'Franchise Admin';
     String adminImageIconLocation = 'assets/icons/admin.png';
-    String adminContentTitle = '${widget.franchiseName} \n${widget.franchiseLocation}';
+    String adminContentTitle = '${widget.franchiseInfo.franchiseName} \n${widget.franchiseInfo.franchiseLocation}';
     int adminInfoItemLength = widget.adminInfo.length;
 
     return Scaffold(
@@ -97,22 +123,59 @@ class _ViewAdminScreenState extends State<ViewAdminScreen> {
               labelBackgroundColor: Color(0xFFFF3700)),
         ],
       ),
-      body: SelectViewTemplate(
+      body: SelectViewTemplateFixed(
       appBarTitle: adminAppBarTitle,
       imageIconLocation: adminImageIconLocation,
       contentTitle: adminContentTitle,
-    itemLength: adminInfoItemLength,
-    myItemBuilder: (context, index) {
-      String key = widget.adminInfo.keys.elementAt(index);
-      return Card(
-        child: Center(
-            child: ListTile(
-              title: Text(key),
-              subtitle: Text('${widget.adminInfo[key]}'),)),
-      );
-    }
-    )
-    );
+    myFutureBuilder: FutureBuilder(
+        future: widget.retrievedFranchiseAdmin,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+            print('error3');
+            return Center(child: CircularProgressIndicator());
+          }
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: adminInfoItemLength,
+              itemBuilder: (context, index) {
+                String key = widget.adminInfo.keys.elementAt(index);
+                return Card(
+                  child: Center(
+                      child: ListTile(
+                        title: Text(key),
+                        subtitle: Text('${widget.adminInfo[key]}'),)),
+                );
+              });
+        })
+      ));}
+
+  Future<void> AdminData() async {
+    String franchiseId = widget.franchiseInfo.franchiseId;
+    String franchiseName = widget.franchiseInfo.franchiseName;
+    String franchiseLocation = widget.franchiseInfo.franchiseLocation;
+    String adminId = widget.franchiseInfo.franchiseAdminId;
+    List<Admin> adminList = [];
+    String adminEmail;
+    String contactNum;
+    String adminName;
+
+    await _firestore.collection('franchiseAdmins')
+        .doc(documentId)
+        .get()
+        .then((value) {
+    Map<String, dynamic> data = value.data();
+    adminEmail = data['adminEmail'];
+    contactNum = data['contactNum'];
+    adminName = data['franchiseAdminName'];
+    });
+
+    widget.adminInfo['Name'] = adminName;
+    widget.adminInfo['Email'] = adminEmail;
+    widget.adminInfo['Contact Number'] = contactNum;
+  }
+
+  Future callFunc() async {
+    return await AdminData();
   }
 }
 

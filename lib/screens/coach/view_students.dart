@@ -4,7 +4,9 @@ import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_scr
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_profile.dart';
 import 'package:mahathir_academy_app/screens/student/student_profile.dart';
+import 'package:mahathir_academy_app/screens/student/student_profile_specific.dart';
 import 'package:mahathir_academy_app/template/select_student_template.dart';
+import 'package:mahathir_academy_app/template/select_student_template_fixed.dart';
 import 'package:mahathir_academy_app/template/select_view_template.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mahathir_academy_app/models/student.dart';
@@ -40,39 +42,59 @@ class _ViewStudentsState extends State<ViewStudents> {
   Widget build(BuildContext context) {
 
     return SelectStudentTemplate(
-        studentContentTitle: widget.contentTitle,
-      studentItemBuilder: (context, index) {
-      return FutureBuilder(
-          builder: (context, snapshot){
-        if (snapshot.hasData) {
-          return Card(
-            child: Center(
-              child: ListTile(
-                title: Text(snapshot.data[index].studentName,
-                    style: kListItemsTextStyle),
-                trailing: Wrap(
-                  spacing: 8,
-                  children: [
-                    Container(
-                        child: Text(snapshot.data[index].exp.toString(),
-                            style: kExpTextStyle)
+        studentContentTitleBuilder: FutureBuilder(
+            future: widget.retrievedStudents,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+                print('error3');
+                return Container();
+              }
+              return Text(
+                '${widget.contentTitle}\n${snapshot.data.length} Students',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18.0),
+              );}),
+      myFutureBuilder: FutureBuilder(
+          future: widget.retrievedStudents,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+              print('error3');
+              return Center(child: CircularProgressIndicator());
+            }
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: Center(
+                        child: ListTile(
+                    title: Text(snapshot.data[index].studentName,
+                        style: kListItemsTextStyle),
+                    trailing: Wrap(
+                      spacing: 8,
+                      children: [
+                        Container(
+                            child: Text(snapshot.data[index].exp.toString(),
+                                style: kExpTextStyle)
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, StudentProfile.id);
-                },
-              ),
-            ),
-          );
-        }
-        else {
-          print('has error');
-          return Center(child: CircularProgressIndicator());
-        }
-      },
-        future: widget.retrievedStudents);
-      }
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SpecificStudentProfile(
+                        studentId: snapshot.data[index].studentId,
+                          )
+                      ));
+                    },
+                  )
+                    ),
+                  );
+                });
+          })
     );
   }
 
@@ -97,10 +119,9 @@ class _ViewStudentsState extends State<ViewStudents> {
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
           String name = doc['studentName'];
+          String studentId = doc['studentId'];
           int exp = doc['exp'];
-          print(name);
-          print(exp);
-          var student = Student(name, exp);
+          var student = Student(name, studentId, exp);
           print(studentList);
           studentList.add(student);
       });

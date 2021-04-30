@@ -12,11 +12,10 @@ class SelectViewTemplate extends StatefulWidget {
   FloatingActionButton fab;
   String appBarTitle;
   String imageIconLocation;
-  String contentTitle;
-  int itemLength;
-  Function myItemBuilder;
+  FutureBuilder contentTitleBuilder;
+  FutureBuilder myFutureBuilder;
 
-  SelectViewTemplate({this.fab, this.appBarTitle, this.imageIconLocation, this.contentTitle, this.itemLength, this.myItemBuilder});
+  SelectViewTemplate({this.fab, this.appBarTitle, this.imageIconLocation, this.contentTitleBuilder, this.myFutureBuilder});
 
   static const String id = '/SelectViewTemplate';
 
@@ -48,14 +47,7 @@ class _SelectViewTemplateState extends State<SelectViewTemplate> {
                   SizedBox(
                     height: 10.0,
                   ),
-                  Text(
-                    widget.contentTitle,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 18.0
-                    ),
-                  ),
+                  widget.contentTitleBuilder
                 ],
               ),
             ),
@@ -73,11 +65,7 @@ class _SelectViewTemplateState extends State<SelectViewTemplate> {
                       child: Column(
                           children: [
                             SizedBox(height: 10.0,),
-                            ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: widget.itemLength,
-                                itemBuilder: widget.myItemBuilder
-                            )
+                            widget.myFutureBuilder
                           ]
                       )
                   )
@@ -87,6 +75,4 @@ class _SelectViewTemplateState extends State<SelectViewTemplate> {
     );
   }
 }
-
-
 

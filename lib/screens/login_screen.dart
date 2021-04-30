@@ -34,73 +34,76 @@ class _LoginScreenState extends State<LoginScreen> {
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: ModalProgressHUD(
-        inAsyncCall: showSpinner,
-        child: Container(
-          height: _height,
-          width: _width,
-          padding: EdgeInsets.only(bottom: 5),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                image(),
-                welcomeText(),
-                loginText(),
-                Container(
-                    margin: EdgeInsets.only(
-                        left: _width / 12.0,
-                        right: _width / 12.0,
-                        top: _height / 15.0),
-                    child: Column(children: <Widget> [
-                      emailBox(),
-                      SizedBox(height: _height / 40.0),
-                      passwordBox(),])
-                ),
-                SizedBox(height: _height / 12),
-                Column(
-                  children: [
-                    Text('Sign in as:'),
-                    SizedBox(height: 10,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CoachButton(),
-                        SizedBox(width: 20),
-                        StudentButton(),
-                      ],
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 10),
-                RichText(
-                  text: TextSpan(
-                      style: TextStyle(
-                          fontSize: 13
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(text: 'Are you an admin? ',
-                            style: TextStyle(
-                                color: Colors.black
-                            )),
-                        TextSpan(
-                            text: 'Click here.',
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.redAccent,
-                                decoration: TextDecoration.underline
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () => Navigator.pushNamed(context, AdminLoginScreen.id)
-                        )
-                      ]
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Login'),
+        ),
+        body: ModalProgressHUD(
+          inAsyncCall: showSpinner,
+          child: Container(
+            height: _height,
+            width: _width,
+            padding: EdgeInsets.only(bottom: 5),
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  image(),
+                  welcomeText(),
+                  loginText(),
+                  Container(
+                      margin: EdgeInsets.only(
+                          left: _width / 12.0,
+                          right: _width / 12.0,
+                          top: _height / 15.0),
+                      child: Column(children: <Widget> [
+                        emailBox(),
+                        SizedBox(height: _height / 40.0),
+                        passwordBox(),])
                   ),
-                )
-              ],
+                  SizedBox(height: _height / 12),
+                  Column(
+                    children: [
+                      Text('Sign in as:'),
+                      SizedBox(height: 10,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CoachButton(),
+                          SizedBox(width: 20),
+                          StudentButton(),
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 10),
+                  RichText(
+                    text: TextSpan(
+                        style: TextStyle(
+                            fontSize: 13
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(text: 'Are you an admin? ',
+                              style: TextStyle(
+                                  color: Colors.black
+                              )),
+                          TextSpan(
+                              text: 'Click here.',
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.redAccent,
+                                  decoration: TextDecoration.underline
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => Navigator.pushNamed(context, AdminLoginScreen.id)
+                          )
+                        ]
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

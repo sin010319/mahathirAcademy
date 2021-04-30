@@ -10,15 +10,17 @@ String identifier;
 
 class SelectStudentTemplate extends StatefulWidget {
 
-  Function studentItemBuilder;
-  String studentContentTitle;
+  // Function studentItemBuilder;
+  FutureBuilder studentContentTitleBuilder;
+  // int studentItemLength;
+  FutureBuilder myFutureBuilder;
 
-  SelectStudentTemplate({this.studentContentTitle, this.studentItemBuilder});
+  SelectStudentTemplate({this.studentContentTitleBuilder, this.myFutureBuilder});
 
   static const String id = '/selectStudentTemplate';
-  String coach = 'Coach1';
-  List<String> students = ['Student1', 'Student2'];
-  List<int> exp = [230, 40, 100];
+  // String coach = 'Coach1';
+  // List<String> students = ['Student1', 'Student2'];
+  // List<int> exp = [230, 40, 100];
 
   @override
   _SelectStudentTemplateState createState() => _SelectStudentTemplateState();
@@ -30,15 +32,14 @@ class _SelectStudentTemplateState extends State<SelectStudentTemplate> {
 
     String studentAppBarTitle = 'View Students';
     String studentImageIconLocation = 'assets/icons/students.png';
-    int studentItemLength = widget.students.length;
+    // int studentItemLength = widget.students.length;
 
     return SelectViewTemplate(
       fab: null,
       appBarTitle: studentAppBarTitle,
       imageIconLocation: studentImageIconLocation,
-      contentTitle: widget.studentContentTitle,
-      itemLength: studentItemLength,
-      myItemBuilder: widget.studentItemBuilder
+      contentTitleBuilder: widget.studentContentTitleBuilder,
+      myFutureBuilder: widget.myFutureBuilder,
       );
   }
 }

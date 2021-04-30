@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mahathir_academy_app/models/class.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/view_coaches_students.dart';
 import 'package:mahathir_academy_app/screens/leaderboard.dart';
 import 'package:mahathir_academy_app/template/select_class_template.dart';
 import 'edit_class_bottomSheet.dart';
 import 'add_class_bottomSheet.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+// for storing data into cloud firebase
+final _firestore = FirebaseFirestore.instance;
+final _auth = FirebaseAuth.instance;
+String targetAdminId;
 
 class ViewClassScreen extends StatefulWidget {
   static const String id = '/addClass';
@@ -12,72 +20,142 @@ class ViewClassScreen extends StatefulWidget {
 
   @override
   _ViewClassScreenState createState() => _ViewClassScreenState();
+
+  Future retrievedClassNames;
 }
 
 class _ViewClassScreenState extends State<ViewClassScreen> {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    targetAdminId = _auth.currentUser.uid;
+    widget.retrievedClassNames = callFunc();
+    super.initState();
+  }
 
-    int classItemLength = widget.classes.length;
-    String classContentTitle = 'Franchise1 \n$classItemLength Classes: ';
+  @override
+  Widget build(BuildContext context) {
 
     return SelectClassTemplate(
         myFab: FloatingActionButton(
-        onPressed: () {
-      showModalBottomSheet(
-          context: context,
-          // builder here needs a method to return widget
-          builder: addClassBuildBottomSheet,
-          isScrollControlled:
-          true // enable the modal take up the full screen
-      );
-    },
-    backgroundColor: Color(0xFF8A1501),
-    child: Icon(Icons.add),
+          onPressed: () {
+            showModalBottomSheet(
+                context: context,
+                // builder here needs a method to return widget
+                builder: addClassBuildBottomSheet,
+                isScrollControlled:
+                    true // enable the modal take up the full screen
+                );
+          },
+          backgroundColor: Color(0xFF8A1501),
+          child: Icon(Icons.add),
         ),
-        textForDisplay: classContentTitle,
-        classItemBuilder: (context, index) {
-          return Card(
-            child: Center(
-                child: ListTile(
-                    title: Text(widget.classes[index]),
-                    trailing: Wrap(
-                      spacing: 8,
-                      children: [
-                        GestureDetector(
-                          child: Icon(
-                            Icons.edit,
-                            color: Color(0xFF8A1501),
-                          ),
-                          onTap: () {
-                            showModalBottomSheet(
-                                context: context,
-                                // builder here needs a method to return widget
-                                builder:
-                                editClassBuildBottomSheet,
-                                isScrollControlled:
-                                true // enable the modal take up the full screen
-                            );
-                          },
-                        ),
-                        GestureDetector(
-                          child: Icon(
-                            Icons.delete,
-                            color: Color(0xFF8A1501),
-                          ),
-                          onTap: () {
-                            deleteDialog(context,
-                                widget.classes[index]);
-                          },
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, ViewCoachStudent.id);
-                    })),
-          );
+        classContentTitle: FutureBuilder(
+            future: widget.retrievedClassNames,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
+                print('error3');
+                return Container();
+              }
+              return Text(
+                '${snapshot.data.length} classes',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18.0),
+              );
+            }),
+        classItemBuilder: FutureBuilder(
+            future: widget.retrievedClassNames,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
+                print('error3');
+                return Center(child: CircularProgressIndicator());
+              }
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: Center(
+                          child: ListTile(
+                              title: Text(snapshot.data[index].className),
+                              trailing: Wrap(
+                                spacing: 8,
+                                children: [
+                                  GestureDetector(
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Color(0xFF8A1501),
+                                    ),
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          // builder here needs a method to return widget
+                                          builder: editClassBuildBottomSheet,
+                                          isScrollControlled:
+                                              true // enable the modal take up the full screen
+                                          );
+                                    },
+                                  ),
+                                  GestureDetector(
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Color(0xFF8A1501),
+                                    ),
+                                    onTap: () {
+                                      deleteDialog(context,
+                                          snapshot.data[index].className);
+                                    },
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ViewCoachStudent(
+                                          classId: snapshot.data[index].classId),
+                                    ));
+                              })),
+                    );
+                  });
+            }));
+  }
+
+  Future<List<Class>> classData() async {
+    String className;
+    List<Class> classList = [];
+    List<dynamic> classIds = [];
+
+    await _firestore
+        .collection('franchiseAdmins')
+        .doc(targetAdminId)
+        .get()
+        .then((value) {
+      Map<String, dynamic> data = value.data();
+      classIds = data['classIds'];
+    });
+
+    for (int i = 0; i < classIds.length; i++) {
+      await _firestore
+          .collection('classes')
+          .where('classId', isEqualTo: classIds[i])
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          className = doc['className'];
+          Class newClass = Class(className, classIds[i]);
+          classList.add(newClass);
         });
+      });
+    }
+    return classList;
+  }
+
+  Future callFunc() async {
+    return await classData();
   }
 }
 

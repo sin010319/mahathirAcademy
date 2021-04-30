@@ -288,10 +288,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   Future<void> franchiseAdminSignIn() async {
     try{
       final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      if (_email.contains("franchise") == false) {
+      if (_email.contains("admin") == false) {
         showAlertDialog(context);
       }
-      if (user != null && _email.contains("franchise")){
+      if (user != null && _email.contains("admin")){
         Navigator.pushNamed(context, franchiseAdminNavigation.id);
         setState((){showSpinner = false;});
       }
@@ -305,10 +305,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   Future<void> HQAdminSignIn() async {
     try{
       final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      if (_email.contains("admin") == false) {
+      if (_email.contains("hqadmin") == false) {
         showAlertDialog(context);
       }
-      if (user != null && _email.contains("admin")){
+      if (user != null && _email.contains("hqadmin")){
         Navigator.pushNamed(context, HQAdminNavigation.id);
         setState((){showSpinner = false;});
       }

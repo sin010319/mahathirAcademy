@@ -10,10 +10,10 @@ import 'package:mahathir_academy_app/template/select_view_template.dart';
 class SelectFranchiseTemplate extends StatefulWidget {
 
   FloatingActionButton franchiseFab;
-  Function franchiseItemBuilder;
-  String contentTitle;
+  FutureBuilder franchiseItemBuilder;
+  FutureBuilder franchiseContentTitle;
 
-  SelectFranchiseTemplate({this.franchiseFab, this.contentTitle, this.franchiseItemBuilder});
+  SelectFranchiseTemplate({this.franchiseFab, this.franchiseContentTitle, this.franchiseItemBuilder});
 
   static const String id = '/selectFranchiseTemplate';
   List<String> franchises = ['Franchise1', 'Franchise2', 'Franchise3'];
@@ -29,16 +29,13 @@ class _SelectFranchiseTemplateState extends State<SelectFranchiseTemplate> {
 
     String franchiseAppBarTitle = 'Select Franchise';
     String franchiseImageIconLocation = 'assets/icons/franchise.png';
-    int franchiseItemLength = widget.franchises.length;
-    String franchiseContentTitle = widget.contentTitle;
 
     return SelectViewTemplate(
       fab: widget.franchiseFab,
       appBarTitle: franchiseAppBarTitle,
       imageIconLocation: franchiseImageIconLocation,
-      contentTitle: franchiseContentTitle,
-      itemLength: franchiseItemLength,
-      myItemBuilder: widget.franchiseItemBuilder,
+      contentTitleBuilder: widget.franchiseContentTitle,
+      myFutureBuilder: widget.franchiseItemBuilder,
     );
   }
 }

@@ -136,13 +136,20 @@ class _AwardExpState extends State<AwardExp> {
                 SizedBox(
                   height: 10.0,
                 ),
-                Text(
-                  widget.contentTitle,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18.0),
-                ),
+                FutureBuilder(
+                    future: widget.retrievedStudents,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+                        print('error3');
+                        return Container();
+                      }
+                      return Text(
+                        '${widget.contentTitle}\n${snapshot.data.length} Students',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18.0),
+                      );}),
               ],
             ),
           ),
@@ -172,7 +179,6 @@ class _AwardExpState extends State<AwardExp> {
     var selectedClassId;
     List<Student> studentList = [];
 
-
     await _firestore
         .collection('classes')
         .where('className', isEqualTo: widget.contentTitle)
@@ -182,6 +188,7 @@ class _AwardExpState extends State<AwardExp> {
         selectedClassId = doc['classId'];
       });
     });
+    print(selectedClassId);
 
     await _firestore
         .collection('students')
@@ -190,14 +197,13 @@ class _AwardExpState extends State<AwardExp> {
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         String name = doc['studentName'];
+        String studentId = doc['studentId'];
         int exp = doc['exp'];
-        print(name);
-        print(exp);
-        var student = Student(name, exp);
-        print(studentList);
+        var student = Student(name, studentId, exp);
         studentList.add(student);
       });
     });
+    print(studentList);
     state = List.filled(studentList.length, false);
     return studentList;
   }

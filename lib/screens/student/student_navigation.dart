@@ -16,70 +16,73 @@ class StudentNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.white, Color(0xFFDB5D38), Color(0xFFDB5D38), Color(0xFFE78466), Colors.white])),
-      child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            title: Text('Home'),
-          ),
-          body: Container(
-            margin: EdgeInsets.only(top: 80.0, bottom: 80.0, right: 25.0, left: 25.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch, // make the items in each row to stretch itself to fit as much space in the screen
-              children: <Widget>[
-                Expanded(
-                  child: ReusableCard(
-                    onPress: () {
-                      Navigator.pushNamed(context, Category.id);
-                    },
-                    colour: Colors.white,
-                    cardChild: IconContent(
-                      icon: FontAwesomeIcons.trophy,
-                      label: 'STUDENT RANKING',
+    return new WillPopScope(
+      onWillPop: () async => false,
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.white, Color(0xFFDB5D38), Color(0xFFDB5D38), Color(0xFFE78466), Colors.white])),
+        child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              title: Text('Home'),
+            ),
+            body: Container(
+              margin: EdgeInsets.only(top: 80.0, bottom: 80.0, right: 25.0, left: 25.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch, // make the items in each row to stretch itself to fit as much space in the screen
+                children: <Widget>[
+                  Expanded(
+                    child: ReusableCard(
+                      onPress: () {
+                        Navigator.pushNamed(context, Category.id);
+                      },
+                      colour: Colors.white,
+                      cardChild: IconContent(
+                        icon: FontAwesomeIcons.trophy,
+                        label: 'STUDENT RANKING',
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: ReusableCard(
-                          onPress: () {
-                            Navigator.pushNamed(context, StudentProfile.id);
-                          },
-                          colour: Colors.white,
-                          cardChild: IconContent(
-                            icon: FontAwesomeIcons.idCard,
-                            label: 'MY PROFILE',
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: ReusableCard(
+                            onPress: () {
+                              Navigator.pushNamed(context, StudentProfile.id);
+                            },
+                            colour: Colors.white,
+                            cardChild: IconContent(
+                              icon: FontAwesomeIcons.idCard,
+                              label: 'MY PROFILE',
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: ReusableCard(
-                          onPress: () {
-                            Navigator.pushNamed(context, Announcement.id);
-                          },
-                          // USE TERNARY OPERATOR HERE
-                          // CHANGE THE COLOR OF CARD WHEN SWITCHING BETWEEN TAPPING
-                          colour: Colors.white,
-                          cardChild: IconContent(
-                            icon: FontAwesomeIcons.scroll,
-                            label: 'ANNOUNCEMENT',
+                        Expanded(
+                          child: ReusableCard(
+                            onPress: () {
+                              Navigator.pushNamed(context, Announcement.id);
+                            },
+                            // USE TERNARY OPERATOR HERE
+                            // CHANGE THE COLOR OF CARD WHEN SWITCHING BETWEEN TAPPING
+                            colour: Colors.white,
+                            cardChild: IconContent(
+                              icon: FontAwesomeIcons.scroll,
+                              label: 'ANNOUNCEMENT',
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          )
+                ],
+              ),
+            )
 
+        ),
       ),
     );
   }

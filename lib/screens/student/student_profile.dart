@@ -1,9 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/components/profile_menu.dart';
 import 'package:mahathir_academy_app/components/profile_pic.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mahathir_academy_app/models/student.dart';
 
-class StudentProfile extends StatelessWidget {
+// for storing data into cloud firebase
+final _firestore = FirebaseFirestore.instance;
+final _auth = FirebaseAuth.instance;
+String studentName;
+int exp;
+String franchiseLocation;
+String classId;
+String className;
+String documentId;
+String rank;
+
+class StudentProfile extends StatefulWidget {
   static String id = "/studentProfile";
+  Future studentInfo;
+
+  @override
+  _StudentProfileState createState() => _StudentProfileState();
+}
+
+class _StudentProfileState extends State<StudentProfile> {
+
+  @override
+  void initState() {
+    documentId = _auth.currentUser.uid;
+    widget.studentInfo = callStudentFunc();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,42 +41,200 @@ class StudentProfile extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 20),
-          child: Column(
-            children: [
-              ProfilePic(),
-              SizedBox(height: 20),
-              ProfileMenu(
-                text: "Name: Student1",
-                icon: "assets/icons/userIcon.svg",
-                press: () => {},
-              ),
-              ProfileMenu(
-                text: "Location: Location1",
-                icon: "assets/icons/school.svg",
-                press: () {},
-              ),
-              ProfileMenu(
-                text: "Class: Class1",
-                icon: "assets/icons/class.svg",
-                press: () {},
-              ),
-              ProfileMenu(
-                text: "Experience Points: 550",
-                icon: "assets/icons/experiencePoint.svg",
-                press: () {},
-              ),
-              ProfileMenu(
-                text: "Rank: Silver Speaker",
-                icon: "assets/icons/ranking.svg",
-                press: () {},
-              ),
-              ProfileMenu(
-                text: "Log Out",
-                icon: "assets/icons/logOut.svg",
-                press: () {},
-              )
-            ],
-          ),
+          child: FutureBuilder(
+          future: widget.studentInfo,
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        print(snapshot.data);
+        return Column(
+          children: [
+            ProfilePic(),
+            SizedBox(height: 20),
+            ProfileMenu(
+              text: "Name: ${snapshot.data.studentName}",
+              icon: "assets/icons/userIcon.svg",
+              press: () => {},
+            ),
+            ProfileMenu(
+              text: "Franchise Location: ${snapshot.data.franchiseLocation}",
+              icon: "assets/icons/school.svg",
+              press: () {},
+            ),
+            ProfileMenu(
+              text: "Class: ${snapshot.data.className}",
+              icon: "assets/icons/class.svg",
+              press: () {},
+            ),
+            ProfileMenu(
+              text: "Experience Points: ${snapshot.data.exp}",
+              icon: "assets/icons/experiencePoint.svg",
+              press: () {},
+            ),
+            ProfileMenu(
+              text: "Rank: ${snapshot.data.rank}",
+              icon: "assets/icons/ranking.svg",
+              press: () {},
+            ),
+            ProfileMenu(
+              text: "Log Out",
+              icon: "assets/icons/logOut.svg",
+              press: () {
+                popUpDialog(context);
+              },
+            )
+          ],
+        );
+      }
+      else {
+        print('error3');
+        return Center(child: CircularProgressIndicator());
+      }
+    }),
         ));
+  }
+
+
+  popUpDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: AlertDialog(
+              content: Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  Positioned(
+                    right: -40.0,
+                    top: -40.0,
+                    child: InkResponse(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: CircleAvatar(
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context, rootNavigator: true).pop();
+                            },
+                            child: Icon(Icons.close)),
+                        backgroundColor: Colors.red,
+                      ),
+                    ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text('Are you sure you want to log out?'),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          button('Yes', context),
+                          button('No', context),
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Widget button(String text, BuildContext context) {
+    double _width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    return RaisedButton(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      onPressed: () {
+        if (text == 'Yes') {
+          logout();
+        } else if (text == 'No') {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+      },
+      textColor: Colors.white,
+      padding: EdgeInsets.all(0.0),
+      child: Container(
+        alignment: Alignment.center,
+        width: _width / 5,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          gradient: LinearGradient(
+            colors: <Color>[Colors.orange[200], Colors.pinkAccent],
+          ),
+        ),
+        padding: const EdgeInsets.all(12.0),
+        child: Text(text, style: TextStyle(fontSize: 15)),
+      ),
+    );
+  }
+
+  Future<Student> getStudent() async {
+    await _firestore.collection('students')
+        .doc(documentId)
+        .get()
+        .then((value) {
+      Map<String, dynamic> data = value.data();
+      studentName = data['studentName'];
+      exp = data['exp'];
+      franchiseLocation = data['franchiseLocation'];
+      classId = data['classId'];
+    });
+
+    await _firestore.collection('classes')
+        .where('classId', isEqualTo: classId)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        className = doc['className'];
+      });
+    });
+
+    rank = decideRank(exp);
+
+    Student student = Student.fromStudent(studentName, exp, franchiseLocation, className, rank);
+    return student;
+  }
+
+  Future callStudentFunc() async {
+    return await getStudent();
+  }
+
+  String decideRank(int exp) {
+    String retRank = "";
+    if (exp >= 0 && exp < 500){
+      retRank = "Bronze Speaker";
+    }
+    else if (exp >= 500 && exp < 1000){
+      retRank = "Silver Speaker";
+    }
+    else if (exp >= 1000 && exp < 1500){
+      retRank = "Gold Speaker";
+    }
+    else if (exp >= 1500 && exp < 2000){
+      retRank = "Platinum Speaker";
+    }
+    else if (exp >= 2000 && exp < 3000){
+      retRank = "Ruby Speaker";
+    }
+    else if (exp >= 3000 && exp < 4000){
+      retRank = "Diamond Speaker";
+    }
+    else if (exp >= 4000){
+      retRank = "Elite Speaker";
+    }
+    return retRank;
+  }
+
+  logout() async{
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacementNamed('/');
   }
 }

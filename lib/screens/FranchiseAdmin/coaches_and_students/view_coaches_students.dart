@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mahathir_academy_app/models/class.dart';
+import 'package:mahathir_academy_app/models/coach.dart';
+import 'package:mahathir_academy_app/models/facilitator.dart';
+import 'package:mahathir_academy_app/models/student.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
 import 'package:mahathir_academy_app/constants.dart';
+import 'package:mahathir_academy_app/screens/coach/coach_profile_specific.dart';
+import 'package:mahathir_academy_app/screens/student/student_profile_specific.dart';
 import 'amend_exp.dart';
 import '../../student/student_profile.dart';
 import 'add_coach_students_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+// for storing data into cloud firebase
+final _firestore = FirebaseFirestore.instance;
+final _auth = FirebaseAuth.instance;
+List <String> studentNames = [];
+String targetClassId;
+bool hasFaci = true;
 
 String identifier;
 
@@ -17,12 +32,27 @@ class ViewCoachStudent extends StatefulWidget {
   String facilitator = 'Facilitator1';
   List<String> students = ['Student1', 'Student2', 'Student3'];
   List<int> exp = [230, 40, 100];
+  String classId;
+  String className = "";
+
+  ViewCoachStudent({this.classId});
 
   @override
   _ViewCoachStudentState createState() => _ViewCoachStudentState();
+
+  Future retrievedClassData;
 }
 
 class _ViewCoachStudentState extends State<ViewCoachStudent> {
+
+  @override
+  void initState() {
+    targetClassId = widget.classId;
+    widget.retrievedClassData = callFunc();
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,23 +161,20 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
               SizedBox(
                 height: 10.0,
               ),
-              Text(
-                'Franchise1 ',
+        FutureBuilder(
+            future: widget.retrievedClassData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+                print('error3');
+                return Container();
+              }
+              return Text(
+                snapshot.data.className,
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontSize: 18.0),
-              ),
-              SizedBox(
-                height: 5.0,
-              ),
-              Text(
-                'Class1',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18.0),
-              ),
+              );}),
             ],
           ),
         ),
@@ -161,114 +188,242 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
                   topLeft: Radius.circular(20.0),
                   topRight: Radius.circular(20.0))),
           child: SingleChildScrollView(
-            child: Column(children: [
-              Text('Coach', style: kCoachStudentLabelTextStyle),
-              Container(
-                  child: Card(
+            child: returnFutureBuilder(),
+          ),
+        ))
+      ]),
+    );
+  }
+
+  FutureBuilder<dynamic> returnFutureBuilder(){
+    return FutureBuilder(
+      future: widget.retrievedClassData,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+          print('error3');
+          return Center(child: CircularProgressIndicator());
+        }
+        return Column(children: [
+          Text('Coach', style: kCoachStudentLabelTextStyle),
+          Container(
+              child: Card(
                 child: Center(
                   child: ListTile(
-                    title: Text(widget.coach, style: kListItemsTextStyle),
+                    title: Text(snapshot.data.coach.coachName, style: kListItemsTextStyle),
                     trailing: GestureDetector(
                       child: Icon(
                         Icons.delete,
                         color: Color(0xFF8A1501),
                       ),
                       onTap: () {
-                        deleteDialog(context, widget.coach);
+                        deleteDialog(context, snapshot.data.coach.coachName);
                       },
                     ),
                     onTap: () {
-                      Navigator.pushNamed(context, CoachProfile.id);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SpecificCoachProfile(
+                                coachId: snapshot.data.coach.coachId,
+                              )
+                          ));
                     },
                   ),
                 ),
               )),
-              SizedBox(
-                height: 15.0,
-              ),
-              Text('Facilitator', style: kCoachStudentLabelTextStyle),
-              Container(
-                  child: Card(
+          Column(
+            children: returnFaciSection(hasFaci, context, snapshot)
+          ),
+          Container(
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data.studentList.length,
+                itemBuilder: (context, index) {
+                  Student student = snapshot.data.studentList[index];
+                  return Card(
                     child: Center(
                       child: ListTile(
-                        title: Text(widget.facilitator, style: kListItemsTextStyle),
-                        trailing: GestureDetector(
-                          child: Icon(
-                            Icons.delete,
-                            color: Color(0xFF8A1501),
-                          ),
-                          onTap: () {
-                            deleteDialog(context, widget.facilitator);
-                          },
+                        title: Text(student.studentName,
+                            style: kListItemsTextStyle),
+                        trailing: Wrap(
+                          spacing: 8,
+                          children: [
+                            Container(
+                                child: Text(student.exp.toString(),
+                                    style: kExpTextStyle)),
+                            GestureDetector(
+                              child: Icon(
+                                Icons.edit,
+                                color: Color(0xFF8A1501),
+                              ),
+                              onTap: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    // builder here needs a method to return widget
+                                    builder: amendExpBuildBottomSheet,
+                                    isScrollControlled:
+                                    true // enable the modal take up the full screen
+                                );
+                              },
+                            ),
+                            GestureDetector(
+                              child: Icon(
+                                Icons.delete,
+                                color: Color(0xFF8A1501),
+                              ),
+                              onTap: () {
+                                deleteDialog(context, student.studentName);
+                              },
+                            )
+                          ],
                         ),
                         onTap: () {
-                          Navigator.pushNamed(context, CoachProfile.id);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SpecificStudentProfile(
+                                    studentId: student.studentId,
+                                  )
+                              ));
                         },
                       ),
                     ),
-                  )),
-              SizedBox(
-                height: 15.0,
-              ),
-              Text('${widget.students.length} Students',
-                  style: kCoachStudentLabelTextStyle),
-              Container(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: widget.students.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: Center(
-                          child: ListTile(
-                            title: Text(widget.students[index],
-                                style: kListItemsTextStyle),
-                            trailing: Wrap(
-                              spacing: 8,
-                              children: [
-                                Container(
-                                    child: Text(widget.exp[index].toString(),
-                                        style: kExpTextStyle)),
-                                GestureDetector(
-                                  child: Icon(
-                                    Icons.edit,
-                                    color: Color(0xFF8A1501),
-                                  ),
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        // builder here needs a method to return widget
-                                        builder: amendExpBuildBottomSheet,
-                                        isScrollControlled:
-                                            true // enable the modal take up the full screen
-                                        );
-                                  },
-                                ),
-                                GestureDetector(
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Color(0xFF8A1501),
-                                  ),
-                                  onTap: () {
-                                    deleteDialog(context, widget.students[index]);
-                                  },
-                                )
-                              ],
-                            ),
-                            onTap: () {
-                              Navigator.pushNamed(context, StudentProfile.id);
-                            },
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-            ]),
+                  );
+                }),
           ),
-        ))
-      ]),
-    );
+        ]);
+      },);
   }
+
+  Future<Class> classData() async {
+    String franchiseId;
+    String studentName;
+    String coachId;
+    String facilitatorId;
+    List<dynamic> studentIds = [];
+    String coachName;
+    String facilitatorName;
+    Coach coach;
+    Facilitator facilitator;
+    List<Student> studentList = [];
+    String className;
+    int exp;
+
+    await _firestore
+        .collection('classes')
+        .where('classId', isEqualTo: targetClassId)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        print('hey');
+        className = doc['className'];
+        coachId = doc['coachId'];
+        try{
+          facilitatorId = doc['facilitatorId'];
+          hasFaci = true;
+        }
+        catch(Exception){
+          hasFaci = false;
+        }
+        studentIds = doc['studentIds'];
+      });
+    });
+
+    await _firestore
+        .collection('coaches')
+        .where('coachId', isEqualTo: coachId)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        coachName = doc['coachName'];
+        coach = Coach.fromCoach(coachName, coachId);
+      });
+    });
+
+    await _firestore
+        .collection('coaches')
+        .where('coachId', isEqualTo: facilitatorId)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        facilitatorName = doc['coachName'];
+        facilitator = Facilitator.fromFacilitator(facilitatorName, facilitatorId);
+      });
+    });
+
+    for (int i = 0; i < studentIds.length; i++) {
+      await _firestore
+          .collection('students')
+          .where('studentId', isEqualTo: studentIds[i])
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          studentName = doc['studentName'];
+          exp = doc['exp'];
+          Student newStudent = Student(studentName, studentIds[i], exp);
+          studentList.add(newStudent);
+          print('hey');
+        });
+      });
+    }
+    widget.className = className;
+    Class newClass = Class.main(className, targetClassId, coach, facilitator, studentList);
+    return newClass;
+  }
+
+  Future callFunc() async {
+    return await classData();
+  }
+
 }
+dynamic returnFaciSection(bool hasFaci, BuildContext context, AsyncSnapshot snapshot){
+  Widget sizedBox2 = SizedBox(
+    height: 15.0,
+  );
+  Widget studentText = Text('${snapshot.data.studentList.length} Students',
+      style: kCoachStudentLabelTextStyle);
+
+  if (hasFaci) {
+    Widget sizedBox1 = SizedBox(
+      height: 15.0,
+    );
+    Widget text = Text('Facilitator', style: kCoachStudentLabelTextStyle);
+    Widget container = Container(
+        child: Card(
+          child: Center(
+            child: ListTile(
+              title: Text(snapshot.data.facilitator.facilitatorName,
+                  style: kListItemsTextStyle),
+              trailing: GestureDetector(
+                child: Icon(
+                  Icons.delete,
+                  color: Color(0xFF8A1501),
+                ),
+                onTap: () {
+                  deleteDialog(
+                      context, snapshot.data.facilitator.facilitatorName);
+                },
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SpecificCoachProfile(
+                          coachId: snapshot.data.facilitator.facilitatorId,
+                        )
+                    ));
+              },
+            ),
+          ),
+        ));
+    return [sizedBox1, text,container,sizedBox2, studentText];
+}
+  else{
+    return [sizedBox2, studentText];
+  }
+
+}
+
 
 deleteDialog(BuildContext context, String itemRemoved) {
   showDialog(
@@ -403,4 +558,7 @@ Widget amendExpBuildBottomSheet(BuildContext context) {
       child: AmendExpScreen(identifier: identifier),
     ),
   );
+
+
+
 }
