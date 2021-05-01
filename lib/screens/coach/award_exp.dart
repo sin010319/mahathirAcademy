@@ -18,6 +18,8 @@ bool isChanged = false;
 List <Student> tickedStudents = [];
 
 class AwardExp extends StatefulWidget {
+  static bool clear;
+
   static const String id = '/award_exp';
 
   List<String> students = ['Student1', 'Student2', 'Student3'];
@@ -25,6 +27,7 @@ class AwardExp extends StatefulWidget {
   String contentTitle;
 
   AwardExp({this.contentTitle});
+  AwardExp.fromAwardExp();
 
   @override
   _AwardExpState createState() => _AwardExpState();
@@ -213,6 +216,7 @@ class _AwardExpState extends State<AwardExp> {
   }
 
   void showModal() {
+    AwardExp.clear = true;
     Future<void> future = showModalBottomSheet(
         context: context,
         // builder here needs a method to return widget
@@ -224,6 +228,7 @@ class _AwardExpState extends State<AwardExp> {
   }
 
   FutureBuilder<dynamic> closeModal(void value) {
+    AwardExp.clear = false;
     print('modal closed');
       Navigator.pushReplacement(
           context,

@@ -35,6 +35,7 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+
     // platform specific UI
     // method to produce ANDROID Material dropdown button: androidDropdown()
     DropdownButton<String> methodDropdownList() {
@@ -69,7 +70,6 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
         },
       );
     }
-
     return Container(
         color: Colors.red,
         child: Container(
@@ -202,12 +202,12 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
                   height: 30.0,
                 ),
                 RoundButton(label: 'Award EXP', function: () {
-                  // if (widget.selectedMethod == null || widget.selectedMethod == ''){
-                  //   popUpAlert(alertMethodMessage, context);
-                  // }
-                  // else{
+                  if (widget.selectedMethod == null || widget.selectedMethod == ''){
+                    popUpAlert(alertMethodMessage, context);
+                  }
+                  else{
                     popUpDialog(awardedExp, context);
-                  // }
+                  }
                 }),
               ]),
         )

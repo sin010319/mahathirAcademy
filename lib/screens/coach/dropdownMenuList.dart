@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mahathir_academy_app/screens/coach/award_exp.dart';
 import 'update_exp_data.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,7 @@ class DropdownMenuList extends StatefulWidget {
   static List<DropdownMenuItem<String>> dropdownItems = [];
   bool first = false;
   static bool assessmentScore = false;
+
 
   static void expDropdownList(String value){
     int index = methods.indexOf(value);
@@ -68,17 +70,20 @@ class DropdownMenuList extends StatefulWidget {
 
 class _DropdownMenuListState extends State<DropdownMenuList> {
 
-  String selectedExpValue= DropdownMenuList.expList[0].toString();
+  String selectedExpValue = DropdownMenuList.expList[0].toString();
 
   @override
   Widget build(BuildContext context) {
     bool isTrue = true;
-    if (DropdownMenuList.expList.contains(int.parse(selectedExpValue))){
-      isTrue = true;
-    }
-    else{
-      isTrue = false;
-    }
+
+      if (DropdownMenuList.expList.contains(int.parse(selectedExpValue))){
+        isTrue = true;
+      }
+      else{
+        isTrue = false;
+      }
+
+
 
     // if (!DropdownMenuList.assessmentScore) {
       // create and return a new dropdown list for user selection
