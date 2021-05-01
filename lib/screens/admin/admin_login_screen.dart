@@ -39,6 +39,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Admin Login'),
+        automaticallyImplyLeading: false,
       ),
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,

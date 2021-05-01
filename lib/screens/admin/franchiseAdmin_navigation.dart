@@ -35,6 +35,7 @@ class franchiseAdminNavigation extends StatelessWidget {
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               title: Text('Franchise Admin Dashboard'),
+                automaticallyImplyLeading: false,
                 actions: <Widget>[
             // First button - decrement
             IconButton(

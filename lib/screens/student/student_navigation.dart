@@ -29,6 +29,7 @@ class StudentNavigation extends StatelessWidget {
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               title: Text('Home'),
+                automaticallyImplyLeading: false,
                 actions: <Widget>[
                   // First button - decrement
                   IconButton(

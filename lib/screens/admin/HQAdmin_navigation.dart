@@ -39,6 +39,7 @@ class HQAdminNavigation extends StatelessWidget {
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               title: Text('HQ Admin Dashboard'),
+                automaticallyImplyLeading: false,
                 actions: <Widget>[
                   // First button - decrement
                   IconButton(

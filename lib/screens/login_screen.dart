@@ -39,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Login'),
+          automaticallyImplyLeading: false,
         ),
         body: ModalProgressHUD(
           inAsyncCall: showSpinner,
