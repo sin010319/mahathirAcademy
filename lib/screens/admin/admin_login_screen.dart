@@ -29,6 +29,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   String _email = '', _password = '';
   bool _showPassword = true;
   bool showSpinner = false; // to figure out when should our spinner spins
+  String hqAdmin = "@hqadmin.com", franchiseAdmin = "@admin.com";
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +176,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         obscureText: false,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.email, color: Colors.red[900], size: 20),
-          hintText: "Email ID",
+          hintText: "User ID",
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),
               borderSide: BorderSide.none),
@@ -227,8 +228,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email Cannot be empty')));
         }else if(_password == null || _password.length < 6){
           Scaffold.of(context).showSnackBar(SnackBar(content: Text('Password needs to be at least six characters')));
-        }else if(!regExp.hasMatch(_email)){
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Enter a Valid Email')));
         }else{
           setState((){showSpinner = true;});
           franchiseAdminSignIn();
@@ -262,8 +261,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email Cannot be empty')));
         }else if(_password == null || _password.length < 6){
           Scaffold.of(context).showSnackBar(SnackBar(content: Text('Password needs to be at least six characters')));
-        }else if(!regExp.hasMatch(_email)){
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Enter a Valid Email')));
         }else{
           setState((){showSpinner = true;});
           HQAdminSignIn();
@@ -287,35 +284,34 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   }
 
   Future<void> franchiseAdminSignIn() async {
+    _email = _email + franchiseAdmin;
     try{
       final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      if (_email.contains("admin") == false) {
-        showAlertDialog(context);
-      }
-      if (user != null && _email.contains("admin")){
+      if (user != null){
         Navigator.pushNamed(context, franchiseAdminNavigation.id);
         setState((){showSpinner = false;});
       }
     }catch(e){
       setState((){showSpinner = false;});
+      showAlertDialog(context);
       print(e.message);
       Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.message)));
     }
   }
 
   Future<void> HQAdminSignIn() async {
+    _email = _email + hqAdmin;
     try{
       final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      if (_email.contains("hqadmin") == false) {
-        showAlertDialog(context);
-      }
-      if (user != null && _email.contains("hqadmin")){
+
+      if (user != null){
         Navigator.pushNamed(context, HQAdminNavigation.id);
         setState((){showSpinner = false;});
       }
 
     }catch(e){
       setState((){showSpinner = false;});
+      showAlertDialog(context);
       print(e.message);
       Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.message)));
     }
@@ -334,7 +330,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Login Error"),
-      content: Text("Please login using the right admin account."),
+      content: Text("Please use correct email and password."),
       actions: [
         okButton,
       ],
