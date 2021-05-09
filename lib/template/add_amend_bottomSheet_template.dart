@@ -4,26 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/constants.dart';
 
 class AddAmendTemplate extends StatelessWidget {
-
   String identifier;
   List<Widget> content;
+  String title1;
+  String title2;
 
   AddAmendTemplate({this.identifier, this.content});
+  AddAmendTemplate.fromTemplate(
+      {this.identifier, this.content, this.title1, this.title2});
 
   @override
   Widget build(BuildContext context) {
-
     String title;
     List<Widget> pageSpecificContent = [];
 
-    if (identifier == 'Amend EXP' || identifier == 'Amend Franchise' || identifier == 'Amend Class' || identifier == 'Amend Admin Info'){
+    if (identifier == 'Amend EXP' ||
+        identifier == 'Amend Franchise' ||
+        identifier == 'Amend Class' ||
+        identifier == 'Amend Admin Info') {
       title = identifier;
-    }
-    else{
+    } else {
       title = 'Add New ' + identifier;
     }
 
-    List <Widget> studentCoachInputContent = [
+    List<Widget> studentCoachInputContent = [
       SizedBox(
         height: 20.0,
       ),
@@ -46,14 +50,14 @@ class AddAmendTemplate extends StatelessWidget {
       )
     ];
 
-    List <Widget> franchiseClassInputContent = [
+    List<Widget> franchiseClassInputContent = [
       SizedBox(
         height: 20.0,
       ),
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          'Franchise1 ',
+          this.title1,
           style: kTitleTextStyle,
         ),
       ),
@@ -63,23 +67,22 @@ class AddAmendTemplate extends StatelessWidget {
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          'Location ',
+          this.title2,
           style: kTitleTextStyle,
         ),
       )
     ];
 
-
-    if (identifier == 'Student' || identifier == 'Amend EXP' || identifier == 'Coach' || identifier == 'Facilitator'){
+    if (identifier == 'Student' ||
+        identifier == 'Amend EXP' ||
+        identifier == 'Coach' ||
+        identifier == 'Facilitator') {
       pageSpecificContent = studentCoachInputContent;
-    }
-    else if (identifier == 'Class' || identifier == 'Amend Class'){
+    } else if (identifier == 'Class' || identifier == 'Amend Class') {
       pageSpecificContent = franchiseClassInputContent;
-    }
-    else if (identifier == 'Admin' || identifier == 'Amend Admin Info'){
+    } else if (identifier == 'Admin' || identifier == 'Amend Admin Info') {
       pageSpecificContent = franchiseClassInputContent;
-    }
-    else{
+    } else {
       pageSpecificContent = [];
     }
 
@@ -94,16 +97,21 @@ class AddAmendTemplate extends StatelessWidget {
                 topRight: Radius.circular(20.0))),
         child: Column(
           children: <Widget>[
-            Text(
-              title, // task name
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 30.0, color: Color(0xFF8A1501), fontWeight: FontWeight.w800,),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),]
-          + pageSpecificContent
-          + content,
+                Text(
+                  title, // task name
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    color: Color(0xFF8A1501),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+              ] +
+              pageSpecificContent +
+              content,
         ),
       ),
     );

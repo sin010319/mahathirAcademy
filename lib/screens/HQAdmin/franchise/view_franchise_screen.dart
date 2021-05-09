@@ -17,7 +17,6 @@ final _auth = FirebaseAuth.instance;
 String targetAdminId;
 
 class ViewFranchiseScreen extends StatefulWidget {
-
   static const String id = '/addFranchise';
   List<String> franchises = ['Franchise1', 'Franchise2', 'Franchise3'];
 
@@ -28,7 +27,6 @@ class ViewFranchiseScreen extends StatefulWidget {
 }
 
 class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
-
   @override
   void initState() {
     targetAdminId = _auth.currentUser.uid;
@@ -39,73 +37,90 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
   @override
   Widget build(BuildContext context) {
     return SelectFranchiseTemplateFixed(
-      franchiseFab: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-              context: context,
-              // builder here needs a method to return widget
-              builder: addFranchiseBuildBottomSheet,
-              isScrollControlled: true // enable the modal take up the full screen
-          );
-        },
-        backgroundColor: Color(0xFF8A1501),
-        child: Icon(Icons.add),
-      ),
-        franchiseContentTitle: 'Please select a franchise to view or modify admin info:',
-      franchiseItemBuilder: FutureBuilder(
-          future: widget.retrievedFranchises,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
-              print('error3');
-              return Center(child: CircularProgressIndicator());
-            }
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: Center(
-                        child: ListTile(
-                            title: Text(
-                                snapshot.data[index].franchiseName),
-                            trailing:
-                            Wrap(
-                              spacing: 8,
-                              children: [
-                                GestureDetector(
-                                  child: Icon(Icons.edit,
-                                    color: Color(0xFF8A1501),),
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        // builder here needs a method to return widget
-                                        builder: editFranchiseBuildBottomSheet,
-                                        isScrollControlled: true // enable the modal take up the full screen
-                                    );
-                                  },),
-                                GestureDetector(
-                                  child: Icon(Icons.delete,
-                                    color: Color(0xFF8A1501),),
-                                  onTap: () {
-                                    deleteDialog(context, snapshot.data[index].franchiseName);
-                                  },),
-                              ],
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ViewAdminScreen(
-                                      franchiseInfo: snapshot.data[index],
+        franchiseFab: FloatingActionButton(
+          onPressed: () {
+            showModal();
+          },
+          backgroundColor: Color(0xFF8A1501),
+          child: Icon(Icons.add),
+        ),
+        franchiseContentTitle:
+            'Please select a franchise to view or modify admin info:',
+        franchiseItemBuilder: FutureBuilder(
+            future: widget.retrievedFranchises,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
+                print('error3');
+                return Center(child: CircularProgressIndicator());
+              }
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: Center(
+                          child: ListTile(
+                              title: Text(snapshot.data[index].franchiseName),
+                              trailing: Wrap(
+                                spacing: 8,
+                                children: [
+                                  GestureDetector(
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Color(0xFF8A1501),
                                     ),
-                                  ));
-                            }
-                        )
-                    ),
-                  );
-                });
-          })
-    );
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          // builder here needs a method to return widget
+                                          builder:
+                                              editFranchiseBuildBottomSheet,
+                                          isScrollControlled:
+                                              true // enable the modal take up the full screen
+                                          );
+                                    },
+                                  ),
+                                  GestureDetector(
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Color(0xFF8A1501),
+                                    ),
+                                    onTap: () {
+                                      deleteDialog(context,
+                                          snapshot.data[index].franchiseName);
+                                    },
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ViewAdminScreen(
+                                        franchiseInfo: snapshot.data[index],
+                                      ),
+                                    ));
+                              })),
+                    );
+                  });
+            }));
+  }
+
+  void showModal() {
+    Future<void> future = showModalBottomSheet(
+        context: context,
+        // builder here needs a method to return widget
+        builder: addFranchiseBuildBottomSheet,
+        isScrollControlled: true // enable the modal take up the full screen
+        );
+    future.then((void value) => closeModal(value));
+  }
+
+  FutureBuilder<dynamic> closeModal(void value) {
+    print('modal closed');
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => super.widget));
   }
 
   Future<List<Franchise>> franchiseData() async {
@@ -113,17 +128,17 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
     String franchiseName;
     String franchiseLocation;
     List<Franchise> franchisesList = [];
-    String franchiseAdminId;
 
-    await _firestore.collection('franchiseAdmins')
+    await _firestore
+        .collection('franchises')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         franchiseName = doc["franchiseName"];
         franchiseId = doc["franchiseId"];
-        franchiseLocation= doc["franchiseLocation"];
-        franchiseAdminId = doc["franchiseAdminId"];
-        Franchise newFranchise = Franchise.fromFranchise(franchiseName, franchiseLocation, franchiseId, franchiseAdminId);
+        franchiseLocation = doc["franchiseLocation"];
+        Franchise newFranchise =
+            Franchise(franchiseName, franchiseLocation, franchiseId);
         franchisesList.add(newFranchise);
       });
     });
@@ -134,13 +149,9 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
   Future callFunc() async {
     return await franchiseData();
   }
-
-
-
 }
 
-
-deleteDialog(BuildContext context, String itemRemoved){
+deleteDialog(BuildContext context, String itemRemoved) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -158,8 +169,8 @@ deleteDialog(BuildContext context, String itemRemoved){
                     },
                     child: CircleAvatar(
                       child: GestureDetector(
-                          onTap: (){
-                            Navigator. of(context, rootNavigator: true). pop();
+                          onTap: () {
+                            Navigator.of(context, rootNavigator: true).pop();
                           },
                           child: Icon(Icons.close)),
                       backgroundColor: Colors.red,
@@ -193,25 +204,24 @@ deleteDialog(BuildContext context, String itemRemoved){
 }
 
 Widget button(String text, BuildContext context) {
-
   double _height = MediaQuery.of(context).size.height;
   double _width = MediaQuery.of(context).size.width;
 
   return RaisedButton(
     elevation: 0,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-    onPressed: (){
-      if(text == 'Yes'){
+    onPressed: () {
+      if (text == 'Yes') {
         // do something
-      }else if(text == 'No'){
-        Navigator. of(context, rootNavigator: true). pop();
+      } else if (text == 'No') {
+        Navigator.of(context, rootNavigator: true).pop();
       }
     },
     textColor: Colors.white,
     padding: EdgeInsets.all(0.0),
     child: Container(
       alignment: Alignment.center,
-      width: _width/5,
+      width: _width / 5,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
         gradient: LinearGradient(
@@ -219,32 +229,31 @@ Widget button(String text, BuildContext context) {
         ),
       ),
       padding: const EdgeInsets.all(12.0),
-      child: Text(text ,style: TextStyle(fontSize: 15)),
+      child: Text(text, style: TextStyle(fontSize: 15)),
     ),
   );
 }
 
-
-Widget editFranchiseBuildBottomSheet(BuildContext context){
-
+Widget editFranchiseBuildBottomSheet(BuildContext context) {
   String identifier = 'Amend Franchise';
 
   return SingleChildScrollView(
     child: Container(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
       child: EditFranchiseBottomSheet(identifier: identifier),
     ),
   );
 }
 
-Widget addFranchiseBuildBottomSheet(BuildContext context){
-
+Widget addFranchiseBuildBottomSheet(BuildContext context) {
   String identifier = 'Franchise';
 
   return SingleChildScrollView(
     child: Container(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
       child: AddFranchiseBottomSheet(identifier: identifier),
     ),

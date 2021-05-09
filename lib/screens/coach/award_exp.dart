@@ -7,15 +7,14 @@ import 'package:mahathir_academy_app/models/student.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'award_exp_bottomSheet.dart';
 
-
 double _width;
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
-List <bool> state = [];
+List<bool> state = [];
 bool isChanged = false;
 
-List <Student> tickedStudents = [];
+List<Student> tickedStudents = [];
 
 class AwardExp extends StatefulWidget {
   static bool clear;
@@ -55,10 +54,7 @@ class _AwardExpState extends State<AwardExp> {
   @override
   Widget build(BuildContext context) {
     // widget.retrievedStudents = callStuFunc();
-    _width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    _width = MediaQuery.of(context).size.width;
     return Scaffold(
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_home,
@@ -89,8 +85,7 @@ class _AwardExpState extends State<AwardExp> {
                 onTap: () {
                   if (tickedStudents.length != 0) {
                     showModal();
-                  }
-                  else {
+                  } else {
                     popUpAlert(alertMessage, context);
                   }
                 },
@@ -119,63 +114,67 @@ class _AwardExpState extends State<AwardExp> {
         ),
         appBar: AppBar(title: Text('Award EXP and Acknowledgment')),
         backgroundColor: Color(0xFFDB5D38),
-        body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-            Widget>[
-          Container(
-            padding: EdgeInsets.all(30.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                // wrap the icon in a circle avatar
-                CircleAvatar(
-                  radius: 30.0,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    FontAwesomeIcons.award,
-                    size: 30.0,
-                    color: Color(0xFF8A1501),
-                  ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                FutureBuilder(
-                    future: widget.retrievedStudents,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
-                        print('error3');
-                        return Container();
-                      }
-                      return Text(
-                        '${widget.contentTitle}\n${snapshot.data.length} Students',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 18.0),
-                      );}),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                // container must have a child to get shown up on screen
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        topRight: Radius.circular(20.0))),
-                child: SingleChildScrollView(
-                  child: Column(children: <Widget>[
+        body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(30.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // wrap the icon in a circle avatar
+                    CircleAvatar(
+                      radius: 30.0,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        FontAwesomeIcons.award,
+                        size: 30.0,
+                        color: Color(0xFF8A1501),
+                      ),
+                    ),
                     SizedBox(
                       height: 10.0,
                     ),
-                      returnFutureBuilder()
-                    // future: widget.retrievedStudents),
-                  ]),
-                )),
-          )
-        ]));
+                    FutureBuilder(
+                        future: widget.retrievedStudents,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState !=
+                                  ConnectionState.done ||
+                              snapshot.hasError) {
+                            print('error3');
+                            return Container();
+                          }
+                          return Text(
+                            '${widget.contentTitle}\n${snapshot.data.length} Students',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18.0),
+                          );
+                        }),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    // container must have a child to get shown up on screen
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20.0),
+                            topRight: Radius.circular(20.0))),
+                    child: Expanded(
+                      child: Column(children: <Widget>[
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        returnFutureBuilder()
+                        // future: widget.retrievedStudents),
+                      ]),
+                    )),
+              )
+            ]));
   }
 
   Future<List<Student>> studentData() async {
@@ -221,124 +220,109 @@ class _AwardExpState extends State<AwardExp> {
         context: context,
         // builder here needs a method to return widget
         builder: awardExpBottomSheet,
-        isScrollControlled:
-        true // enable the modal take up the full screen
-    );
+        isScrollControlled: true // enable the modal take up the full screen
+        );
     future.then((void value) => closeModal(value));
   }
 
   FutureBuilder<dynamic> closeModal(void value) {
     AwardExp.clear = false;
     print('modal closed');
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => super.widget));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => super.widget));
   }
 
-  FutureBuilder<dynamic> returnFutureBuilder(){
+  FutureBuilder<dynamic> returnFutureBuilder() {
     return FutureBuilder(
       future: widget.retrievedStudents,
       builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+        if (snapshot.connectionState != ConnectionState.done ||
+            snapshot.hasError) {
           print('error3');
           return Center(child: CircularProgressIndicator());
         }
-          return ListView.builder(
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, index) {
-                return IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment
-                        .center,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Checkbox(
-                          // When this checkboxState value changes, it is going to trigger this callback and pass in the latest state of checkbox
-                          activeColor: Colors
-                              .orangeAccent,
-                          // color of tick
-                          value: state[index],
-                          // if true, checked; else unchecked
-                          // once the user clicks on the checkbox, swap the state
-                          onChanged: (bool newValue) {
-                            setState(() {
-                              state[index] = !state[index];
-                              Student studentObj = snapshot
-                                  .data[index];
-                              if (state[index] &&
-                                  !tickedStudents.contains(
-                                      studentObj)) {
-                                tickedStudents.add(studentObj);
-                              }
-                              else if (!state[index]) {
-                                tickedStudents.remove(
-                                    studentObj);
-                              }
-                            });
-                          },
-                        ),
+        return ListView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Checkbox(
+                        // When this checkboxState value changes, it is going to trigger this callback and pass in the latest state of checkbox
+                        activeColor: Colors.orangeAccent,
+                        // color of tick
+                        value: state[index],
+                        // if true, checked; else unchecked
+                        // once the user clicks on the checkbox, swap the state
+                        onChanged: (bool newValue) {
+                          setState(() {
+                            state[index] = !state[index];
+                            Student studentObj = snapshot.data[index];
+                            if (state[index] &&
+                                !tickedStudents.contains(studentObj)) {
+                              tickedStudents.add(studentObj);
+                            } else if (!state[index]) {
+                              tickedStudents.remove(studentObj);
+                            }
+                          });
+                        },
                       ),
-                      Expanded(
-                        flex: 7,
-                        child: Container(
-                          height: 70.0,
-                          child: Card(
-                            child: Center(
-                              child: ListTile(
-                                title: Text(
-                                  snapshot.data[index]
-                                      .studentName,
-                                  style: kListItemsTextStyle,
-                                ),
+                    ),
+                    Expanded(
+                      flex: 7,
+                      child: Container(
+                        height: 70.0,
+                        child: Card(
+                          child: Center(
+                            child: ListTile(
+                              title: Text(
+                                snapshot.data[index].studentName,
+                                style: kListItemsTextStyle,
                               ),
                             ),
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          mainAxisAlignment:
-                          MainAxisAlignment.start,
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Card(
-                              child: TextFormField(
-                                initialValue:
-                                snapshot.data[index].exp
-                                    .toString(),
-                                style: kExpTextStyle,
-                                enabled: false,
-                                //Not clickable and not editable
-                                readOnly: true,
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Card(
+                            child: TextFormField(
+                              initialValue: snapshot.data[index].exp.toString(),
+                              style: kExpTextStyle,
+                              enabled: false,
+                              //Not clickable and not editable
+                              readOnly: true,
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          )
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              });
-      },);
+                    ),
+                  ],
+                ),
+              );
+            });
+      },
+    );
   }
 
   Widget awardExpBottomSheet(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
         padding:
-        EdgeInsets.only(bottom: MediaQuery
-            .of(context)
-            .viewInsets
-            .bottom),
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
         child: AwardExpBottomSheet(tickedStudents: tickedStudents),
       ),
@@ -437,10 +421,7 @@ class _AwardExpState extends State<AwardExp> {
   }
 
   Widget button(String text, BuildContext context) {
-    double _width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double _width = MediaQuery.of(context).size.width;
 
     return RaisedButton(
       elevation: 0,

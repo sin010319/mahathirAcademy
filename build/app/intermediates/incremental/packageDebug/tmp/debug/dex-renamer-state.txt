@@ -1,10 +1,10 @@
-#Sun May 09 15:02:48 SGT 2021
+#Sun May 09 21:51:17 SGT 2021
+base.2=D\:\\Documents\\iCube Tech Consulting Project 2.0\\git_mahathir_academy\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes3.dex
 path.2=classes3.dex
+base.1=D\:\\Documents\\iCube Tech Consulting Project 2.0\\git_mahathir_academy\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes2.dex
 path.1=classes2.dex
-path.0=classes.dex
+base.0=D\:\\Documents\\iCube Tech Consulting Project 2.0\\git_mahathir_academy\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.2=classes3.dex
 renamed.1=classes2.dex
 renamed.0=classes.dex
-base.2=D\:\\Documents\\iCube Tech Consulting Project 2.0\\git_mahathir_academy\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes3.dex
-base.1=D\:\\Documents\\iCube Tech Consulting Project 2.0\\git_mahathir_academy\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes2.dex
-base.0=D\:\\Documents\\iCube Tech Consulting Project 2.0\\git_mahathir_academy\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+path.0=classes.dex

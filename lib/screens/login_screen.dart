@@ -9,16 +9,13 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'student/student_navigation.dart';
 
 class LoginScreen extends StatefulWidget {
-
   static const String id = '/';
-
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   // create an authentication instance
   // use this auth object to use the associated methods with sign in
   final _auth = FirebaseAuth.instance;
@@ -31,7 +28,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
 
@@ -59,16 +55,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           left: _width / 12.0,
                           right: _width / 12.0,
                           top: _height / 15.0),
-                      child: Column(children: <Widget> [
+                      child: Column(children: <Widget>[
                         emailBox(),
                         SizedBox(height: _height / 40.0),
-                        passwordBox(),])
-                  ),
+                        passwordBox(),
+                      ])),
                   SizedBox(height: _height / 12),
                   Column(
                     children: [
                       Text('Sign in as:'),
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -79,30 +77,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-
                   SizedBox(height: 10),
                   RichText(
                     text: TextSpan(
-                        style: TextStyle(
-                            fontSize: 13
-                        ),
+                        style: TextStyle(fontSize: 13),
                         children: <TextSpan>[
-                          TextSpan(text: 'Are you an admin? ',
-                              style: TextStyle(
-                                  color: Colors.black
-                              )),
+                          TextSpan(
+                              text: 'Are you an admin? ',
+                              style: TextStyle(color: Colors.black)),
                           TextSpan(
                               text: 'Click here.',
                               style: TextStyle(
                                   fontSize: 13,
                                   color: Colors.redAccent,
-                                  decoration: TextDecoration.underline
-                              ),
+                                  decoration: TextDecoration.underline),
                               recognizer: TapGestureRecognizer()
-                                ..onTap = () => Navigator.pushNamed(context, AdminLoginScreen.id)
-                          )
-                        ]
-                    ),
+                                ..onTap = () => Navigator.pushNamed(
+                                    context, AdminLoginScreen.id))
+                        ]),
                   )
                 ],
               ),
@@ -113,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget image(){
+  Widget image() {
     return Container(
         margin: EdgeInsets.only(top: _height / 15.0),
         height: 100.0,
@@ -124,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: new Image.asset('assets/images/login.png'));
   }
 
-  Widget welcomeText(){
+  Widget welcomeText() {
     return Container(
       padding: EdgeInsets.only(top: 10),
       child: Row(
@@ -182,18 +174,19 @@ class _LoginScreenState extends State<LoginScreen> {
   //   );
   // }
 
-  Widget emailBox(){
+  Widget emailBox() {
     return Material(
       borderRadius: BorderRadius.circular(30.0),
       elevation: 10,
-      child:TextField(
+      child: TextField(
         onChanged: (input) => _email = input,
         keyboardType: TextInputType.emailAddress,
         cursorColor: Colors.redAccent,
         obscureText: false,
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.account_box_rounded, color: Colors.red[900], size: 20),
-          hintText: "Username",
+          prefixIcon:
+              Icon(Icons.account_box_rounded, color: Colors.red[900], size: 20),
+          hintText: "User ID",
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),
               borderSide: BorderSide.none),
@@ -202,11 +195,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget passwordBox(){
+  Widget passwordBox() {
     return Material(
       borderRadius: BorderRadius.circular(30.0),
       elevation: 10,
-      child:TextField(
+      child: TextField(
         onChanged: (input) => _password = input,
         keyboardType: TextInputType.visiblePassword,
         cursorColor: Colors.redAccent,
@@ -225,8 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
           hintText: "Password",
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),
-              borderSide: BorderSide.none
-          ),
+              borderSide: BorderSide.none),
         ),
       ),
     );
@@ -236,14 +228,19 @@ class _LoginScreenState extends State<LoginScreen> {
     return RaisedButton(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      onPressed: (){
-        RegExp regExp = new RegExp(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
-        if(_email == null || _email.isEmpty){
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email Cannot be empty')));
-        }else if(_password == null || _password.length < 6){
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Password needs to be at least six characters')));
-        }else{
-          setState((){showSpinner = true;});
+      onPressed: () {
+        RegExp regExp = new RegExp(
+            r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
+        if (_email == null || _email.isEmpty) {
+          Scaffold.of(context)
+              .showSnackBar(SnackBar(content: Text('Email Cannot be empty')));
+        } else if (_password == null || _password.length < 6) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('Password needs to be at least six characters')));
+        } else {
+          setState(() {
+            showSpinner = true;
+          });
           CoachSignIn();
         }
       },
@@ -259,25 +256,29 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text('COACH',style: TextStyle(fontSize: 12)),
+        child: Text('COACH', style: TextStyle(fontSize: 12)),
       ),
     );
   }
-
 
   Widget StudentButton() {
     String name;
     return RaisedButton(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      onPressed: (){
-        RegExp regExp = new RegExp(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
-        if(_email == null || _email.isEmpty){
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email Cannot be empty')));
-        }else if(_password == null || _password.length < 6){
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Password needs to be at least six characters')));
-        }else{
-          setState((){showSpinner = true;});
+      onPressed: () {
+        RegExp regExp = new RegExp(
+            r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
+        if (_email == null || _email.isEmpty) {
+          Scaffold.of(context)
+              .showSnackBar(SnackBar(content: Text('Email Cannot be empty')));
+        } else if (_password == null || _password.length < 6) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('Password needs to be at least six characters')));
+        } else {
+          setState(() {
+            showSpinner = true;
+          });
           StudentSignIn();
         }
       },
@@ -285,7 +286,7 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.all(0.0),
       child: Container(
         alignment: Alignment.center,
-        width: _width/3,
+        width: _width / 3,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           gradient: LinearGradient(
@@ -293,21 +294,26 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text('STUDENT',style: TextStyle(fontSize: 12)),
+        child: Text('STUDENT', style: TextStyle(fontSize: 12)),
       ),
     );
   }
 
   Future<void> CoachSignIn() async {
     _email = _email + coach;
-    try{
-      final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      if (user != null){
+    try {
+      final user = await _auth.signInWithEmailAndPassword(
+          email: _email, password: _password);
+      if (user != null) {
         Navigator.pushNamed(context, CoachNavigation.id);
-        setState((){showSpinner = false;});
+        setState(() {
+          showSpinner = false;
+        });
       }
-    }catch(e){
-      setState((){showSpinner = false;});
+    } catch (e) {
+      setState(() {
+        showSpinner = false;
+      });
       showAlertDialog(context);
       print(e.message);
       Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.message)));
@@ -316,14 +322,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> StudentSignIn() async {
     _email = _email + student;
-    try{
-      final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      if (user != null){
+    try {
+      final user = await _auth.signInWithEmailAndPassword(
+          email: _email, password: _password);
+      if (user != null) {
         Navigator.pushNamed(context, StudentNavigation.id);
-        setState((){showSpinner = false;});
+        setState(() {
+          showSpinner = false;
+        });
       }
-    }catch(e){
-      setState((){showSpinner = false;});
+    } catch (e) {
+      setState(() {
+        showSpinner = false;
+      });
       showAlertDialog(context);
       print(e.message);
       Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.message)));
@@ -331,7 +342,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   showAlertDialog(BuildContext c) {
-
     // set up the button
     Widget okButton = FlatButton(
       child: Text("OK"),
@@ -357,5 +367,4 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
   }
-
 }
