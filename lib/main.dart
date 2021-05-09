@@ -9,8 +9,12 @@ import 'package:mahathir_academy_app/screens/admin/HQAdmin_navigation.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/view_coaches_students.dart';
 import 'package:mahathir_academy_app/screens/admin/viewFranchiseStudents.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
+import 'package:mahathir_academy_app/template/coachesCategory.dart';
+import 'package:mahathir_academy_app/template/franchiseCategory.dart';
+import 'package:mahathir_academy_app/template/studentCategory.dart';
 import 'screens/admin/admin_login_screen.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_profile.dart';
+import 'package:mahathir_academy_app/screens/coach/guideline.dart';
 import 'package:mahathir_academy_app/screens/leaderboard.dart';
 import 'package:mahathir_academy_app/screens/login_screen.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_navigation.dart';
@@ -63,8 +67,12 @@ class MyApp extends StatelessWidget {
         Announcement.id: (context) => Announcement(),
         AwardExp.id: (context) => AwardExp(),
         Category.id: (context) => Category(),
+        franchiseCategory.id: (context) => franchiseCategory(),
+        coachesCategory.id: (context) => coachesCategory(),
+        StudentCategory.id: (context) => StudentCategory(),
         SelectFranchiseForLeaderBoard.id: (context) => SelectFranchiseForLeaderBoard(),
-        SelectFranchiseToViewAllStudents.id: (context) => SelectFranchiseToViewAllStudents()
+        SelectFranchiseToViewAllStudents.id: (context) => SelectFranchiseToViewAllStudents(),
+        Guideline.id: (context) => Guideline(),
       },
     );
   }

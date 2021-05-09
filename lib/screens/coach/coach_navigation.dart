@@ -10,7 +10,7 @@ import 'package:mahathir_academy_app/screens/coach/select_class.dart';
 import 'package:mahathir_academy_app/screens/coach/select_class_general.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:mahathir_academy_app/template/coachesCategory.dart';
 import '../student/student_profile.dart';
 import 'view_students.dart';
 import '../leaderboard.dart';
@@ -90,15 +90,8 @@ class CoachNavigation extends StatelessWidget {
                 Expanded(
                   child: ReusableCard(
                     onPress: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SelectClass(
-                                textForDisplay: "Please select the class that you want to view the student ranking: ",
-                                classFunction: (){
-                                  Navigator.pushNamed(context, Category.id);
-                                }),
-                          ));
+                      Navigator.pushNamed(
+                          context, coachesCategory.id);
                     },
                     colour: Colors.white,
                     cardChild: IconContent(

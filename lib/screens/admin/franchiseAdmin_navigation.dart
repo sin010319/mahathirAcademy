@@ -10,6 +10,7 @@ import 'package:mahathir_academy_app/screens/admin/viewFranchiseStudents.dart';
 import 'package:mahathir_academy_app/screens/coach/select_class.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
 import 'package:mahathir_academy_app/template/select_class_template.dart';
+import 'package:mahathir_academy_app/template/franchiseCategory.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../student/student_profile.dart';
@@ -50,26 +51,19 @@ class franchiseAdminNavigation extends StatelessWidget {
                 children: <Widget>[
               Expanded(
               child: Row(children: <Widget>[
-              Expanded(
-                    child: ReusableCard(
-                      onPress: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SelectClass(
-                                  textForDisplay: "Please select the class that you want to view the student ranking: ",
-                                  classFunction: (){
-                                    Navigator.pushNamed(context, Category.id);
-                                  }),
-                            ));
-                      },
-                      colour: Colors.white,
-                      cardChild: IconContent(
-                        icon: FontAwesomeIcons.trophy,
-                        label: 'STUDENT RANKING',
-                      ),
+                Expanded(
+                  child: ReusableCard(
+                    onPress: () {
+                      Navigator.pushNamed(
+                          context, franchiseCategory.id);
+                    },
+                    colour: Colors.white,
+                    cardChild: IconContent(
+                      icon: FontAwesomeIcons.trophy,
+                      label: 'STUDENT RANKING',
                     ),
                   ),
+                ),
                 Expanded(
                   child: ReusableCard(
                     onPress: () {

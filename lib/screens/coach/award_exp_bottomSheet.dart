@@ -11,6 +11,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
+String targetStudentId;
+String targetFranchiseId;
+String targetFranchiseName;
+int noOfStudents;
+List <String> studentNames = [];
+String title ="";
+String studentRank = "";
+String newStudentRank = "";
+int targetStudentExp;
+int studentNewExp;
 
 
 class AwardExpBottomSheet extends StatefulWidget {
@@ -103,60 +113,64 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
                 ),
                 Column(
                   children: <Widget>[
+
                     SingleChildScrollView(
                       scrollDirection: Axis.vertical,
                       child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: widget.tickedStudents.length,
                           itemBuilder: (context, index) {
+                            targetStudentExp = widget.tickedStudents[index].exp;
                             return IntrinsicHeight(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 7,
-                                    child: Container(
-                                      height: 70.0,
-                                      child: Card(
-                                        child: Center(
-                                          child: ListTile(
-                                            title: Text(
-                                              widget.tickedStudents[index]
-                                                  .studentName,
-                                              style: kListItemsTextStyle,
+                              child: Expanded(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 7,
+                                      child: Container(
+                                        height: 70.0,
+                                        child: Card(
+                                          child: Center(
+                                            child: ListTile(
+                                              title: Text(
+                                                widget.tickedStudents[index]
+                                                    .studentName,
+                                                style: kListItemsTextStyle,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Card(
-                                          child: TextFormField(
-                                            initialValue: widget
-                                                .tickedStudents[index].exp
-                                                .toString(),
-                                            style: kExpTextStyle,
-                                            enabled: false,
-                                            //Not clickable and not editable
-                                            readOnly: true,
-                                            textAlign: TextAlign.center,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Card(
+                                            child: TextFormField(
+                                              initialValue: widget
+                                                  .tickedStudents[index].exp
+                                                  .toString(),
+                                              style: kExpTextStyle,
+                                              enabled: false,
+                                              //Not clickable and not editable
+                                              readOnly: true,
+                                              textAlign: TextAlign.center,
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                      ],
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             );
                           }),
@@ -223,8 +237,9 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
           .get().
       then((querySnapshot) {
         querySnapshot.docs.forEach((doc) {
+            studentNewExp = doc.data()["exp"];
             batch.update(doc.reference,
-                {"exp": doc.data()["exp"] + awardedExp});
+                {"exp": studentNewExp + awardedExp});
             print('can update exp');
         });
       });
@@ -232,6 +247,62 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
     String expAwardedMessage = 'You have successfully award EXP to the student(s). Please close this page to view the newly updated student EXP.';
     popUpAlert(expAwardedMessage, context);
     return batch.commit();
+  }
+
+  Future<Student> getStudent() async {
+    await _firestore.collection('students')
+        .doc(targetStudentId)
+        .get()
+        .then((value) {
+      Map<String, dynamic> data = value.data();
+      targetFranchiseId = data['franchiseId'];
+      targetStudentExp = data['exp'];
+      studentRank = decideRank(targetStudentExp);
+      print(studentRank);
+
+
+    });
+  }
+
+  Future<Student> getNewStudent() async {
+    await _firestore.collection('students')
+        .doc(targetStudentId)
+        .get()
+        .then((value) {
+      Map<String, dynamic> data = value.data();
+      targetFranchiseId = data['franchiseId'];
+      studentNewExp = data['exp'];
+      newStudentRank = decideRank(studentNewExp);
+      print(studentRank);
+
+
+    });
+  }
+
+  String decideRank(int exp) {
+    String retRank = "";
+    if (exp >= 0 && exp < 500){
+      retRank = "Bronze Speaker";
+    }
+    else if (exp >= 500 && exp < 1000){
+      retRank = "Silver Speaker";
+    }
+    else if (exp >= 1000 && exp < 1500){
+      retRank = "Gold Speaker";
+    }
+    else if (exp >= 1500 && exp < 2000){
+      retRank = "Platinum Speaker";
+    }
+    else if (exp >= 2000 && exp < 3000){
+      retRank = "Ruby Speaker";
+    }
+    else if (exp >= 3000 && exp < 4000){
+      retRank = "Diamond Speaker";
+    }
+    else if (exp >= 4000){
+      retRank = "Elite Speaker";
+    }
+    return retRank;
   }
 
   callAwardExpFunc(int awardedExp) async {

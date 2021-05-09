@@ -13,6 +13,8 @@ class Student{
 
   Student.viewStudent(this._studentName, this._studentId, this._className);
 
+  Student.viewRankStudent(this._studentName, this._studentId, this._rank);
+
   String get className => _className;
 
   set className(String value) {
