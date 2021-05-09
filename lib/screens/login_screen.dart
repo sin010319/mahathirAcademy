@@ -27,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _email = '', _password = '';
   bool _showPassword = true;
   bool showSpinner = false; // to figure out when should our spinner spins
+  String coach = '@coach.com', student = '@student.com';
 
   @override
   Widget build(BuildContext context) {
@@ -191,8 +192,8 @@ class _LoginScreenState extends State<LoginScreen> {
         cursorColor: Colors.redAccent,
         obscureText: false,
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.email, color: Colors.red[900], size: 20),
-          hintText: "Email ID",
+          prefixIcon: Icon(Icons.account_box_rounded, color: Colors.red[900], size: 20),
+          hintText: "Username",
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),
               borderSide: BorderSide.none),
@@ -241,8 +242,6 @@ class _LoginScreenState extends State<LoginScreen> {
           Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email Cannot be empty')));
         }else if(_password == null || _password.length < 6){
           Scaffold.of(context).showSnackBar(SnackBar(content: Text('Password needs to be at least six characters')));
-        }else if(!regExp.hasMatch(_email)){
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Enter a Valid Email')));
         }else{
           setState((){showSpinner = true;});
           CoachSignIn();
@@ -277,8 +276,6 @@ class _LoginScreenState extends State<LoginScreen> {
           Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email Cannot be empty')));
         }else if(_password == null || _password.length < 6){
           Scaffold.of(context).showSnackBar(SnackBar(content: Text('Password needs to be at least six characters')));
-        }else if(!regExp.hasMatch(_email)){
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Enter a Valid Email')));
         }else{
           setState((){showSpinner = true;});
           StudentSignIn();
@@ -302,34 +299,32 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> CoachSignIn() async {
+    _email = _email + coach;
     try{
       final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      if (_email.contains("coach") == false) {
-        showAlertDialog(context);
-      }
-      if (user != null && _email.contains("coach")){
+      if (user != null){
         Navigator.pushNamed(context, CoachNavigation.id);
         setState((){showSpinner = false;});
       }
     }catch(e){
       setState((){showSpinner = false;});
+      showAlertDialog(context);
       print(e.message);
       Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.message)));
     }
   }
 
   Future<void> StudentSignIn() async {
+    _email = _email + student;
     try{
       final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      if (_email.contains("student") == false) {
-        showAlertDialog(context);
-      }
-      if (user != null && _email.contains("student")){
+      if (user != null){
         Navigator.pushNamed(context, StudentNavigation.id);
         setState((){showSpinner = false;});
       }
     }catch(e){
       setState((){showSpinner = false;});
+      showAlertDialog(context);
       print(e.message);
       Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.message)));
     }
@@ -348,7 +343,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Login Error"),
-      content: Text("Please login using the right account."),
+      content: Text("Please use correct email and password."),
       actions: [
         okButton,
       ],
