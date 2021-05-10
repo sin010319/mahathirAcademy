@@ -8,6 +8,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:mahathir_academy_app/models/student.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'award_exp_bottomSheet.dart';
+import 'guideline.dart';
 
 double _width;
 
@@ -71,7 +72,7 @@ class _AwardExpState extends State<AwardExp> {
                 backgroundColor: Color(0xFFC61F00),
                 onTap: () {
                   setState(() {
-                    // do something
+                    Navigator.pushNamed(context, Guideline.id);
                   });
                 },
                 label: 'Award EXP Guidelines',

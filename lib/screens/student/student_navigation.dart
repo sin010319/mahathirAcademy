@@ -6,11 +6,12 @@ import 'package:mahathir_academy_app/components/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mahathir_academy_app/template/studentCategory.dart';
 
 import 'student_profile.dart';
 import '../coach/view_students.dart';
 import '../leaderboard.dart';
-import '../announcement.dart';
+import '../announcement/announcement.dart';
 
 class StudentNavigation extends StatelessWidget {
   static const String id = '/student';
@@ -60,7 +61,8 @@ class StudentNavigation extends StatelessWidget {
                   Expanded(
                     child: ReusableCard(
                       onPress: () {
-                        Navigator.pushNamed(context, Category.id);
+                        Navigator.pushNamed(
+                            context, StudentCategory.id);
                       },
                       colour: Colors.white,
                       cardChild: IconContent(
