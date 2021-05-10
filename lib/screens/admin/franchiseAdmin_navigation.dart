@@ -7,6 +7,7 @@ import 'package:mahathir_academy_app/screens/HQAdmin/franchise/view_franchise_sc
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
 import 'package:mahathir_academy_app/screens/admin/viewFranchiseStudents.dart';
+import 'package:mahathir_academy_app/screens/announcement/franchiseAnnouncement.dart';
 import 'package:mahathir_academy_app/screens/coach/select_class.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
 import 'package:mahathir_academy_app/template/select_class_template.dart';
@@ -16,7 +17,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../student/student_profile.dart';
 import '../coach/view_students.dart';
 import '../leaderboard.dart';
-import '../announcement.dart';
+import '../announcement/announcement.dart';
 
 class franchiseAdminNavigation extends StatelessWidget {
 
@@ -96,7 +97,7 @@ class franchiseAdminNavigation extends StatelessWidget {
                         Expanded(
                           child: ReusableCard(
                             onPress: () {
-                              Navigator.pushNamed(context, Announcement.id);
+                              Navigator.pushNamed(context, FranchiseAnnouncement.id);
                             },
                             // USE TERNARY OPERATOR HERE
                             // CHANGE THE COLOR OF CARD WHEN SWITCHING BETWEEN TAPPING

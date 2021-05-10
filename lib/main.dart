@@ -8,6 +8,8 @@ import 'package:mahathir_academy_app/screens/HQAdmin/select_franchise_to_view_al
 import 'package:mahathir_academy_app/screens/admin/HQAdmin_navigation.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/view_coaches_students.dart';
 import 'package:mahathir_academy_app/screens/admin/viewFranchiseStudents.dart';
+import 'package:mahathir_academy_app/screens/announcement/franchiseAnnouncement.dart';
+import 'package:mahathir_academy_app/screens/announcement/hqadminAnnouncement.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
 import 'package:mahathir_academy_app/template/coachesCategory.dart';
 import 'package:mahathir_academy_app/template/franchiseCategory.dart';
@@ -19,7 +21,7 @@ import 'package:mahathir_academy_app/screens/leaderboard.dart';
 import 'package:mahathir_academy_app/screens/login_screen.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_navigation.dart';
 import 'screens/coach/view_students.dart';
-import 'package:mahathir_academy_app/screens/announcement.dart';
+import 'package:mahathir_academy_app/screens/announcement/announcement.dart';
 import 'package:mahathir_academy_app/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'screens/coach/award_exp.dart';
@@ -65,6 +67,8 @@ class MyApp extends StatelessWidget {
         CoachProfile.id: (context) => CoachProfile(),
         ViewStudents.id: (context) => ViewStudents(),
         Announcement.id: (context) => Announcement(),
+        HQAdminAnnouncement.id: (context) => HQAdminAnnouncement(),
+        FranchiseAnnouncement.id: (context) => FranchiseAnnouncement(),
         AwardExp.id: (context) => AwardExp(),
         Category.id: (context) => Category(),
         franchiseCategory.id: (context) => franchiseCategory(),

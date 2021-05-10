@@ -10,7 +10,7 @@ import 'package:mahathir_academy_app/template/studentCategory.dart';
 import 'student_profile.dart';
 import '../coach/view_students.dart';
 import '../leaderboard.dart';
-import '../announcement.dart';
+import '../announcement/announcement.dart';
 
 class StudentNavigation extends StatelessWidget {
 
