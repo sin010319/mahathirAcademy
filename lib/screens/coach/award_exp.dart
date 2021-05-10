@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
+import 'package:mahathir_academy_app/components/pop_up_alert.dart';
+import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:mahathir_academy_app/models/student.dart';
@@ -86,7 +88,7 @@ class _AwardExpState extends State<AwardExp> {
                   if (tickedStudents.length != 0) {
                     showModal();
                   } else {
-                    popUpAlert(alertMessage, context);
+                    PopUpAlertClass.popUpAlert(alertMessage, context);
                   }
                 },
                 label: 'Award EXP',
@@ -101,7 +103,12 @@ class _AwardExpState extends State<AwardExp> {
                 backgroundColor: Color(0xFFC61F00),
                 onTap: () {
                   setState(() {
-                    popUpDialog(acknowledgementMessage, context);
+                    PopUpDialogClass.popUpDialog(
+                        acknowledgementMessage, context, () {
+                      // do smt
+                    }, () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    });
                   });
                 },
                 label: 'Acknowledgement',
@@ -241,17 +248,16 @@ class _AwardExpState extends State<AwardExp> {
           print('error3');
           return Center(child: CircularProgressIndicator());
         }
-        return ListView.builder(
-            shrinkWrap: true,
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              return IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: Checkbox(
+        return SingleChildScrollView(
+          child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Checkbox(
                         // When this checkboxState value changes, it is going to trigger this callback and pass in the latest state of checkbox
                         activeColor: Colors.orangeAccent,
                         // color of tick
@@ -271,49 +277,50 @@ class _AwardExpState extends State<AwardExp> {
                           });
                         },
                       ),
-                    ),
-                    Expanded(
-                      flex: 7,
-                      child: Container(
-                        height: 70.0,
-                        child: Card(
-                          child: Center(
-                            child: ListTile(
-                              title: Text(
-                                snapshot.data[index].studentName,
-                                style: kListItemsTextStyle,
+                      Expanded(
+                        flex: 7,
+                        child: Container(
+                          height: 70.0,
+                          child: Card(
+                            child: Center(
+                              child: ListTile(
+                                title: Text(
+                                  snapshot.data[index].studentName,
+                                  style: kListItemsTextStyle,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Card(
-                            child: TextFormField(
-                              initialValue: snapshot.data[index].exp.toString(),
-                              style: kExpTextStyle,
-                              enabled: false,
-                              //Not clickable and not editable
-                              readOnly: true,
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Card(
+                              child: TextFormField(
+                                initialValue:
+                                    snapshot.data[index].exp.toString(),
+                                style: kExpTextStyle,
+                                enabled: false,
+                                //Not clickable and not editable
+                                readOnly: true,
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                ),
                               ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            });
+                    ],
+                  ),
+                );
+              }),
+        );
       },
     );
   }
@@ -325,127 +332,6 @@ class _AwardExpState extends State<AwardExp> {
             EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
         child: AwardExpBottomSheet(tickedStudents: tickedStudents),
-      ),
-    );
-  }
-
-  popUpAlert(String message, BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: AlertDialog(
-              content: Stack(
-                overflow: Overflow.visible,
-                children: <Widget>[
-                  Positioned(
-                    right: -40.0,
-                    top: -40.0,
-                    child: InkResponse(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: CircleAvatar(
-                        child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context, rootNavigator: true).pop();
-                            },
-                            child: Icon(Icons.close)),
-                        backgroundColor: Colors.red,
-                      ),
-                    ),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(message),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  popUpDialog(String message, BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: AlertDialog(
-              content: Stack(
-                overflow: Overflow.visible,
-                children: <Widget>[
-                  Positioned(
-                    right: -40.0,
-                    top: -40.0,
-                    child: InkResponse(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: CircleAvatar(
-                        child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context, rootNavigator: true).pop();
-                            },
-                            child: Icon(Icons.close)),
-                        backgroundColor: Colors.red,
-                      ),
-                    ),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(message),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          button('Yes', context),
-                          button('No', context),
-                        ],
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  Widget button(String text, BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-
-    return RaisedButton(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      onPressed: () {
-        if (text == 'Yes') {
-          // do something
-        } else if (text == 'No') {
-          Navigator.of(context, rootNavigator: true).pop();
-        }
-      },
-      textColor: Colors.white,
-      padding: EdgeInsets.all(0.0),
-      child: Container(
-        alignment: Alignment.center,
-        width: _width / 5,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          gradient: LinearGradient(
-            colors: <Color>[Colors.orange[200], Colors.pinkAccent],
-          ),
-        ),
-        padding: const EdgeInsets.all(12.0),
-        child: Text(text, style: TextStyle(fontSize: 15)),
       ),
     );
   }

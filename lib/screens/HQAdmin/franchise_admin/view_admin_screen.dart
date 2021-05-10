@@ -136,19 +136,21 @@ class _ViewAdminScreenState extends State<ViewAdminScreen> {
                     print('error3');
                     return Center(child: CircularProgressIndicator());
                   }
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: adminInfoItemLength,
-                      itemBuilder: (context, index) {
-                        String key = widget.adminInfo.keys.elementAt(index);
-                        return Card(
-                          child: Center(
-                              child: ListTile(
-                            title: Text(key),
-                            subtitle: Text('${widget.adminInfo[key]}'),
-                          )),
-                        );
-                      });
+                  return Expanded(
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: adminInfoItemLength,
+                        itemBuilder: (context, index) {
+                          String key = widget.adminInfo.keys.elementAt(index);
+                          return Card(
+                            child: Center(
+                                child: ListTile(
+                              title: Text(key),
+                              subtitle: Text('${widget.adminInfo[key]}'),
+                            )),
+                          );
+                        }),
+                  );
                 })));
   }
 

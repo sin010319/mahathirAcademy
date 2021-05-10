@@ -34,7 +34,7 @@ class AddAmendTemplate extends StatelessWidget {
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          'Franchise1 ',
+          this.title1,
           style: kTitleTextStyle,
         ),
       ),
@@ -44,7 +44,7 @@ class AddAmendTemplate extends StatelessWidget {
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          'Class1 ',
+          this.title2,
           style: kTitleTextStyle,
         ),
       )

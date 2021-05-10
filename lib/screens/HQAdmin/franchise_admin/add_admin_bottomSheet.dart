@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/components/input_box.dart';
+import 'package:mahathir_academy_app/components/pop_up_alert.dart';
+import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/round_button.dart';
 
 import 'package:mahathir_academy_app/constants.dart';
@@ -91,6 +93,7 @@ class _AddAdminBottomSheetState extends State<AddAdminBottomSheet> {
             }
           }
         }
+        username = username.toLowerCase();
         username += numberGenerator();
       } else {
         print('adminName is null');
@@ -144,6 +147,15 @@ class _AddAdminBottomSheetState extends State<AddAdminBottomSheet> {
           .update({'franchiseAdminId': this.adminId})
           .then((value) => print("User Updated"))
           .catchError((error) => print("Failed to update user: $error"));
+    }
+
+    Future<void> callFunc() async {
+      await createAdmin();
+      await addtoFranchisesAdmin();
+      await updateFranchise();
+      String adminAddedMessage =
+          'You have successfully added a new franchise admin. Please close this page to view the newly updated admin info';
+      PopUpAlertClass.popUpAlert(adminAddedMessage, context);
     }
 
     List<Widget> retContent = [
@@ -208,17 +220,27 @@ class _AddAdminBottomSheetState extends State<AddAdminBottomSheet> {
                   this.adminName != null &&
                   this.password != null &&
                   this.contactNum != null) {
-                await createAdmin();
-                await addtoFranchisesAdmin();
-                await updateFranchise();
-                Navigator.of(context, rootNavigator: true).pop();
+                FocusScopeNode currentFocus = FocusScope.of(context);
+                if (!currentFocus.hasPrimaryFocus) {
+                  currentFocus.unfocus();
+                }
+                String message =
+                    'Are you sure you want to add the following admin to the franchise?';
+                PopUpDialogClass.popUpDialog(message, context, () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  callFunc();
+                }, () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                });
               } else {
-                print('error');
+                String message =
+                    'Kindly fill up all the required field(s) before adding a new admin to the franchise.';
+                PopUpAlertClass.popUpAlert(message, context);
               }
             } else {
               String message =
                   'Each franchise is limited to only 1 franchise admin. You may delete the current franchise admin to add a new one or choose to edit the current admin info.';
-              popUpAlert(message, context);
+              PopUpAlertClass.popUpAlert(message, context);
             }
           }),
     ];
@@ -229,47 +251,5 @@ class _AddAdminBottomSheetState extends State<AddAdminBottomSheet> {
       title1: this.franchiseName,
       title2: this.franchiseLocation,
     );
-  }
-
-  popUpAlert(String message, BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: AlertDialog(
-              content: Stack(
-                overflow: Overflow.visible,
-                children: <Widget>[
-                  Positioned(
-                    right: -40.0,
-                    top: -40.0,
-                    child: InkResponse(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: CircleAvatar(
-                        child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context, rootNavigator: true).pop();
-                            },
-                            child: Icon(Icons.close)),
-                        backgroundColor: Colors.red,
-                      ),
-                    ),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(message),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/reusable_card.dart';
 import 'package:mahathir_academy_app/screens/coach/select_class_view_students.dart';
 import 'package:mahathir_academy_app/template/select_class_template.dart';
@@ -18,7 +19,6 @@ import '../announcement.dart';
 import 'coach_profile.dart';
 
 class CoachNavigation extends StatelessWidget {
-
   static const String id = '/coach';
 
   @override
@@ -30,22 +30,35 @@ class CoachNavigation extends StatelessWidget {
             gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Colors.white, Color(0xFFDB5D38), Color(0xFFDB5D38), Color(0xFFE78466), Colors.white])),
+                colors: [
+              Colors.white,
+              Color(0xFFDB5D38),
+              Color(0xFFDB5D38),
+              Color(0xFFE78466),
+              Colors.white
+            ])),
         child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-              title: Text('Home'),
+                title: Text('Home'),
                 automaticallyImplyLeading: false,
                 actions: <Widget>[
                   // First button - decrement
                   IconButton(
                     icon: Icon(Icons.logout), // The "-" icon
-                    onPressed: (){popUpDialog(context);}, // The `_decrementCounter` function
+                    onPressed: () {
+                      String message = 'Are you sure you want to log out?';
+                      PopUpDialogClass.popUpDialog(message, context, () {
+                        logout(context);
+                      }, () {
+                        Navigator.of(context, rootNavigator: true).pop();
+                      });
+                    },
                   ),
-                ]
-            ),
+                ]),
             body: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch, // make the items in each row to stretch itself to fit as much space in the screen
+              crossAxisAlignment: CrossAxisAlignment
+                  .stretch, // make the items in each row to stretch itself to fit as much space in the screen
               children: <Widget>[
                 Expanded(
                   child: Row(
@@ -71,9 +84,10 @@ class CoachNavigation extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SelectClassViewStudents(
-                                      textForDisplay: "Please select the class that you want to view the students: ",),
-                                )
-                            );
+                                    textForDisplay:
+                                        "Please select the class that you want to view the students: ",
+                                  ),
+                                ));
                           },
                           // USE TERNARY OPERATOR HERE
                           // CHANGE THE COLOR OF CARD WHEN SWITCHING BETWEEN TAPPING
@@ -94,8 +108,9 @@ class CoachNavigation extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => SelectClass(
-                                textForDisplay: "Please select the class that you want to view the student ranking: ",
-                                classFunction: (){
+                                textForDisplay:
+                                    "Please select the class that you want to view the student ranking: ",
+                                classFunction: () {
                                   Navigator.pushNamed(context, Category.id);
                                 }),
                           ));
@@ -117,7 +132,8 @@ class CoachNavigation extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SelectClassGeneral(
-                                    textForDisplay: "Please select the class you want to award EXP or acknowledgment to: "),
+                                      textForDisplay:
+                                          "Please select the class you want to award EXP or acknowledgment to: "),
                                 ));
                           },
                           // USE TERNARY OPERATOR HERE
@@ -147,97 +163,12 @@ class CoachNavigation extends StatelessWidget {
                   ),
                 ),
               ],
-            )
-
-        ),
+            )),
       ),
     );
   }
 
-
-  popUpDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: AlertDialog(
-              content: Stack(
-                overflow: Overflow.visible,
-                children: <Widget>[
-                  Positioned(
-                    right: -40.0,
-                    top: -40.0,
-                    child: InkResponse(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: CircleAvatar(
-                        child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context, rootNavigator: true).pop();
-                            },
-                            child: Icon(Icons.close)),
-                        backgroundColor: Colors.red,
-                      ),
-                    ),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text('Are you sure you want to log out?'),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          button('Yes', context),
-                          button('No', context),
-                        ],
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  Widget button(String text, BuildContext context) {
-    double _width = MediaQuery
-        .of(context)
-        .size
-        .width;
-
-    return RaisedButton(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      onPressed: () {
-        if (text == 'Yes') {
-          logout(context);
-        } else if (text == 'No') {
-          Navigator.of(context, rootNavigator: true).pop();
-        }
-      },
-      textColor: Colors.white,
-      padding: EdgeInsets.all(0.0),
-      child: Container(
-        alignment: Alignment.center,
-        width: _width / 5,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          gradient: LinearGradient(
-            colors: <Color>[Colors.orange[200], Colors.pinkAccent],
-          ),
-        ),
-        padding: const EdgeInsets.all(12.0),
-        child: Text(text, style: TextStyle(fontSize: 15)),
-      ),
-    );
-  }
-
-  logout(BuildContext context) async{
+  logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed('/');
   }

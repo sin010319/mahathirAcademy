@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 final _firestore = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
 String targetAdminId;
+String franchiseId;
 
 class ViewClassScreen extends StatefulWidget {
   static const String id = '/addClass';
@@ -34,17 +35,10 @@ class _ViewClassScreenState extends State<ViewClassScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return SelectClassTemplate(
         myFab: FloatingActionButton(
           onPressed: () {
-            showModalBottomSheet(
-                context: context,
-                // builder here needs a method to return widget
-                builder: addClassBuildBottomSheet,
-                isScrollControlled:
-                    true // enable the modal take up the full screen
-                );
+            showModal();
           },
           backgroundColor: Color(0xFF8A1501),
           child: Icon(Icons.add),
@@ -73,54 +67,57 @@ class _ViewClassScreenState extends State<ViewClassScreen> {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Center(
-                          child: ListTile(
-                              title: Text(snapshot.data[index].className),
-                              trailing: Wrap(
-                                spacing: 8,
-                                children: [
-                                  GestureDetector(
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: Color(0xFF8A1501),
+              return Expanded(
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: Center(
+                            child: ListTile(
+                                title: Text(snapshot.data[index].className),
+                                trailing: Wrap(
+                                  spacing: 8,
+                                  children: [
+                                    GestureDetector(
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Color(0xFF8A1501),
+                                      ),
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            // builder here needs a method to return widget
+                                            builder: editClassBuildBottomSheet,
+                                            isScrollControlled:
+                                                true // enable the modal take up the full screen
+                                            );
+                                      },
                                     ),
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                          context: context,
-                                          // builder here needs a method to return widget
-                                          builder: editClassBuildBottomSheet,
-                                          isScrollControlled:
-                                              true // enable the modal take up the full screen
-                                          );
-                                    },
-                                  ),
-                                  GestureDetector(
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: Color(0xFF8A1501),
+                                    GestureDetector(
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Color(0xFF8A1501),
+                                      ),
+                                      onTap: () {
+                                        deleteDialog(context,
+                                            snapshot.data[index].className);
+                                      },
                                     ),
-                                    onTap: () {
-                                      deleteDialog(context,
-                                          snapshot.data[index].className);
-                                    },
-                                  ),
-                                ],
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ViewCoachStudent(
-                                          classId: snapshot.data[index].classId),
-                                    ));
-                              })),
-                    );
-                  });
+                                  ],
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ViewCoachStudent(
+                                            classId:
+                                                snapshot.data[index].classId),
+                                      ));
+                                })),
+                      );
+                    }),
+              );
             }));
   }
 
@@ -136,6 +133,7 @@ class _ViewClassScreenState extends State<ViewClassScreen> {
         .then((value) {
       Map<String, dynamic> data = value.data();
       classIds = data['classIds'];
+      franchiseId = data['franchiseId'];
     });
 
     for (int i = 0; i < classIds.length; i++) {
@@ -152,6 +150,22 @@ class _ViewClassScreenState extends State<ViewClassScreen> {
       });
     }
     return classList;
+  }
+
+  void showModal() {
+    Future<void> future = showModalBottomSheet(
+        context: context,
+        // builder here needs a method to return widget
+        builder: addClassBuildBottomSheet,
+        isScrollControlled: true // enable the modal take up the full screen
+        );
+    future.then((void value) => closeModal(value));
+  }
+
+  FutureBuilder<dynamic> closeModal(void value) {
+    print('modal closed');
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => super.widget));
   }
 
   Future callFunc() async {
@@ -263,7 +277,11 @@ Widget addClassBuildBottomSheet(BuildContext context) {
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
-      child: AddClassBottomSheet(identifier: identifier),
+      child: AddClassBottomSheet(
+        identifier: identifier,
+        franchiseId: franchiseId,
+        franchiseAdminId: targetAdminId,
+      ),
     ),
   );
 }

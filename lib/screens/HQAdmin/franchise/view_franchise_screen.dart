@@ -54,56 +54,58 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Center(
-                          child: ListTile(
-                              title: Text(snapshot.data[index].franchiseName),
-                              trailing: Wrap(
-                                spacing: 8,
-                                children: [
-                                  GestureDetector(
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: Color(0xFF8A1501),
-                                    ),
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                          context: context,
-                                          // builder here needs a method to return widget
-                                          builder:
-                                              editFranchiseBuildBottomSheet,
-                                          isScrollControlled:
-                                              true // enable the modal take up the full screen
-                                          );
-                                    },
-                                  ),
-                                  GestureDetector(
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: Color(0xFF8A1501),
-                                    ),
-                                    onTap: () {
-                                      deleteDialog(context,
-                                          snapshot.data[index].franchiseName);
-                                    },
-                                  ),
-                                ],
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ViewAdminScreen(
-                                        franchiseInfo: snapshot.data[index],
+              return Expanded(
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: Center(
+                            child: ListTile(
+                                title: Text(snapshot.data[index].franchiseName),
+                                trailing: Wrap(
+                                  spacing: 8,
+                                  children: [
+                                    GestureDetector(
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Color(0xFF8A1501),
                                       ),
-                                    ));
-                              })),
-                    );
-                  });
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            // builder here needs a method to return widget
+                                            builder:
+                                                editFranchiseBuildBottomSheet,
+                                            isScrollControlled:
+                                                true // enable the modal take up the full screen
+                                            );
+                                      },
+                                    ),
+                                    GestureDetector(
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Color(0xFF8A1501),
+                                      ),
+                                      onTap: () {
+                                        deleteDialog(context,
+                                            snapshot.data[index].franchiseName);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ViewAdminScreen(
+                                          franchiseInfo: snapshot.data[index],
+                                        ),
+                                      ));
+                                })),
+                      );
+                    }),
+              );
             }));
   }
 
