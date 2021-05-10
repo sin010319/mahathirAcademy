@@ -75,7 +75,7 @@ class _AddAdminBottomSheetState extends State<AddAdminBottomSheet> {
         List<String> nameParts = this.adminName.split(" ");
         if (nameParts.length > 1) {
           username = nameParts[1][0];
-          if (nameParts[0].length > 3) {
+          if (nameParts[0].length >= 3) {
             username += nameParts[0].substring(0, 3);
           } else {
             username += nameParts[0];

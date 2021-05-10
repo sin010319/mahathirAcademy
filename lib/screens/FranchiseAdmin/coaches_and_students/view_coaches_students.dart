@@ -33,7 +33,7 @@ String studentId = '';
 String studentName;
 String studentExp;
 int studentListLength = 0;
-String globalClassName = '';
+String globalClassId = '';
 
 String franchiseId;
 String franchiseName;
@@ -65,7 +65,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
     studentName;
     studentExp;
     studentListLength = 0;
-    globalClassName = '';
+    globalClassId = '';
 
     targetClassId = widget.classId;
     widget.retrievedClassData = callFunc();
@@ -88,13 +88,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
               backgroundColor: Color(0xFFC61F00),
               onTap: () {
                 setState(() {
-                  showModalBottomSheet(
-                      context: context,
-                      // builder here needs a method to return widget
-                      builder: coachBuildBottomSheet,
-                      isScrollControlled:
-                          true // enable the modal take up the full screen
-                      );
+                  showModal(coachBuildBottomSheet);
                 });
               },
               label: 'Add Coach',
@@ -109,13 +103,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
               backgroundColor: Color(0xFFC61F00),
               onTap: () {
                 setState(() {
-                  showModalBottomSheet(
-                      context: context,
-                      // builder here needs a method to return widget
-                      builder: facilitatorBuildBottomSheet,
-                      isScrollControlled:
-                          true // enable the modal take up the full screen
-                      );
+                  showModal(facilitatorBuildBottomSheet);
                 });
               },
               label: 'Add Facilitator',
@@ -145,13 +133,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
               backgroundColor: Color(0xFFC61F00),
               onTap: () {
                 setState(() {
-                  showModalBottomSheet(
-                      context: context,
-                      // builder here needs a method to return widget
-                      builder: studentBuildBottomSheet,
-                      isScrollControlled:
-                          true // enable the modal take up the full screen
-                      );
+                  showModal(studentBuildBottomSheet);
                 });
               },
               label: 'Add Student',
@@ -227,11 +209,11 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
           print('error3');
           return Center(child: CircularProgressIndicator());
         }
-        if (snapshot.data.coach != null &&
-            snapshot.data.studentList != null &&
-            snapshot.data.facilitator != null) {
+        if (snapshot.data.coach != null) {
           coachName = snapshot.data.coach.coachName;
           coachId = snapshot.data.coach.coachId;
+        }
+        if (snapshot.data.studentList != null) {
           studentListLength = snapshot.data.studentList.length;
         }
         return Column(children: [
@@ -374,6 +356,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
         print('hey');
         className = doc['className'];
         coachId = doc['coachId'];
+        globalClassId = doc['classId'];
         try {
           facilitatorId = doc['facilitatorId'];
           hasFaci = true;
@@ -422,10 +405,25 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
         });
       });
     }
-    globalClassName = className;
     Class newClass =
         Class.main(className, targetClassId, coach, facilitator, studentList);
     return newClass;
+  }
+
+  void showModal(Widget Function(BuildContext) bottomSheet) {
+    Future<void> future = showModalBottomSheet(
+        context: context,
+        // builder here needs a method to return widget
+        builder: bottomSheet,
+        isScrollControlled: true // enable the modal take up the full screen
+        );
+    future.then((void value) => closeModal(value));
+  }
+
+  FutureBuilder<dynamic> closeModal(void value) {
+    print('modal closed');
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => super.widget));
   }
 
   Future callFunc() async {
@@ -584,7 +582,7 @@ Widget coachBuildBottomSheet(BuildContext context) {
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
       child: AddCoachStudentBottomSheet(
         identifier: identifier,
-        classId: globalClassName,
+        classId: globalClassId,
         franchiseId: franchiseId,
         title1: franchiseName,
         title2: franchiseLocation,
@@ -603,7 +601,7 @@ Widget facilitatorBuildBottomSheet(BuildContext context) {
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
       child: AddCoachStudentBottomSheet(
         identifier: identifier,
-        classId: globalClassName,
+        classId: globalClassId,
         franchiseId: franchiseId,
         title1: franchiseName,
         title2: franchiseLocation,
@@ -622,7 +620,7 @@ Widget studentBuildBottomSheet(BuildContext context) {
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
       child: AddCoachStudentBottomSheet(
         identifier: identifier,
-        classId: globalClassName,
+        classId: globalClassId,
         franchiseId: franchiseId,
         title1: franchiseName,
         title2: franchiseLocation,

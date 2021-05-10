@@ -15,7 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../student/student_profile.dart';
 import 'view_students.dart';
 import '../leaderboard.dart';
-import '../announcement.dart';
+import '../announcement/announcement.dart';
 import 'coach_profile.dart';
 
 class CoachNavigation extends StatelessWidget {

@@ -16,7 +16,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../student/student_profile.dart';
 import '../coach/view_students.dart';
 import '../leaderboard.dart';
-import '../announcement.dart';
+import '../announcement/announcement.dart';
 
 class franchiseAdminNavigation extends StatelessWidget {
   static const String id = '/franchiseAdmin';
