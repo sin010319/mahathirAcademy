@@ -62,7 +62,7 @@ class _SelectViewTemplateState extends State<SelectViewTemplate> {
                               topRight: Radius.circular(20.0)
                           )
                       ),
-                      child: Column(
+                      child: ListView(
                           children: [
                             SizedBox(height: 10.0,),
                             widget.myFutureBuilder

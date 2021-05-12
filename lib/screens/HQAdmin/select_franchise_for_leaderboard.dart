@@ -8,6 +8,7 @@ import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bot
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/edit_franchise_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/admin/hqViewStudentsRank.dart';
 import 'package:mahathir_academy_app/screens/coach/select_class.dart';
+import 'package:mahathir_academy_app/template/HQAdminCategory.dart';
 import 'package:mahathir_academy_app/template/select_franchise_template.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
 import 'package:mahathir_academy_app/template/select_class_template.dart';
@@ -72,7 +73,7 @@ class _SelectFranchiseForLeaderBoardState extends State<SelectFranchiseForLeader
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => HQViewStudentsRank(
+                                        builder: (context) => HQAdminCategory(
                                           franchiseId: snapshot.data[index].franchiseId,
                                           franchiseName: snapshot.data[index].franchiseName,
                                         )));

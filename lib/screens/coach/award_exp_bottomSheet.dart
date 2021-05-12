@@ -13,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
+bool rankUp = false;
 
 class AwardExpBottomSheet extends StatefulWidget {
   String selectedMethod; // start out with the default value
@@ -21,6 +22,7 @@ class AwardExpBottomSheet extends StatefulWidget {
   Future retrievedStudents;
   Future<dynamic> function;
 
+
   AwardExpBottomSheet({this.tickedStudents});
 
   @override
@@ -28,6 +30,12 @@ class AwardExpBottomSheet extends StatefulWidget {
 }
 
 class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
+  int markBefore;
+  int markAfter;
+  String rankBefore = "";
+  String rankAfter = "";
+  String targetFranchiseAdminName;
+  String targetStudentId;
   String alertMethodMessage =
       'Please select a method first before awarding exp to students.';
 
@@ -219,6 +227,22 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
         ));
   }
 
+  // Future<Student> getStudent() async {
+  //   await _firestore.collection('students')
+  //       .doc(targetStudentId)
+  //       .get()
+  //       .then((value) {
+  //     Map<String, dynamic> data = value.data();
+  //     targetStudentFranchise = data['franchiseName'];
+  //     print(targetStudentName);
+  //     print("hahahhah");
+  //
+  //
+  //
+  //
+  //   });
+  // }
+
   Future update(int awardedExp) async {
     WriteBatch batch = _firestore.batch();
 
@@ -229,15 +253,66 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
           .get()
           .then((querySnapshot) {
         querySnapshot.docs.forEach((doc) {
+          markBefore = doc.data()["exp"];
+          rankBefore = decideRank(markBefore);
+
           batch.update(doc.reference, {"exp": doc.data()["exp"] + awardedExp});
+          markAfter = doc.data()["exp"] + awardedExp;
+          rankAfter = decideRank(markAfter);
+          targetFranchiseAdminName = doc.data()['franchiseName'];
+          targetStudentId = doc.data()['studentId'];
+          print(rankBefore);
+          print("------------");
+          print(rankAfter);
+          print(tickedStudents[i].studentId);
+
           print('can update exp');
         });
       });
     }
+
+    if (rankBefore != rankAfter) {
+      String studentRankUp = "Student has leveled up from $rankBefore to $rankAfter!";
+      PopUpAlertClass.popUpAlert(studentRankUp, context);
+      _firestore.collection('announcements').add(
+          {'message' : "Congratulation! You have ranked up!",
+            'sender' : targetFranchiseAdminName,
+            'timestamp': new DateTime.now(),
+            'target' : targetStudentId
+
+          });
+    }
+
     String expAwardedMessage =
         'You have successfully award EXP to the student(s). Please close this page to view the newly updated student EXP.';
     PopUpAlertClass.popUpAlert(expAwardedMessage, context);
     return batch.commit();
+  }
+
+  String decideRank(int exp) {
+    String retRank = "";
+    if (exp >= 0 && exp < 500){
+      retRank = "Bronze Speaker";
+    }
+    else if (exp >= 500 && exp < 1000){
+      retRank = "Silver Speaker";
+    }
+    else if (exp >= 1000 && exp < 1500){
+      retRank = "Gold Speaker";
+    }
+    else if (exp >= 1500 && exp < 2000){
+      retRank = "Platinum Speaker";
+    }
+    else if (exp >= 2000 && exp < 3000){
+      retRank = "Ruby Speaker";
+    }
+    else if (exp >= 3000 && exp < 4000){
+      retRank = "Diamond Speaker";
+    }
+    else if (exp >= 4000){
+      retRank = "Elite Speaker";
+    }
+    return retRank;
   }
 
   callAwardExpFunc(int awardedExp) async {

@@ -57,7 +57,8 @@ class FranchiseAnnouncement extends StatelessWidget {
                       _firestore.collection('announcements').add(
                           {'message' : messageText,
                             'sender' : targetFranchiseAdminName,
-                            'timestamp': new DateTime.now()
+                            'timestamp': new DateTime.now(),
+                            'target': 'franchiseStudent'
 
                           });
                     },
@@ -115,9 +116,14 @@ class MessagesStream extends StatelessWidget {
         for (var message in messages) {
           final messageText = message.data()['message'];
           final messageSender = message.data()['sender'];
+          final messageTarget = message.data()['target'];
 
-          final messageBubble = MessageBubble(sender: messageSender, text: messageText);
-          messageBubbles.add(messageBubble);
+          if (messageSender == 'hqAdmin' || (messageSender == targetFranchiseAdminName && messageTarget == 'franchiseStudent')) {
+            final messageBubble = MessageBubble(sender: messageSender, text: messageText, target: messageTarget);
+            messageBubbles.add(messageBubble);
+          }
+
+
 
         };
         return Expanded(
@@ -138,10 +144,11 @@ class MessagesStream extends StatelessWidget {
 
 class MessageBubble extends StatelessWidget {
 
-  MessageBubble({this.sender, this.text});
+  MessageBubble({this.sender, this.text, this.target});
 
   final String sender;
   final String text;
+  final String target;
 
   @override
   Widget build(BuildContext context) {

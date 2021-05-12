@@ -8,8 +8,12 @@ import 'package:mahathir_academy_app/screens/HQAdmin/franchise/view_franchise_sc
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
 import 'package:mahathir_academy_app/screens/admin/viewFranchiseStudents.dart';
+import 'package:mahathir_academy_app/screens/announcement/franchiseAnnouncement.dart';
 import 'package:mahathir_academy_app/screens/coach/select_class.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
+import 'package:mahathir_academy_app/template/coachFranchiseCategory.dart';
+import 'package:mahathir_academy_app/template/franchiseBasedCategory.dart';
+import 'package:mahathir_academy_app/template/franchiseCategory.dart';
 import 'package:mahathir_academy_app/template/select_class_template.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -65,27 +69,19 @@ class franchiseAdminNavigation extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                       child: Row(children: <Widget>[
-                    Expanded(
-                      child: ReusableCard(
-                        onPress: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SelectClass(
-                                    textForDisplay:
-                                        "Please select the class that you want to view the student ranking: ",
-                                    classFunction: () {
-                                      Navigator.pushNamed(context, Category.id);
-                                    }),
-                              ));
-                        },
-                        colour: Colors.white,
-                        cardChild: IconContent(
-                          icon: FontAwesomeIcons.trophy,
-                          label: 'STUDENT RANKING',
+                        Expanded(
+                          child: ReusableCard(
+                            onPress: () {
+                              Navigator.pushNamed(
+                                  context, FranchiseBasedCategory.id);
+                            },
+                            colour: Colors.white,
+                            cardChild: IconContent(
+                              icon: FontAwesomeIcons.trophy,
+                              label: 'STUDENT RANKING',
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
                     Expanded(
                       child: ReusableCard(
                         onPress: () {
@@ -118,7 +114,7 @@ class franchiseAdminNavigation extends StatelessWidget {
                         Expanded(
                           child: ReusableCard(
                             onPress: () {
-                              Navigator.pushNamed(context, Announcement.id);
+                              Navigator.pushNamed(context, FranchiseAnnouncement.id);
                             },
                             // USE TERNARY OPERATOR HERE
                             // CHANGE THE COLOR OF CARD WHEN SWITCHING BETWEEN TAPPING

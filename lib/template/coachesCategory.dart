@@ -30,10 +30,10 @@ class coachesCategory extends StatefulWidget {
   static const String id = '/coachesCategory';
 
   String franchiseId;
-  String franchiseName;
+  int minMark;
+  int maxMark;
 
-  coachesCategory({this.franchiseId, this.franchiseName});
-
+  coachesCategory({this.minMark, this.maxMark});
   @override
   _coachesCategoryState createState() => _coachesCategoryState();
 
@@ -66,7 +66,7 @@ class _coachesCategoryState extends State<coachesCategory> {
                 return Container();
               }
               return Text(
-                '${targetFranchiseName} \n${snapshot.data.length} Students',
+                '$targetFranchiseName \n${snapshot.data.length} Students',
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
@@ -128,7 +128,7 @@ class _coachesCategoryState extends State<coachesCategory> {
     List<Student> studentList = [];
     List<dynamic> classIds = [];
     List<String> studentIds = [];
-    studentNames = [];
+    List <String>studentNames = [];
     int studentExp;
     List<int> studentExps = [];
     String studentRank;
@@ -161,8 +161,11 @@ class _coachesCategoryState extends State<coachesCategory> {
         querySnapshot.docs.forEach((doc) {
           studentExp = doc['exp'];
           rank = decideRank(studentExp);
-          Student newStudent = Student(studentNames[i], studentIds[i], studentExp);
-          studentList.add(newStudent);
+          if (doc['franchiseId'] == targetFranchiseId && (doc['exp'] >= widget.minMark && doc['exp'] < widget.maxMark)) {
+            Student newStudent =
+                Student(studentNames[i], studentIds[i], studentExp);
+            studentList.add(newStudent);
+          }
         });
       });
     }

@@ -30,10 +30,10 @@ class franchiseCategory extends StatefulWidget {
   static const String id = '/franchiseCategory';
 
   String franchiseId;
-  String franchiseName;
+  int minMark;
+  int maxMark;
 
-  franchiseCategory({this.franchiseId, this.franchiseName});
-
+  franchiseCategory({this.minMark, this.maxMark});
   @override
   _franchiseCategoryState createState() => _franchiseCategoryState();
 
@@ -47,8 +47,10 @@ class _franchiseCategoryState extends State<franchiseCategory> {
     targetAdminId = _auth.currentUser.uid;
     widget.retrievedStudents = callStuFunc();
     print(targetAdminId);
-    getFranchise();
+    getFranchiseAdmin();
+    print(targetFranchiseName);
     print(targetFranchiseId);
+    print("????");
     super.initState();
 
   }
@@ -64,7 +66,7 @@ class _franchiseCategoryState extends State<franchiseCategory> {
                 return Container();
               }
               return Text(
-                '${targetFranchiseName} \n${snapshot.data.length} Students',
+                '$targetFranchiseName \n${snapshot.data.length} Students',
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
@@ -106,14 +108,14 @@ class _franchiseCategoryState extends State<franchiseCategory> {
             })
     );}
 
-  Future<Franchise> getFranchise() async {
+  Future<Franchise> getFranchiseAdmin() async {
     await _firestore.collection('franchiseAdmins')
         .doc(targetAdminId)
         .get()
         .then((value) {
       Map<String, dynamic> data = value.data();
-      targetFranchiseId = data['franchiseId'];
       targetFranchiseName = data['franchiseName'];
+      targetFranchiseId = data['franchiseId'];
 
     });
   }
@@ -126,7 +128,7 @@ class _franchiseCategoryState extends State<franchiseCategory> {
     List<Student> studentList = [];
     List<dynamic> classIds = [];
     List<String> studentIds = [];
-    studentNames = [];
+    List <String>studentNames = [];
     int studentExp;
     List<int> studentExps = [];
     String studentRank;
@@ -159,8 +161,11 @@ class _franchiseCategoryState extends State<franchiseCategory> {
         querySnapshot.docs.forEach((doc) {
           studentExp = doc['exp'];
           rank = decideRank(studentExp);
-          Student newStudent = Student(studentNames[i], studentIds[i], studentExp);
-          studentList.add(newStudent);
+          if (doc['franchiseId'] == targetFranchiseId && (doc['exp'] >= widget.minMark && doc['exp'] < widget.maxMark)) {
+            Student newStudent =
+            Student(studentNames[i], studentIds[i], studentExp);
+            studentList.add(newStudent);
+          }
         });
       });
     }

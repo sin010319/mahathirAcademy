@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/reusable_card.dart';
+import 'package:mahathir_academy_app/screens/announcement/coachAnnouncement.dart';
 import 'package:mahathir_academy_app/screens/coach/select_class_view_students.dart';
+import 'package:mahathir_academy_app/template/coachFranchiseCategory.dart';
 import 'package:mahathir_academy_app/template/select_class_template.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/components/icon_content.dart';
@@ -11,6 +13,7 @@ import 'package:mahathir_academy_app/screens/coach/select_class.dart';
 import 'package:mahathir_academy_app/screens/coach/select_class_general.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mahathir_academy_app/template/coachesCategory.dart';
 
 import '../student/student_profile.dart';
 import 'view_students.dart';
@@ -104,16 +107,8 @@ class CoachNavigation extends StatelessWidget {
                 Expanded(
                   child: ReusableCard(
                     onPress: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SelectClass(
-                                textForDisplay:
-                                    "Please select the class that you want to view the student ranking: ",
-                                classFunction: () {
-                                  Navigator.pushNamed(context, Category.id);
-                                }),
-                          ));
+                      Navigator.pushNamed(
+                          context, CoachFranchiseCategory.id);
                     },
                     colour: Colors.white,
                     cardChild: IconContent(
@@ -148,7 +143,7 @@ class CoachNavigation extends StatelessWidget {
                       Expanded(
                         child: ReusableCard(
                           onPress: () {
-                            Navigator.pushNamed(context, Announcement.id);
+                            Navigator.pushNamed(context, CoachAnnouncement.id);
                           },
                           // USE TERNARY OPERATOR HERE
                           // CHANGE THE COLOR OF CARD WHEN SWITCHING BETWEEN TAPPING
