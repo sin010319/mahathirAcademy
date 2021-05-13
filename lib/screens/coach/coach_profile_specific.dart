@@ -17,6 +17,7 @@ String franchiseName;
 List<dynamic> listClassNames = [];
 List<dynamic> classIds = [];
 String documentId;
+String username;
 
 class SpecificCoachProfile extends StatefulWidget {
   static String id = "/coachProfileSpecific";
@@ -41,7 +42,6 @@ class _SpecificCoachProfileState extends State<SpecificCoachProfile> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           title: Text("Profile"),
@@ -49,54 +49,59 @@ class _SpecificCoachProfileState extends State<SpecificCoachProfile> {
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 20),
           child: FutureBuilder(
-          future: widget.coachInfo,
-    builder: (context, snapshot) {
-      if (snapshot.hasData){
-        print(snapshot.data);
-      return Column(
-        children: [
-          ProfilePic(),
-          SizedBox(height: 20),
-          ProfileMenu(
-            text: "Name: ${snapshot.data.coachName}",
-            icon: "assets/icons/userIcon.svg",
-            press: () => {},
-          ),
-          ProfileMenu(
-            text: "Franchise: ${snapshot.data.franchiseName}",
-            icon: "assets/icons/school.svg",
-            press: () {},
-          ),
-          ProfileMenu(
-            text: "Class: ${snapshot.data.classNames}",
-            icon: "assets/icons/class.svg",
-            press: () {},
-          ),
-        ],
-      );}
-      else{
-        print('error3');
-        return Center(child: CircularProgressIndicator());
-      }
-    }),
+              future: widget.coachInfo,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  print(snapshot.data);
+
+                  return Column(
+                    children: [
+                      ProfilePic(),
+                      SizedBox(height: 20),
+                      ProfileMenu(
+                        text: "Name: ${snapshot.data.coachName}",
+                        icon: "assets/icons/userIcon.svg",
+                        press: () => {},
+                      ),
+                      ProfileMenu(
+                        text: "Username: ${snapshot.data.username}",
+                        icon: "assets/icons/username.svg",
+                        press: () => {},
+                      ),
+                      ProfileMenu(
+                        text: "Franchise: ${snapshot.data.franchiseName}",
+                        icon: "assets/icons/school.svg",
+                        press: () {},
+                      ),
+                      ProfileMenu(
+                        text: "Class: ${snapshot.data.classNames}",
+                        icon: "assets/icons/class.svg",
+                        press: () {},
+                      ),
+                    ],
+                  );
+                } else {
+                  print('error3');
+                  return Center(child: CircularProgressIndicator());
+                }
+              }),
         ));
   }
 
   Future<Coach> getCoach() async {
-    await _firestore.collection('coaches')
-        .doc(documentId)
-        .get()
-        .then((value) {
+    await _firestore.collection('coaches').doc(documentId).get().then((value) {
       Map<String, dynamic> data = value.data();
       coachName = data['coachName'];
       franchiseName = data['franchiseName'];
       classIds = data['classIds'];
+      username = data['username'];
     });
 
     listClassNames = [];
 
     for (var eachClassId in classIds) {
-      await _firestore.collection('classes')
+      await _firestore
+          .collection('classes')
           .where('classId', isEqualTo: eachClassId)
           .get()
           .then((QuerySnapshot querySnapshot) {
@@ -106,7 +111,8 @@ class _SpecificCoachProfileState extends State<SpecificCoachProfile> {
         });
       });
     }
-    Coach coach = Coach(coachName, classIds, franchiseName, listClassNames);
+    Coach coach = Coach.completeInfo(
+        coachName, username, classIds, franchiseName, listClassNames);
     return coach;
   }
 
@@ -114,5 +120,3 @@ class _SpecificCoachProfileState extends State<SpecificCoachProfile> {
     return await getCoach();
   }
 }
-
-

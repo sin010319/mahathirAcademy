@@ -8,15 +8,19 @@ import 'package:mahathir_academy_app/models/student.dart';
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
-String studentName;
-String username;
+String studentName = '';
+String username = '';
 int exp;
-String contactNum;
-String franchiseLocation;
-String classId;
-String className;
-String documentId;
-String rank;
+String contactNum = '';
+String franchiseLocation = '';
+String classId = '';
+String className = '';
+String documentId = '';
+String rank = '';
+String coachId = '';
+String coachName = '-';
+String facilitatorId = '';
+String facilitatorName = '-';
 
 class StudentProfile extends StatefulWidget {
   static String id = "/studentProfile";
@@ -57,6 +61,11 @@ class _StudentProfileState extends State<StudentProfile> {
                         press: () => {},
                       ),
                       ProfileMenu(
+                        text: "Username: ${snapshot.data.username}",
+                        icon: "assets/icons/username.svg",
+                        press: () => {},
+                      ),
+                      ProfileMenu(
                         text:
                             "Franchise Location: ${snapshot.data.franchiseLocation}",
                         icon: "assets/icons/school.svg",
@@ -65,6 +74,16 @@ class _StudentProfileState extends State<StudentProfile> {
                       ProfileMenu(
                         text: "Class: ${snapshot.data.className}",
                         icon: "assets/icons/class.svg",
+                        press: () {},
+                      ),
+                      ProfileMenu(
+                        text: "Coach: ${snapshot.data.coachName}",
+                        icon: "assets/icons/coach.svg",
+                        press: () {},
+                      ),
+                      ProfileMenu(
+                        text: "Facilitator: ${snapshot.data.facilitatorName}",
+                        icon: "assets/icons/facilitator.svg",
                         press: () {},
                       ),
                       ProfileMenu(
@@ -105,13 +124,32 @@ class _StudentProfileState extends State<StudentProfile> {
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         className = doc['className'];
+        coachId = doc['coachId'];
+        facilitatorId = doc['facilitatorId'];
       });
     });
 
+    await _firestore.collection('coaches').doc(coachId).get().then((value) {
+      Map<String, dynamic> data = value.data();
+      coachName = data['coachName'];
+    });
+
+    await _firestore.collection('coaches').doc(coachId).get().then((value) {
+      Map<String, dynamic> data = value.data();
+      facilitatorName = data['facilitatorName'];
+    });
+
+    if (coachName == null) {
+      coachName = '-';
+    }
+    if (facilitatorName == null) {
+      facilitatorName = '-';
+    }
+
     rank = decideRank(exp);
 
-    Student student = Student.fromStudent(
-        studentName, exp, franchiseLocation, className, rank);
+    Student student = Student.completeStudentInfo(studentName, username, exp,
+        franchiseLocation, className, rank, coachName, facilitatorName);
     return student;
   }
 

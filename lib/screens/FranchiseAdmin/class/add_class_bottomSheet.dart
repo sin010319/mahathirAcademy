@@ -71,7 +71,7 @@ class _AddClassBottomSheetState extends State<AddClassBottomSheet> {
       await updateClassIds();
       await addNewClass();
       String classAddedMessage =
-          'You have successfully added a new class. Please close this page to view the newly updated student EXP.';
+          'You have successfully added a new class. Please close this page to view the newly updated class(es).';
       PopUpAlertClass.popUpAlert(classAddedMessage, context);
     }
 

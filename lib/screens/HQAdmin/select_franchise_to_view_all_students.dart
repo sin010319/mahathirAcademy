@@ -23,17 +23,17 @@ final _auth = FirebaseAuth.instance;
 String targetAdminId;
 
 class SelectFranchiseToViewAllStudents extends StatefulWidget {
-
   static const String id = '/SelectFranchiseToViewAllStudents';
 
   @override
-  _SelectFranchiseToViewAllStudentsState createState() => _SelectFranchiseToViewAllStudentsState();
+  _SelectFranchiseToViewAllStudentsState createState() =>
+      _SelectFranchiseToViewAllStudentsState();
 
   Future retrievedFranchises;
 }
 
-class _SelectFranchiseToViewAllStudentsState extends State<SelectFranchiseToViewAllStudents> {
-
+class _SelectFranchiseToViewAllStudentsState
+    extends State<SelectFranchiseToViewAllStudents> {
   @override
   void initState() {
     targetAdminId = _auth.currentUser.uid;
@@ -43,13 +43,15 @@ class _SelectFranchiseToViewAllStudentsState extends State<SelectFranchiseToView
 
   @override
   Widget build(BuildContext context) {
-    return SelectFranchiseTemplateFixed(
+    return SelectCoachTemplate(
         franchiseFab: null,
-        franchiseContentTitle: 'Please select the franchise that you want to view the students:',
+        franchiseContentTitle:
+            'Please select the franchise that you want to view the students:',
         franchiseItemBuilder: FutureBuilder(
             future: widget.retrievedFranchises,
             builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
@@ -60,24 +62,23 @@ class _SelectFranchiseToViewAllStudentsState extends State<SelectFranchiseToView
                     return Card(
                       child: Center(
                           child: ListTile(
-                              title: Text(
-                                  snapshot.data[index].franchiseName),
+                              title: Text(snapshot.data[index].franchiseName),
                               onTap: () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => HQViewFranchiseStudents(
-                                          franchiseId: snapshot.data[index].franchiseId,
-                                        franchiseName: snapshot.data[index].franchiseName,
-                                    )));
-                              }
-                          )
-                      ),
+                                        builder: (context) =>
+                                            HQViewFranchiseStudents(
+                                              franchiseId: snapshot
+                                                  .data[index].franchiseId,
+                                              franchiseName: snapshot
+                                                  .data[index].franchiseName,
+                                            )));
+                              })),
                     );
                   });
-            })
-                );
-        }
+            }));
+  }
 
   Future<List<Franchise>> franchiseData() async {
     String franchiseId;
@@ -85,18 +86,19 @@ class _SelectFranchiseToViewAllStudentsState extends State<SelectFranchiseToView
     String franchiseLocation;
     List<Franchise> franchisesList = [];
 
-    await _firestore.collection('franchiseAdmins')
+    await _firestore
+        .collection('franchiseAdmins')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         franchiseName = doc["franchiseName"];
         franchiseId = doc["franchiseId"];
-        franchiseLocation= doc["franchiseLocation"];
-        Franchise newFranchise = Franchise(franchiseName, franchiseLocation, franchiseId);
+        franchiseLocation = doc["franchiseLocation"];
+        Franchise newFranchise =
+            Franchise(franchiseName, franchiseLocation, franchiseId);
         franchisesList.add(newFranchise);
       });
     });
-
 
     return franchisesList;
   }
@@ -105,6 +107,3 @@ class _SelectFranchiseToViewAllStudentsState extends State<SelectFranchiseToView
     return await franchiseData();
   }
 }
-
-
-

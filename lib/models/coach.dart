@@ -1,15 +1,16 @@
-class Coach{
-
+class Coach {
   String _coachName;
   String _coachId;
   List<dynamic> _classIds;
   String _franchiseName;
   List<dynamic> _classNames;
+  String _username;
 
   Coach(this._coachName, this._classIds, this._franchiseName, this._classNames);
+  Coach.completeInfo(this._coachName, this._username, this._classIds,
+      this._franchiseName, this._classNames);
 
   Coach.fromCoach(this._coachName, this._coachId);
-
 
   List<dynamic> get classNames => _classNames;
 
@@ -39,5 +40,11 @@ class Coach{
 
   set coachId(String value) {
     _coachId = value;
+  }
+
+  String get username => _username;
+
+  set username(String value) {
+    _username = value;
   }
 }

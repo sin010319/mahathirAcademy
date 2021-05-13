@@ -101,6 +101,27 @@ class franchiseAdminNavigation extends StatelessWidget {
                     ),
                   ])),
                   Expanded(
+                    child: ReusableCard(
+                      onPress: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SelectClass(
+                                  textForDisplay:
+                                      "Please select the class that you want to view the student ranking: ",
+                                  classFunction: () {
+                                    Navigator.pushNamed(context, Category.id);
+                                  }),
+                            ));
+                      },
+                      colour: Colors.white,
+                      cardChild: IconContent(
+                        icon: FontAwesomeIcons.trophy,
+                        label: 'STUDENT RANKING',
+                      ),
+                    ),
+                  ),
+                  Expanded(
                     child: Row(
                       children: <Widget>[
                         Expanded(

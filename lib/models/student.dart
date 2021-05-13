@@ -1,15 +1,25 @@
-class Student{
-
+class Student {
   String _studentName;
   String _studentId;
   int _exp;
   String _franchiseLocation;
   String _className;
   String _rank;
+  String _username;
+  String _coachName;
+  String _facilitatorName;
 
   Student(this._studentName, this._studentId, this._exp);
 
-  Student.fromStudent(this._studentName, this._exp, this._franchiseLocation, this._className, this._rank);
+  Student.completeStudentInfo(
+      this._studentName,
+      this._username,
+      this._exp,
+      this._franchiseLocation,
+      this._className,
+      this._rank,
+      this._coachName,
+      this._facilitatorName);
 
   Student.viewStudent(this._studentName, this._studentId, this._className);
 
@@ -51,5 +61,21 @@ class Student{
     _studentId = value;
   }
 
+  String get username => _username;
 
+  set username(String value) {
+    _username = value;
+  }
+
+  String get facilitatorName => _facilitatorName;
+
+  set facilitatorName(String value) {
+    _facilitatorName = value;
+  }
+
+  String get coachName => _coachName;
+
+  set coachName(String value) {
+    _coachName = value;
+  }
 }

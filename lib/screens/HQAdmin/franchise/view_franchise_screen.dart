@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mahathir_academy_app/components/pop_up_alert.dart';
+import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/models/franchise.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise_admin/view_admin_screen.dart';
@@ -36,7 +38,88 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SelectFranchiseTemplateFixed(
+    Future<void> removeFranchises(String franchiseIdForDelete) async {
+      CollectionReference franchises =
+          FirebaseFirestore.instance.collection('franchises');
+
+      return franchises
+          .doc(franchiseIdForDelete)
+          .delete()
+          .then((value) => print("Franchise Removed"))
+          .catchError((error) => print("Failed to remove franchise: $error"));
+    }
+
+    Future<void> removeData(String franchiseIdForDelete) async {
+      CollectionReference franchiseAdmins =
+          FirebaseFirestore.instance.collection('franchiseAdmins');
+      CollectionReference students =
+          FirebaseFirestore.instance.collection('students');
+      CollectionReference classes =
+          FirebaseFirestore.instance.collection('classes');
+      CollectionReference coaches =
+          FirebaseFirestore.instance.collection('coaches');
+
+      dynamic classIdsForDelete = [];
+
+      await franchiseAdmins
+          .where('franchiseId', isEqualTo: franchiseIdForDelete)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          classIdsForDelete = doc['classIds'];
+        });
+      });
+
+      for (dynamic classId in classIdsForDelete) {
+        await classes
+            .where('classId', isEqualTo: classId)
+            .get()
+            .then((querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            doc.reference.delete();
+          });
+        });
+      }
+
+      await franchiseAdmins
+          .where('franchiseId', isEqualTo: franchiseIdForDelete)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.delete();
+        });
+      });
+
+      await students
+          .where('franchiseId', isEqualTo: franchiseIdForDelete)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.delete();
+        });
+      });
+
+      await coaches
+          .where('franchiseId', isEqualTo: franchiseIdForDelete)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.delete();
+        });
+      });
+    }
+
+    Future<void> callDeleteFunc(String franchiseIdForDelete) async {
+      await removeFranchises(franchiseIdForDelete);
+      await removeData(franchiseIdForDelete);
+      String franchiseDeletedMsg =
+          'You have successfully removed a franchise. Please close this page to view the newly updated franchises.';
+      await PopUpAlertClass.popUpAlert(franchiseDeletedMsg, context);
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+    }
+
+    return SelectCoachTemplate(
         franchiseFab: FloatingActionButton(
           onPressed: () {
             showModal();
@@ -88,8 +171,20 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
                                         color: Color(0xFF8A1501),
                                       ),
                                       onTap: () {
-                                        deleteDialog(context,
-                                            snapshot.data[index].franchiseName);
+                                        String message =
+                                            'Are you sure you want to remove ${snapshot.data[index].franchiseName}? Note that when you remove this franchise, all the classes, students and coaches who are still under this franchise will be removed';
+                                        PopUpDialogClass.popUpDialog(
+                                            message, context, () {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop();
+                                          callDeleteFunc(
+                                              snapshot.data[index].franchiseId);
+                                        }, () {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop();
+                                        });
                                       },
                                     ),
                                   ],
@@ -151,89 +246,6 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
   Future callFunc() async {
     return await franchiseData();
   }
-}
-
-deleteDialog(BuildContext context, String itemRemoved) {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Center(
-          child: AlertDialog(
-            content: Stack(
-              overflow: Overflow.visible,
-              children: <Widget>[
-                Positioned(
-                  right: -40.0,
-                  top: -40.0,
-                  child: InkResponse(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: CircleAvatar(
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context, rootNavigator: true).pop();
-                          },
-                          child: Icon(Icons.close)),
-                      backgroundColor: Colors.red,
-                    ),
-                  ),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      'Are you sure you want to remove $itemRemoved?',
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        button('Yes', context),
-                        button('No', context),
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      });
-}
-
-Widget button(String text, BuildContext context) {
-  double _height = MediaQuery.of(context).size.height;
-  double _width = MediaQuery.of(context).size.width;
-
-  return RaisedButton(
-    elevation: 0,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-    onPressed: () {
-      if (text == 'Yes') {
-        // do something
-      } else if (text == 'No') {
-        Navigator.of(context, rootNavigator: true).pop();
-      }
-    },
-    textColor: Colors.white,
-    padding: EdgeInsets.all(0.0),
-    child: Container(
-      alignment: Alignment.center,
-      width: _width / 5,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        gradient: LinearGradient(
-          colors: <Color>[Colors.orange[200], Colors.pinkAccent],
-        ),
-      ),
-      padding: const EdgeInsets.all(12.0),
-      child: Text(text, style: TextStyle(fontSize: 15)),
-    ),
-  );
 }
 
 Widget editFranchiseBuildBottomSheet(BuildContext context) {
