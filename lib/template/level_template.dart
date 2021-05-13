@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mahathir_academy_app/models/student.dart';
 
 
 class LevelTemplate extends StatefulWidget {
@@ -173,7 +174,7 @@ class _LevelTemplateState extends State<LevelTemplate> {
                                       });
                                 } else {
                                   return Center(
-                                    child: CircularProgressIndicator(),
+                                    child: Text("No students in this franchise are currently in this rank."),
                                   );
                                 }
 
@@ -187,5 +188,6 @@ class _LevelTemplateState extends State<LevelTemplate> {
       ],
     );
   }
+
 
 }

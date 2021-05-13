@@ -99,25 +99,6 @@ class _AwardExpState extends State<AwardExp> {
                     fontSize: 16.0),
                 labelBackgroundColor: Color(0xFFFF3700)),
             // FAB 3
-            SpeedDialChild(
-                child: Icon(FontAwesomeIcons.stamp, color: Colors.white),
-                backgroundColor: Color(0xFFC61F00),
-                onTap: () {
-                  setState(() {
-                    PopUpDialogClass.popUpDialog(
-                        acknowledgementMessage, context, () {
-                      // do smt
-                    }, () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    });
-                  });
-                },
-                label: 'Acknowledgement',
-                labelStyle: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                    fontSize: 16.0),
-                labelBackgroundColor: Color(0xFFFF3700)),
           ],
         ),
         appBar: AppBar(title: Text('Award EXP and Acknowledgment')),

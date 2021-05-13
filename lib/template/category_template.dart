@@ -47,7 +47,7 @@ class _CategoryState extends State<Category> {
                 height: 10.0,
               ),
               Text(
-                  'Please select which class speaker you want to view: ',
+                'Please select which class speaker you want to view: ',
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
@@ -92,7 +92,7 @@ class _CategoryState extends State<Category> {
                                             .orderBy('exp', descending: true)
                                             .where('exp', isGreaterThanOrEqualTo: 4000)
                                             .snapshots(),
-                                    imageLocation: 'elite'),
+                                        imageLocation: 'elite'),
 
                                   ));
                               break;
@@ -100,28 +100,28 @@ class _CategoryState extends State<Category> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => LevelTemplate(
-                                        titleForDisplay: "Diamond Speaker",
-                                        streamList: _firestore
-                                            .collection('students')
-                                            .orderBy('exp', descending: true)
-                                            .where('exp', isGreaterThanOrEqualTo: 3000, isLessThan: 4000)
-                                            .snapshots(),
-                                        imageLocation: 'diamond')
+                                      builder: (context) => LevelTemplate(
+                                          titleForDisplay: "Diamond Speaker",
+                                          streamList: _firestore
+                                              .collection('students')
+                                              .orderBy('exp', descending: true)
+                                              .where('exp', isGreaterThanOrEqualTo: 3000, isLessThan: 4000)
+                                              .snapshots(),
+                                          imageLocation: 'diamond')
                                   ));
                               break;
                             case 2:
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => LevelTemplate(
-                                        titleForDisplay: "Ruby Speaker",
-                                        streamList: _firestore
-                                            .collection('students')
-                                            .orderBy('exp', descending: true)
-                                            .where('exp', isGreaterThanOrEqualTo: 2000, isLessThan: 3000)
-                                            .snapshots(),
-                                        imageLocation: 'ruby')
+                                      builder: (context) => LevelTemplate(
+                                          titleForDisplay: "Ruby Speaker",
+                                          streamList: _firestore
+                                              .collection('students')
+                                              .orderBy('exp', descending: true)
+                                              .where('exp', isGreaterThanOrEqualTo: 2000, isLessThan: 3000)
+                                              .snapshots(),
+                                          imageLocation: 'ruby')
                                   ));
                               break;
                             case 3:
@@ -142,42 +142,42 @@ class _CategoryState extends State<Category> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => LevelTemplate(
-                                        titleForDisplay: "Gold Speaker",
-                                        streamList: _firestore
-                                            .collection('students')
-                                            .orderBy('exp', descending: true)
-                                            .where('exp', isGreaterThanOrEqualTo: 1000, isLessThan: 1500)
-                                            .snapshots(),
-                                        imageLocation: 'gold')
+                                      builder: (context) => LevelTemplate(
+                                          titleForDisplay: "Gold Speaker",
+                                          streamList: _firestore
+                                              .collection('students')
+                                              .orderBy('exp', descending: true)
+                                              .where('exp', isGreaterThanOrEqualTo: 1000, isLessThan: 1500)
+                                              .snapshots(),
+                                          imageLocation: 'gold')
                                   ));
                               break;
                             case 5:
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => LevelTemplate(
-                                        titleForDisplay: "Silver Speaker",
-                                        streamList: _firestore
-                                            .collection('students')
-                                            .orderBy('exp', descending: true)
-                                            .where('exp', isGreaterThanOrEqualTo: 500, isLessThan: 1000)
-                                            .snapshots(),
-                                        imageLocation: 'silver')
+                                      builder: (context) => LevelTemplate(
+                                          titleForDisplay: "Silver Speaker",
+                                          streamList: _firestore
+                                              .collection('students')
+                                              .orderBy('exp', descending: true)
+                                              .where('exp', isGreaterThanOrEqualTo: 500, isLessThan: 1000)
+                                              .snapshots(),
+                                          imageLocation: 'silver')
                                   ));
                               break;
                             case 6:
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => LevelTemplate(
-                                        titleForDisplay: "Bronze Speaker",
-                                        streamList: _firestore
-                                            .collection('students')
-                                            .orderBy('exp', descending: true)
-                                            .where('exp', isLessThan: 500)
-                                            .snapshots(),
-                                        imageLocation: 'bronze')
+                                      builder: (context) => LevelTemplate(
+                                          titleForDisplay: "Bronze Speaker",
+                                          streamList: _firestore
+                                              .collection('students')
+                                              .orderBy('exp', descending: true)
+                                              .where('exp', isLessThan: 500)
+                                              .snapshots(),
+                                          imageLocation: 'bronze')
                                   ));
                               break;
                             case 7:

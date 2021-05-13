@@ -3,28 +3,32 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/models/admin.dart';
-import 'package:mahathir_academy_app/screens/admin/hqviewStudentsRank.dart';
+import 'package:mahathir_academy_app/models/student.dart';
 
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
 final _auth = FirebaseAuth.instance;
+String targetCoachId="";
+String targetStudentName;
+String targetAdminName;
 String targetAdminId="";
-String targetFranchiseAdminName;
+String targetFranchiseId;
+String targetCoachFranchise;
 
-class FranchiseAnnouncement extends StatelessWidget {
+class CoachAnnouncement extends StatelessWidget {
   final messageTextController = TextEditingController();
 
   String messageText;
 
-  static const String id = '/franchiseAnnouncement';
+  static const String id = '/coachAnnouncement';
 
 
   @override
   Widget build(BuildContext context) {
-    targetAdminId = _auth.currentUser.uid;
-    getFranchiseAdmin();
-    print(targetFranchiseAdminName);
-    print(targetAdminId);
+    targetCoachId = _auth.currentUser.uid;
+    getCoach();
+    print(targetCoachFranchise);
+    print(targetCoachId);
     return Scaffold(
       appBar: AppBar(
         title: Text('Announcement'),
@@ -35,42 +39,6 @@ class FranchiseAnnouncement extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             MessagesStream(),
-            Container(
-              decoration: kMessageContainerDecoration,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      controller: messageTextController,
-                      onChanged: (value) {
-                        messageText = value;
-                        print(messageText);
-                        print("lamo");
-                      },
-                      decoration: kMessageTextFieldDecoration,
-                    ),
-                  ),
-                  FlatButton(
-                    onPressed: () {
-                      messageTextController.clear();
-                      _firestore.collection('announcements').add(
-                          {'message' : messageText,
-                            'sender' : targetFranchiseAdminName,
-                            'timestamp': new DateTime.now(),
-                            'target': 'franchiseStudent'
-
-                          });
-                    },
-                    child: Text(
-                      'Send',
-                      style: kSendButtonTextStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
           ],
 
         ),
@@ -79,15 +47,14 @@ class FranchiseAnnouncement extends StatelessWidget {
     );
   }
 
-  Future<Admin> getFranchiseAdmin() async {
-    await _firestore.collection('franchiseAdmins')
-        .doc(targetAdminId)
+  Future<Student> getCoach() async {
+    await _firestore.collection('coaches')
+        .doc(targetCoachId)
         .get()
         .then((value) {
       Map<String, dynamic> data = value.data();
-      targetFranchiseAdminName = data['franchiseAdminName'];
-      targetFranchiseId = data['franchiseId'];
-      print(targetFranchiseAdminName);
+      targetCoachFranchise = data['franchiseAdmin'];
+      print(targetStudentName);
       print("hahahhah");
 
 
@@ -117,11 +84,17 @@ class MessagesStream extends StatelessWidget {
           final messageText = message.data()['message'];
           final messageSender = message.data()['sender'];
           final messageTarget = message.data()['target'];
+          print(messageSender);
+          print(targetCoachFranchise);
 
-          if (messageSender == 'hqAdmin' || (messageSender == targetFranchiseAdminName && messageTarget == 'franchiseStudent')) {
-            final messageBubble = MessageBubble(sender: messageSender, text: messageText, target: messageTarget);
+          if ((messageSender == targetCoachFranchise && messageTarget == 'franchiseStudent')  || messageSender == "hqAdmin") {
+            final messageBubble = MessageBubble(sender: messageSender??'default value', text: messageText??'default value');
             messageBubbles.add(messageBubble);
+
           }
+
+
+
 
 
 

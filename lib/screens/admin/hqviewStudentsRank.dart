@@ -26,10 +26,13 @@ String title ="";
 
 class HQViewStudentsRank extends StatefulWidget {
 
+  int minMark;
+  int maxMark;
   String franchiseId;
   String franchiseName;
 
-  HQViewStudentsRank({this.franchiseId, this.franchiseName});
+  static const String id = '/HQViewStudentRank';
+  HQViewStudentsRank({this.franchiseId, this.franchiseName, this.minMark, this.maxMark});
 
   @override
   _HQViewStudentsRankState createState() => _HQViewStudentsRankState();
@@ -139,8 +142,11 @@ class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
         querySnapshot.docs.forEach((doc) {
           studentExp = doc['exp'];
           rank = decideRank(studentExp);
-          Student newStudent = Student(studentNames[i], studentIds[i], studentExp);
-          studentList.add(newStudent);
+          if (doc['franchiseId'] == targetFranchiseId && (doc['exp'] >= widget.minMark && doc['exp'] < widget.maxMark)) {
+            Student newStudent =
+            Student(studentNames[i], studentIds[i], studentExp);
+            studentList.add(newStudent);
+          }
         });
       });
     }
@@ -177,8 +183,6 @@ class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
     }
     return retRank;
   }
-
-
 
   Future callStuFunc() async {
     return await studentData();

@@ -46,31 +46,31 @@ class _SelectClassState extends State<SelectClass> {
   @override
   Widget build(BuildContext context) {
     String classContentTitle = widget.textForDisplay;
-            return SelectClassTemplateFixed(
-              myFab: null,
-              textForDisplay: classContentTitle,
-              classItemBuilder: FutureBuilder(
-                  future: widget.retrievedClassNames,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
-                      print('error3');
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            child: Center(
-                                child: ListTile(
-                                    title: Text(
-                                        snapshot.data[index], style: kListItemsTextStyle),
-                                    onTap: widget.classFunction
-                                )
-                            ),
-                          );
-                        });
-                  })
+    return SelectClassTemplateFixed(
+        myFab: null,
+        textForDisplay: classContentTitle,
+        classItemBuilder: FutureBuilder(
+            future: widget.retrievedClassNames,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+                print('error3');
+                return Center(child: CircularProgressIndicator());
+              }
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: Center(
+                          child: ListTile(
+                              title: Text(
+                                  snapshot.data[index], style: kListItemsTextStyle),
+                              onTap: widget.classFunction
+                          )
+                      ),
+                    );
+                  });
+            })
     );
   }
 

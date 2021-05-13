@@ -21,7 +21,6 @@ class Announcement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     targetAdminId = _auth.currentUser.uid;
-    getAdmin();
     print(targetAdminName);
     print("what");
     print("what");
@@ -79,21 +78,7 @@ class Announcement extends StatelessWidget {
     );
   }
 
-  Future<Admin> getAdmin() async {
-    await _firestore.collection('hqAdmin')
-        .doc(targetAdminId)
-        .get()
-        .then((value) {
-      Map<String, dynamic> data = value.data();
-      targetAdminName = data['username'];
-      print(targetAdminName);
-      print("hahahhah");
 
-
-
-
-    });
-  }
 
 
 }
@@ -116,7 +101,7 @@ class MessagesStream extends StatelessWidget {
           final messageText = message.data()['message'];
           final messageSender = message.data()['sender'];
 
-          final messageBubble = MessageBubble(sender: messageSender, text: messageText);
+          final messageBubble = MessageBubble(sender: messageSender?? 'default value', text: messageText?? 'default value');
           messageBubbles.add(messageBubble);
 
         };
