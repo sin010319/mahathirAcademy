@@ -249,7 +249,7 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
           print(rankBefore);
           print("------------");
           print(rankAfter);
-          print(tickedStudents[i].studentId);
+          print(tickedStudents[i].studentName);
 
           print('can update exp');
         });
