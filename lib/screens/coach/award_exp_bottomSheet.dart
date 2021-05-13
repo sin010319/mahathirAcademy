@@ -227,21 +227,6 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
         ));
   }
 
-  // Future<Student> getStudent() async {
-  //   await _firestore.collection('students')
-  //       .doc(targetStudentId)
-  //       .get()
-  //       .then((value) {
-  //     Map<String, dynamic> data = value.data();
-  //     targetStudentFranchise = data['franchiseName'];
-  //     print(targetStudentName);
-  //     print("hahahhah");
-  //
-  //
-  //
-  //
-  //   });
-  // }
 
   Future update(int awardedExp) async {
     WriteBatch batch = _firestore.batch();
@@ -259,7 +244,7 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
           batch.update(doc.reference, {"exp": doc.data()["exp"] + awardedExp});
           markAfter = doc.data()["exp"] + awardedExp;
           rankAfter = decideRank(markAfter);
-          targetFranchiseAdminName = doc.data()['franchiseName'];
+          targetFranchiseAdminName = doc.data()['franchiseAdminName'];
           targetStudentId = doc.data()['studentId'];
           print(rankBefore);
           print("------------");
