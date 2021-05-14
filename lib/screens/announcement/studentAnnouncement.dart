@@ -53,7 +53,7 @@ class StudentAnnouncement extends StatelessWidget {
         .get()
         .then((value) {
       Map<String, dynamic> data = value.data();
-      targetStudentFranchise = data['franchiseName'];
+      targetStudentFranchise = data['franchiseAdminName'];
       print(targetStudentName);
       print("hahahhah");
 

@@ -13,11 +13,7 @@ class Guideline extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10),
-              child: Image.asset('assets/images/guideline1.png'),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10),
-              child: Image.asset('assets/images/guideline2.png'),
+              child: Image.asset('assets/images/guidelineMark.png'),
             ),
           ],
         ),

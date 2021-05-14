@@ -225,9 +225,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       onPressed: (){
         RegExp regExp = new RegExp(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
         if(_email == null || _email.isEmpty){
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email Cannot be empty')));
+          showAlertDialog(context);
         }else if(_password == null || _password.length < 6){
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Password needs to be at least six characters')));
+          showAlertDialog(context);
         }else{
           setState((){showSpinner = true;});
           franchiseAdminSignIn();
@@ -258,9 +258,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       onPressed: (){
         RegExp regExp = new RegExp(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
         if(_email == null || _email.isEmpty){
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Email Cannot be empty')));
+          showAlertDialog(context);
         }else if(_password == null || _password.length < 6){
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Password needs to be at least six characters')));
+          showAlertDialog(context);
         }else{
           setState((){showSpinner = true;});
           HQAdminSignIn();
