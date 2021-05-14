@@ -75,7 +75,7 @@ class franchiseAdminNavigation extends StatelessWidget {
                         colour: Colors.white,
                         cardChild: IconContent(
                           icon: FontAwesomeIcons.chalkboardTeacher,
-                          label: 'VIEW FRANCHISE COACHES',
+                          label: 'CREATE AND VIEW FRANCHISE COACHES',
                         ),
                       ),
                     ),
@@ -88,7 +88,7 @@ class franchiseAdminNavigation extends StatelessWidget {
                         colour: Colors.white,
                         cardChild: IconContent(
                           icon: FontAwesomeIcons.users,
-                          label: 'VIEW FRANCHISE STUDENTS',
+                          label: 'CREATE AND VIEW FRANCHISE STUDENTS',
                         ),
                       ),
                     ),

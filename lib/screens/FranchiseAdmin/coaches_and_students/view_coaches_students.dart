@@ -347,21 +347,22 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
               child: ListTile(
                 title: Text(coachName, style: kListItemsTextStyle),
                 trailing: GestureDetector(
-                  child: Icon(
-                    Icons.delete,
-                    color: Color(0xFF8A1501),
-                  ),
-                  onTap: () {
-                    String message =
-                        'Are you sure you want to remove ${snapshot.data.coach.coachName} from this class?';
-                    PopUpDialogClass.popUpDialog(message, context, () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      callDeleteFunc(snapshot.data.coach.coachId, 'coach');
-                    }, () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    });
-                  },
-                ),
+                    child: Icon(
+                      Icons.delete,
+                      color: Color(0xFF8A1501),
+                    ),
+                    onTap: () {
+                      if (coachName != '') {
+                        String message =
+                            'Are you sure you want to remove ${snapshot.data.coach.coachName} from this class?';
+                        PopUpDialogClass.popUpDialog(message, context, () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                          callDeleteFunc(snapshot.data.coach.coachId, 'coach');
+                        }, () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        });
+                      }
+                    }),
                 onTap: () {
                   if (coachId != '') {
                     Navigator.push(
