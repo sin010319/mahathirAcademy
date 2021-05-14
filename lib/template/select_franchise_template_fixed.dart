@@ -8,12 +8,12 @@ import 'package:mahathir_academy_app/screens/HQAdmin/franchise/edit_franchise_bo
 import 'package:mahathir_academy_app/template/select_view_template.dart';
 import 'package:mahathir_academy_app/template/select_view_template_fixed.dart';
 
-class SelectCoachTemplate extends StatefulWidget {
+class SelectFranchiseTemplateFixed extends StatefulWidget {
   FloatingActionButton franchiseFab;
   FutureBuilder franchiseItemBuilder;
   String franchiseContentTitle;
 
-  SelectCoachTemplate(
+  SelectFranchiseTemplateFixed(
       {this.franchiseFab,
       this.franchiseContentTitle,
       this.franchiseItemBuilder});
@@ -22,10 +22,12 @@ class SelectCoachTemplate extends StatefulWidget {
   List<String> franchises = ['Franchise1', 'Franchise2', 'Franchise3'];
 
   @override
-  _SelectCoachTemplateState createState() => _SelectCoachTemplateState();
+  _SelectFranchiseTemplateFixedState createState() =>
+      _SelectFranchiseTemplateFixedState();
 }
 
-class _SelectCoachTemplateState extends State<SelectCoachTemplate> {
+class _SelectFranchiseTemplateFixedState
+    extends State<SelectFranchiseTemplateFixed> {
   @override
   Widget build(BuildContext context) {
     String franchiseAppBarTitle = 'Select Franchise';

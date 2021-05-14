@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -69,6 +70,10 @@ class _AddAdminBottomSheetState extends State<AddAdminBottomSheet> {
 
     CollectionReference franchises = _firestore.collection('franchises');
 
+    CollectionReference coaches = _firestore.collection('coaches');
+
+    CollectionReference students = _firestore.collection('students');
+
     Future<String> generateUserName() async {
       String username = "";
       if (this.adminName != null) {
@@ -105,9 +110,13 @@ class _AddAdminBottomSheetState extends State<AddAdminBottomSheet> {
 
     Future<void> createAdmin() async {
       await generateUserName();
+
+      FirebaseApp app = await Firebase.initializeApp(
+          name: 'admin', options: Firebase.app().options);
+
       try {
-        UserCredential userCredential =
-            await _auth.createUserWithEmailAndPassword(
+        UserCredential userCredential = await FirebaseAuth.instanceFor(app: app)
+            .createUserWithEmailAndPassword(
                 email: this.email, password: this.password);
         this.docId = userCredential.user.uid;
         this.adminId = userCredential.user.uid;
@@ -121,6 +130,7 @@ class _AddAdminBottomSheetState extends State<AddAdminBottomSheet> {
       } catch (e) {
         print(e);
       }
+      await app.delete();
     }
 
     Future<void> addtoFranchisesAdmin() async {
@@ -128,7 +138,6 @@ class _AddAdminBottomSheetState extends State<AddAdminBottomSheet> {
           .doc(this.docId)
           .set({
             'adminEmail': this.adminEmail,
-            'classIds': [],
             'contactNum': this.contactNum,
             'franchiseAdminId': this.adminId,
             'franchiseAdminName': this.adminName,
@@ -141,18 +150,47 @@ class _AddAdminBottomSheetState extends State<AddAdminBottomSheet> {
           .catchError((error) => print("Failed to add user: $error"));
     }
 
-    Future<void> updateFranchise() async {
-      return franchises
-          .doc(this.franchiseId)
-          .update({'franchiseAdminId': this.adminId})
-          .then((value) => print("User Updated"))
-          .catchError((error) => print("Failed to update user: $error"));
+    Future<void> updateData() async {
+      WriteBatch batch = _firestore.batch();
+
+      await coaches
+          .where('franchiseId', isEqualTo: franchiseId)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          batch.update(doc.reference, {"franchiseAdminName": adminName});
+          print('can update franchiseName');
+        });
+      });
+
+      await students
+          .where('franchiseId', isEqualTo: franchiseId)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          batch.update(doc.reference, {"franchiseAdminName": adminName});
+          print('can update franchiseName');
+        });
+      });
+
+      await franchises
+          .where('franchiseId', isEqualTo: franchiseId)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          batch.update(doc.reference,
+              {"franchiseAdminId": adminId, "franchiseAdminName": adminName});
+          print('can update franchise');
+        });
+      });
+
+      return batch.commit();
     }
 
     Future<void> callFunc() async {
       await createAdmin();
       await addtoFranchisesAdmin();
-      await updateFranchise();
+      await updateData();
       String adminAddedMessage =
           'You have successfully added a new franchise admin. Please close this page to view the newly updated admin info';
       PopUpAlertClass.popUpAlert(adminAddedMessage, context);

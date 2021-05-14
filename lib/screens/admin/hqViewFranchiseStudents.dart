@@ -8,6 +8,7 @@ import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bot
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/edit_franchise_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/student/student_profile.dart';
 import 'package:mahathir_academy_app/screens/student/student_profile_specific.dart';
+import 'package:mahathir_academy_app/screens/student/student_profile_specific_hq.dart';
 import 'package:mahathir_academy_app/template/select_franchise_template.dart';
 import 'package:mahathir_academy_app/template/category_template.dart';
 import 'package:mahathir_academy_app/template/select_class_template.dart';
@@ -21,24 +22,23 @@ final _auth = FirebaseAuth.instance;
 String targetAdminId;
 String targetFranchiseId;
 int noOfStudents;
-List <String> studentNames = [];
-String title ="";
+List<String> studentNames = [];
+String title = "";
 
 class HQViewFranchiseStudents extends StatefulWidget {
-
   String franchiseId;
   String franchiseName;
 
   HQViewFranchiseStudents({this.franchiseId, this.franchiseName});
 
   @override
-  _HQViewFranchiseStudentsState createState() => _HQViewFranchiseStudentsState();
+  _HQViewFranchiseStudentsState createState() =>
+      _HQViewFranchiseStudentsState();
 
   Future retrievedStudents;
 }
 
 class _HQViewFranchiseStudentsState extends State<HQViewFranchiseStudents> {
-
   @override
   void initState() {
     targetAdminId = _auth.currentUser.uid;
@@ -68,48 +68,48 @@ class _HQViewFranchiseStudentsState extends State<HQViewFranchiseStudents> {
         myFutureBuilder: FutureBuilder(
             future: widget.retrievedStudents,
             builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Center(
-                          child: ListTile(
-                              title: Text(
-                                  snapshot.data[index].studentName),
-                              trailing: Text(
-                                snapshot.data[index].className,
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SpecificStudentProfile(
-                                          studentId: snapshot.data[index].studentId,
-                                        )
-                                    ));
-                              }
-                          )
-                      ),
-                    );
-                  });
-            })
-    );}
+              return SingleChildScrollView(
+                  physics: ScrollPhysics(),
+                  child: Column(children: <Widget>[
+                    ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: Center(
+                                child: ListTile(
+                                    title:
+                                        Text(snapshot.data[index].studentName),
+                                    trailing: Text(
+                                      snapshot.data[index].exp.toString(),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SpecificStudentProfileHQ(
+                                                    studentId: snapshot
+                                                        .data[index].studentId,
+                                                  )));
+                                    })),
+                          );
+                        }),
+                  ]));
+            }));
+  }
 
-  Future<List<Student>> studentData() async {
+  Future<List<dynamic>> studentData() async {
     String studentName;
-    String className;
-    String classId;
+    int exp;
     String studentId;
     List<Student> studentList = [];
-    List<dynamic> classIds = [];
-    List<String> studentIds = [];
-    studentNames = [];
-
 
     await _firestore
         .collection('students')
@@ -118,28 +118,12 @@ class _HQViewFranchiseStudentsState extends State<HQViewFranchiseStudents> {
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         studentName = doc['studentName'];
-        studentNames.add(studentName);
         studentId = doc['studentId'];
-        studentIds.add(studentId);
-        classId = doc['classId'];
-        classIds.add(classId);
+        exp = doc['exp'];
+        Student newStudent = Student(studentName, studentId, exp);
+        studentList.add(newStudent);
       });
     });
-
-    for (int i = 0; i < classIds.length; i++){
-      await _firestore
-          .collection('classes')
-          .where('classId', isEqualTo: classIds[i])
-          .get()
-          .then((QuerySnapshot querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
-          className = doc['className'];
-          Student newStudent = Student.viewStudent(studentNames[i], studentIds[i], className);
-          studentList.add(newStudent);
-        });
-      });
-    }
-
     return studentList;
   }
 
@@ -147,6 +131,3 @@ class _HQViewFranchiseStudentsState extends State<HQViewFranchiseStudents> {
     return await studentData();
   }
 }
-
-
-

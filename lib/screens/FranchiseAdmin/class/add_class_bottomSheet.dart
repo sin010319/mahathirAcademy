@@ -33,8 +33,7 @@ class _AddClassBottomSheetState extends State<AddClassBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference franchiseAdmins =
-        _firestore.collection('franchiseAdmins');
+    CollectionReference franchises = _firestore.collection('franchises');
 
     CollectionReference classes = _firestore.collection('classes');
 
@@ -45,8 +44,8 @@ class _AddClassBottomSheetState extends State<AddClassBottomSheet> {
       this.docId = '000${docLength}';
       this.classIdinStr = this.docId;
 
-      return franchiseAdmins
-          .doc(widget.franchiseAdminId)
+      return franchises
+          .doc(widget.franchiseId)
           .update({'classIds': FieldValue.arrayUnion(this.classId)})
           .then((value) => print("New Class Added to franchise"))
           .catchError((error) => print("Failed to update class: $error"));
@@ -58,8 +57,7 @@ class _AddClassBottomSheetState extends State<AddClassBottomSheet> {
           .set({
             'classId': this.classIdinStr,
             'className': this.className,
-            'coachId': "", // 42
-            'facilitatorId': "",
+            'coachId': "",
             'facilitatorId': "",
             'studentIds': []
           })
@@ -92,8 +90,6 @@ class _AddClassBottomSheetState extends State<AddClassBottomSheet> {
       RoundButton(
           label: 'Add ${widget.identifier}',
           function: () {
-            // do smt
-            // do smt
             if (this.className != null) {
               FocusScopeNode currentFocus = FocusScope.of(context);
               if (!currentFocus.hasPrimaryFocus) {

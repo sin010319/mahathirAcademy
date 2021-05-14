@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/amend_exp.dart';
+import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/add_coach.dart';
+import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/edit_student_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/view_franchise_screen.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise_admin/view_admin_screen.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/select_franchise_for_leaderboard.dart';
@@ -64,7 +65,7 @@ class MyApp extends StatelessWidget {
         HQAdminNavigation.id: (context) => HQAdminNavigation(),
         ViewFranchiseScreen.id: (context) => ViewFranchiseScreen(),
         ViewFranchiseStudents.id: (context) => ViewFranchiseStudents(),
-        AmendExpScreen.id: (context) => AmendExpScreen(),
+        EditStudentBottomSheet.id: (context) => EditStudentBottomSheet(),
         CoachNavigation.id: (context) => CoachNavigation(),
         StudentNavigation.id: (context) => StudentNavigation(),
         StudentProfile.id: (context) => StudentProfile(),
@@ -82,12 +83,13 @@ class MyApp extends StatelessWidget {
         FranchiseBasedCategory.id: (context) => FranchiseBasedCategory(),
         coachesCategory.id: (context) => coachesCategory(),
         StudentCategory.id: (context) => StudentCategory(),
-        SelectFranchiseForLeaderBoard.id: (context) => SelectFranchiseForLeaderBoard(),
-        SelectFranchiseToViewAllStudents.id: (context) => SelectFranchiseToViewAllStudents(),
+        SelectFranchiseForLeaderBoard.id: (context) =>
+            SelectFranchiseForLeaderBoard(),
+        SelectFranchiseToViewAllStudents.id: (context) =>
+            SelectFranchiseToViewAllStudents(),
         Guideline.id: (context) => Guideline(),
+        AddCoachScreen.id: (context) => AddCoachScreen(),
       },
     );
   }
 }
-
-

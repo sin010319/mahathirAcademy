@@ -17,7 +17,6 @@ String identifier;
 final _firestore = FirebaseFirestore.instance;
 
 class ViewStudents extends StatefulWidget {
-
   static const String id = '/viewStudents';
   List<String> students = ['Student1', 'Student2', 'Student3'];
   List<int> exp = [230, 40, 100];
@@ -32,7 +31,6 @@ class ViewStudents extends StatefulWidget {
 }
 
 class _ViewStudentsState extends State<ViewStudents> {
-
   @override
   void initState() {
     widget.retrievedStudents = callStuFunc();
@@ -40,12 +38,12 @@ class _ViewStudentsState extends State<ViewStudents> {
 
   @override
   Widget build(BuildContext context) {
-
     return SelectStudentTemplate(
         studentContentTitleBuilder: FutureBuilder(
             future: widget.retrievedStudents,
             builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
                 print('error3');
                 return Container();
               }
@@ -55,47 +53,46 @@ class _ViewStudentsState extends State<ViewStudents> {
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontSize: 18.0),
-              );}),
-      myFutureBuilder: FutureBuilder(
-          future: widget.retrievedStudents,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
-              print('error3');
-              return Center(child: CircularProgressIndicator());
-            }
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: Center(
-                        child: ListTile(
-                    title: Text(snapshot.data[index].studentName,
-                        style: kListItemsTextStyle),
-                    trailing: Wrap(
-                      spacing: 8,
-                      children: [
-                        Container(
-                            child: Text(snapshot.data[index].exp.toString(),
-                                style: kExpTextStyle)
+              );
+            }),
+        myFutureBuilder: FutureBuilder(
+            future: widget.retrievedStudents,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
+                print('error3');
+                return Center(child: CircularProgressIndicator());
+              }
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: Center(
+                          child: ListTile(
+                        title: Text(snapshot.data[index].studentName,
+                            style: kListItemsTextStyle),
+                        trailing: Wrap(
+                          spacing: 8,
+                          children: [
+                            Container(
+                                child: Text(snapshot.data[index].exp.toString(),
+                                    style: kExpTextStyle)),
+                          ],
                         ),
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SpecificStudentProfile(
-                        studentId: snapshot.data[index].studentId,
-                          )
-                      ));
-                    },
-                  )
-                    ),
-                  );
-                });
-          })
-    );
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SpecificStudentProfile(
+                                        studentId:
+                                            snapshot.data[index].studentId,
+                                      )));
+                        },
+                      )),
+                    );
+                  });
+            }));
   }
 
   Future<List<Student>> studentData() async {
@@ -114,16 +111,16 @@ class _ViewStudentsState extends State<ViewStudents> {
 
     await _firestore
         .collection('students')
-        .where('classId', isEqualTo: selectedClassId)
+        .where('classIds', arrayContains: selectedClassId)
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-          String name = doc['studentName'];
-          String studentId = doc['studentId'];
-          int exp = doc['exp'];
-          var student = Student(name, studentId, exp);
-          print(studentList);
-          studentList.add(student);
+        String name = doc['studentName'];
+        String studentId = doc['studentId'];
+        int exp = doc['exp'];
+        var student = Student(name, studentId, exp);
+        print(studentList);
+        studentList.add(student);
       });
     });
     print('studentList');
@@ -131,11 +128,7 @@ class _ViewStudentsState extends State<ViewStudents> {
     return studentList;
   }
 
-  callStuFunc() async{
+  callStuFunc() async {
     return await studentData();
   }
-
 }
-
-
-

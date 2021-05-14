@@ -3,32 +3,29 @@ class Student {
   String _studentId;
   int _exp;
   String _franchiseLocation;
-  String _className;
+  List<dynamic> _classNames;
   String _rank;
   String _username;
-  String _coachName;
-  String _facilitatorName;
+  String _contactNum;
 
   Student(this._studentName, this._studentId, this._exp);
 
-  Student.completeStudentInfo(
-      this._studentName,
-      this._username,
-      this._exp,
-      this._franchiseLocation,
-      this._className,
-      this._rank,
-      this._coachName,
-      this._facilitatorName);
+  Student.completeStudentInfo(this._studentName, this._username, this._exp,
+      this._franchiseLocation, this._classNames, this._rank, this._contactNum);
 
-  Student.viewStudent(this._studentName, this._studentId, this._className);
+  Student.viewStudent(this._studentName, this._studentId, this._classNames);
 
   Student.viewRankStudent(this._studentName, this._studentId, this._rank);
 
-  String get className => _className;
+  Student.fromStudent(this._studentName, this._exp, this._studentId,
+      this._classNames, this._rank);
 
-  set className(String value) {
-    _className = value;
+  Student.simpleStudent(this._studentName, this._studentId);
+
+  List<dynamic> get classNames => _classNames;
+
+  set classNames(List<dynamic> value) {
+    _classNames = value;
   }
 
   String get franchiseLocation => _franchiseLocation;
@@ -67,15 +64,9 @@ class Student {
     _username = value;
   }
 
-  String get facilitatorName => _facilitatorName;
+  String get contactNum => _contactNum;
 
-  set facilitatorName(String value) {
-    _facilitatorName = value;
-  }
-
-  String get coachName => _coachName;
-
-  set coachName(String value) {
-    _coachName = value;
+  set contactNum(String value) {
+    _contactNum = value;
   }
 }

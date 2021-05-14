@@ -1,9 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:mahathir_academy_app/components/customised_pop_up_dialog.dart';
+import 'package:mahathir_academy_app/components/pop_up_alert.dart';
+import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/profile_menu.dart';
 import 'package:mahathir_academy_app/components/profile_pic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mahathir_academy_app/models/AuthService.dart';
 import 'package:mahathir_academy_app/models/student.dart';
+import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/edit_student_bottomSheet.dart';
+import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/transfer_coach_students_bottomSheet.dart';
+import 'package:mahathir_academy_app/screens/admin/viewFranchiseStudents.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -13,17 +22,20 @@ String username = '';
 int exp;
 String contactNum = '';
 String franchiseLocation = '';
+String franchiseName = '';
+String franchiseId = '';
 String classId = '';
 String className = '';
 String documentId = '';
 String rank = '';
-String coachId = '';
-String coachName = '-';
-String facilitatorId = '';
-String facilitatorName = '-';
+String studentId = '';
+List<dynamic> classIds = [];
+List<dynamic> listClassNames = [];
+int globalCheckEdit = 0;
 
 class SpecificStudentProfile extends StatefulWidget {
-  static String id = "/studentProfile";
+  static String id = "/studentProfileSpecific";
+  static bool studentDone = false;
   Future studentInfo;
   String studentId;
 
@@ -45,7 +57,47 @@ class _SpecificStudentProfileState extends State<SpecificStudentProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Profile"),
+          title: Text("Student Profile"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.edit,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                // do something
+                String message =
+                    'Please select an option below to do your modification to the student.';
+                String btn1Text = 'Transfer Franchise';
+                String btn2Text = 'Edit Student Info';
+                CustomizedPopUpDialogClass.popUpDialog(
+                    message, context, btn1Text, btn2Text, () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  showModal(studentBuildBottomSheet, 1);
+                }, () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  showModal(editStudentBuildBottomSheet, 2);
+                });
+              },
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                // do something
+                String message =
+                    'Are you sure you wish to delete this student info from the franchise completely?';
+                PopUpDialogClass.popUpDialog(message, context, () {
+                  callDeleteFunc(studentId);
+                  Navigator.of(context, rootNavigator: true).pop();
+                }, () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                });
+              },
+            )
+          ],
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 20),
@@ -75,18 +127,13 @@ class _SpecificStudentProfileState extends State<SpecificStudentProfile> {
                         press: () {},
                       ),
                       ProfileMenu(
-                        text: "Class: ${snapshot.data.className}",
+                        text: "Class: ${snapshot.data.classNames}",
                         icon: "assets/icons/class.svg",
                         press: () {},
                       ),
                       ProfileMenu(
-                        text: "Coach: ${snapshot.data.coachName}",
-                        icon: "assets/icons/coach.svg",
-                        press: () {},
-                      ),
-                      ProfileMenu(
-                        text: "Facilitator: ${snapshot.data.facilitatorName}",
-                        icon: "assets/icons/facilitator.svg",
+                        text: "Contact No: ${snapshot.data.contactNum}",
+                        icon: "assets/icons/contactNum.svg",
                         press: () {},
                       ),
                       ProfileMenu(
@@ -113,46 +160,42 @@ class _SpecificStudentProfileState extends State<SpecificStudentProfile> {
     await _firestore.collection('students').doc(documentId).get().then((value) {
       Map<String, dynamic> data = value.data();
       studentName = data['studentName'];
-      exp = data['exp'];
       username = data['username'];
       contactNum = data['contactNum'];
+      exp = data['exp'];
       franchiseLocation = data['franchiseLocation'];
-      classId = data['classId'];
+      classIds = data['classIds'];
+      studentId = data['studentId'];
+      franchiseId = data['franchiseId'];
     });
 
     await _firestore
-        .collection('classes')
-        .where('classId', isEqualTo: classId)
+        .collection('franchises')
+        .doc(franchiseId)
         .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
-        className = doc['className'];
-        coachId = doc['coachId'];
-        facilitatorId = doc['facilitatorId'];
+        .then((value) {
+      Map<String, dynamic> data = value.data();
+      franchiseName = data['franchiseName'];
+    });
+
+    listClassNames = [];
+
+    for (var eachClassId in classIds) {
+      await _firestore
+          .collection('classes')
+          .where('classId', isEqualTo: eachClassId)
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          listClassNames.add(doc['className']);
+        });
       });
-    });
-
-    await _firestore.collection('coaches').doc(coachId).get().then((value) {
-      Map<String, dynamic> data = value.data();
-      coachName = data['coachName'];
-    });
-
-    await _firestore.collection('coaches').doc(coachId).get().then((value) {
-      Map<String, dynamic> data = value.data();
-      facilitatorName = data['facilitatorName'];
-    });
-
-    if (coachName == null) {
-      coachName = '-';
-    }
-    if (facilitatorName == null) {
-      facilitatorName = '-';
     }
 
     rank = decideRank(exp);
 
     Student student = Student.completeStudentInfo(studentName, username, exp,
-        franchiseLocation, className, rank, coachName, facilitatorName);
+        franchiseLocation, listClassNames, rank, contactNum);
     return student;
   }
 
@@ -179,4 +222,122 @@ class _SpecificStudentProfileState extends State<SpecificStudentProfile> {
     }
     return retRank;
   }
+
+  Future<void> removeStudentData(String studentIdForDelete) async {
+    CollectionReference students =
+        FirebaseFirestore.instance.collection('students');
+    CollectionReference classes =
+        FirebaseFirestore.instance.collection('classes');
+
+    await classes
+        .where('studentIds', arrayContains: studentIdForDelete)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        doc.reference.update({
+          "studentIds": FieldValue.arrayRemove([studentIdForDelete])
+        });
+      });
+    });
+
+    return students
+        .doc(studentIdForDelete)
+        .delete()
+        .then((value) => print("Student Removed"))
+        .catchError((error) => print("Failed to remove student: $error"));
+  }
+
+  Future<void> callDeleteFunc(String studentIdForDelete) async {
+    await removeStudentData(studentIdForDelete);
+    String studentDeletedMsg = 'You have now successfully removed a student.';
+    await PopUpAlertClass.popUpAlert(studentDeletedMsg, context);
+    SpecificStudentProfile.studentDone = true;
+    Future.delayed(Duration(milliseconds: 3000), () async {
+      await Navigator.pop(context);
+      navigateToPreviousPage();
+    });
+  }
+
+  void navigateToPreviousPage() {
+    try {
+      Route route =
+          MaterialPageRoute(builder: (context) => ViewFranchiseStudents());
+      Navigator.pushReplacement(context, route).then(onGoBack);
+    } catch (exception) {
+      print(exception);
+    }
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    try {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+    } catch (exception) {
+      print(exception);
+    }
+  }
+
+  void showModal(Widget Function(BuildContext) bottomSheet, int checkEdit) {
+    if (checkEdit == 1) {
+      globalCheckEdit = 1;
+    } else if (checkEdit == 2) {
+      globalCheckEdit = 2;
+    }
+    Future<void> future = showModalBottomSheet(
+        context: context,
+        // builder here needs a method to return widget
+        builder: bottomSheet,
+        isScrollControlled: true // enable the modal take up the full screen
+        );
+    future.then((void value) => closeModal(value));
+  }
+
+  FutureBuilder<dynamic> closeModal(void value) {
+    print('modal closed');
+    if (globalCheckEdit == 1 && SpecificStudentProfile.studentDone) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+    } else if (globalCheckEdit == 2 && SpecificStudentProfile.studentDone) {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+    }
+    SpecificStudentProfile.studentDone = false;
+  }
+}
+
+Widget editStudentBuildBottomSheet(BuildContext context) {
+  String identifier = 'Amend Student Info';
+
+  return SingleChildScrollView(
+    child: Container(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
+      child: EditStudentBottomSheet(
+          identifier: identifier,
+          studentId: studentId,
+          studentName: studentName,
+          exp: exp,
+          contactNum: contactNum),
+    ),
+  );
+}
+
+Widget studentBuildBottomSheet(BuildContext context) {
+  String identifier = 'Student';
+
+  return SingleChildScrollView(
+    child: Container(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
+      child: TransferCoachStudentBottomSheet(
+        identifier: identifier,
+        franchiseId: franchiseId,
+        userId: studentId,
+        title1: franchiseName,
+        title2: franchiseLocation,
+      ),
+    ),
+  );
 }

@@ -17,6 +17,9 @@ import 'package:mahathir_academy_app/template/select_franchise_template_fixed.da
 final _firestore = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
 String targetAdminId;
+String selectedFranchiseId;
+String selectedFranchiseLocation;
+String selectedFranchiseName;
 
 class ViewFranchiseScreen extends StatefulWidget {
   static const String id = '/addFranchise';
@@ -38,10 +41,18 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> removeFranchises(String franchiseIdForDelete) async {
-      CollectionReference franchises =
-          FirebaseFirestore.instance.collection('franchises');
+    CollectionReference franchiseAdmins =
+        FirebaseFirestore.instance.collection('franchiseAdmins');
+    CollectionReference franchises =
+        FirebaseFirestore.instance.collection('franchises');
+    CollectionReference students =
+        FirebaseFirestore.instance.collection('students');
+    CollectionReference classes =
+        FirebaseFirestore.instance.collection('classes');
+    CollectionReference coaches =
+        FirebaseFirestore.instance.collection('coaches');
 
+    Future<void> removeFranchise(String franchiseIdForDelete) async {
       return franchises
           .doc(franchiseIdForDelete)
           .delete()
@@ -50,18 +61,11 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
     }
 
     Future<void> removeData(String franchiseIdForDelete) async {
-      CollectionReference franchiseAdmins =
-          FirebaseFirestore.instance.collection('franchiseAdmins');
-      CollectionReference students =
-          FirebaseFirestore.instance.collection('students');
-      CollectionReference classes =
-          FirebaseFirestore.instance.collection('classes');
-      CollectionReference coaches =
-          FirebaseFirestore.instance.collection('coaches');
+      List<dynamic> studentIds = [];
 
       dynamic classIdsForDelete = [];
 
-      await franchiseAdmins
+      await franchises
           .where('franchiseId', isEqualTo: franchiseIdForDelete)
           .get()
           .then((querySnapshot) {
@@ -95,6 +99,7 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
           .get()
           .then((querySnapshot) {
         querySnapshot.docs.forEach((doc) {
+          studentIds.add(doc['studentId']);
           doc.reference.delete();
         });
       });
@@ -107,22 +112,37 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
           doc.reference.delete();
         });
       });
+
+      for (var studentId in studentIds) {
+        await classes
+            .where('classId', isEqualTo: 'INACTIVE')
+            .where('studentIds', arrayContains: studentId)
+            .get()
+            .then((querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            doc.reference.update({
+              "studentIds": FieldValue.arrayRemove([studentId])
+            });
+          });
+        });
+      }
     }
 
     Future<void> callDeleteFunc(String franchiseIdForDelete) async {
-      await removeFranchises(franchiseIdForDelete);
       await removeData(franchiseIdForDelete);
-      String franchiseDeletedMsg =
-          'You have successfully removed a franchise. Please close this page to view the newly updated franchises.';
+      await removeFranchise(franchiseIdForDelete);
+      String franchiseDeletedMsg = 'You have successfully removed a franchise.';
       await PopUpAlertClass.popUpAlert(franchiseDeletedMsg, context);
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+      Future.delayed(Duration(milliseconds: 3000), () {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => super.widget));
+      });
     }
 
-    return SelectCoachTemplate(
+    return SelectFranchiseTemplateFixed(
         franchiseFab: FloatingActionButton(
           onPressed: () {
-            showModal();
+            showModal(addFranchiseBuildBottomSheet);
           },
           backgroundColor: Color(0xFF8A1501),
           child: Icon(Icons.add),
@@ -155,14 +175,14 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
                                         color: Color(0xFF8A1501),
                                       ),
                                       onTap: () {
-                                        showModalBottomSheet(
-                                            context: context,
-                                            // builder here needs a method to return widget
-                                            builder:
-                                                editFranchiseBuildBottomSheet,
-                                            isScrollControlled:
-                                                true // enable the modal take up the full screen
-                                            );
+                                        selectedFranchiseId =
+                                            snapshot.data[index].franchiseId;
+                                        selectedFranchiseLocation = snapshot
+                                            .data[index].franchiseLocation;
+                                        selectedFranchiseName =
+                                            snapshot.data[index].franchiseName;
+                                        showModal(
+                                            editFranchiseBuildBottomSheet);
                                       },
                                     ),
                                     GestureDetector(
@@ -172,7 +192,7 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
                                       ),
                                       onTap: () {
                                         String message =
-                                            'Are you sure you want to remove ${snapshot.data[index].franchiseName}? Note that when you remove this franchise, all the classes, students and coaches who are still under this franchise will be removed';
+                                            'Are you sure you want to remove ${snapshot.data[index].franchiseName}? Note that when you remove this franchise, all the classes, students and coaches who are still under this franchise will be removed.';
                                         PopUpDialogClass.popUpDialog(
                                             message, context, () {
                                           Navigator.of(context,
@@ -204,11 +224,11 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
             }));
   }
 
-  void showModal() {
+  void showModal(Widget Function(BuildContext) bottomSheet) {
     Future<void> future = showModalBottomSheet(
         context: context,
         // builder here needs a method to return widget
-        builder: addFranchiseBuildBottomSheet,
+        builder: bottomSheet,
         isScrollControlled: true // enable the modal take up the full screen
         );
     future.then((void value) => closeModal(value));
@@ -256,7 +276,12 @@ Widget editFranchiseBuildBottomSheet(BuildContext context) {
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
-      child: EditFranchiseBottomSheet(identifier: identifier),
+      child: EditFranchiseBottomSheet(
+        identifier: identifier,
+        franchiseName: selectedFranchiseName,
+        franchiseLocation: selectedFranchiseLocation,
+        franchiseId: selectedFranchiseId,
+      ),
     ),
   );
 }

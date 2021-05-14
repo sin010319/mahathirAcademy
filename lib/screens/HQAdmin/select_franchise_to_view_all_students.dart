@@ -43,7 +43,7 @@ class _SelectFranchiseToViewAllStudentsState
 
   @override
   Widget build(BuildContext context) {
-    return SelectCoachTemplate(
+    return SelectFranchiseTemplateFixed(
         franchiseFab: null,
         franchiseContentTitle:
             'Please select the franchise that you want to view the students:',

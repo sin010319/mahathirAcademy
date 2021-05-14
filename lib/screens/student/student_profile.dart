@@ -17,10 +17,8 @@ String classId = '';
 String className = '';
 String documentId = '';
 String rank = '';
-String coachId = '';
-String coachName = '-';
-String facilitatorId = '';
-String facilitatorName = '-';
+List<dynamic> classIds = [];
+List<dynamic> listClassNames = [];
 
 class StudentProfile extends StatefulWidget {
   static String id = "/studentProfile";
@@ -42,7 +40,7 @@ class _StudentProfileState extends State<StudentProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Profile"),
+          title: Text("My Profile"),
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 20),
@@ -72,18 +70,13 @@ class _StudentProfileState extends State<StudentProfile> {
                         press: () {},
                       ),
                       ProfileMenu(
-                        text: "Class: ${snapshot.data.className}",
+                        text: "Class: ${snapshot.data.classNames}",
                         icon: "assets/icons/class.svg",
                         press: () {},
                       ),
                       ProfileMenu(
-                        text: "Coach: ${snapshot.data.coachName}",
-                        icon: "assets/icons/coach.svg",
-                        press: () {},
-                      ),
-                      ProfileMenu(
-                        text: "Facilitator: ${snapshot.data.facilitatorName}",
-                        icon: "assets/icons/facilitator.svg",
+                        text: "Contact No: ${snapshot.data.contactNum}",
+                        icon: "assets/icons/contactNum.svg",
                         press: () {},
                       ),
                       ProfileMenu(
@@ -110,46 +103,31 @@ class _StudentProfileState extends State<StudentProfile> {
     await _firestore.collection('students').doc(documentId).get().then((value) {
       Map<String, dynamic> data = value.data();
       studentName = data['studentName'];
-      exp = data['exp'];
       username = data['username'];
       contactNum = data['contactNum'];
+      exp = data['exp'];
       franchiseLocation = data['franchiseLocation'];
-      classId = data['classId'];
+      classIds = data['classIds'];
     });
 
-    await _firestore
-        .collection('classes')
-        .where('classId', isEqualTo: classId)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
-        className = doc['className'];
-        coachId = doc['coachId'];
-        facilitatorId = doc['facilitatorId'];
+    listClassNames = [];
+
+    for (var eachClassId in classIds) {
+      await _firestore
+          .collection('classes')
+          .where('classId', isEqualTo: eachClassId)
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          listClassNames.add(doc['className']);
+        });
       });
-    });
-
-    await _firestore.collection('coaches').doc(coachId).get().then((value) {
-      Map<String, dynamic> data = value.data();
-      coachName = data['coachName'];
-    });
-
-    await _firestore.collection('coaches').doc(coachId).get().then((value) {
-      Map<String, dynamic> data = value.data();
-      facilitatorName = data['facilitatorName'];
-    });
-
-    if (coachName == null) {
-      coachName = '-';
-    }
-    if (facilitatorName == null) {
-      facilitatorName = '-';
     }
 
     rank = decideRank(exp);
 
     Student student = Student.completeStudentInfo(studentName, username, exp,
-        franchiseLocation, className, rank, coachName, facilitatorName);
+        franchiseLocation, listClassNames, rank, contactNum);
     return student;
   }
 

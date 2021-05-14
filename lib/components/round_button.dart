@@ -9,7 +9,6 @@ class RoundButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     double _width = MediaQuery.of(context).size.width;
 
     return RaisedButton(
@@ -20,7 +19,7 @@ class RoundButton extends StatelessWidget {
       padding: EdgeInsets.all(0.0),
       child: Container(
         alignment: Alignment.center,
-        width: _width/3,
+        width: _width / 2,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           gradient: LinearGradient(
@@ -28,7 +27,7 @@ class RoundButton extends StatelessWidget {
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text(label,style: TextStyle(fontSize: 15)),
+        child: Text(label, style: TextStyle(fontSize: 15)),
       ),
     );
   }

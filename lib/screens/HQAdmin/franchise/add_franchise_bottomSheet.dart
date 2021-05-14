@@ -54,7 +54,8 @@ class _AddFranchiseBottomSheetState extends State<AddFranchiseBottomSheet> {
             'franchiseId': this.franchiseId, // John Doe
             'franchiseLocation': this.franchiseLocation, // Stokes and Sons
             'franchiseName': this.franchiseName, // 42
-            'franchiseAdminId': ""
+            'franchiseAdminId': "",
+            'classIds': []
           })
           .then((value) => print("Franchise Added"))
           .catchError((error) => print("Failed to add user: $error"));

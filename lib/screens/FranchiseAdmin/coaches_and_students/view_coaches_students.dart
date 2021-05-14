@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mahathir_academy_app/components/pop_up_alert.dart';
+import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/models/class.dart';
 import 'package:mahathir_academy_app/models/coach.dart';
 import 'package:mahathir_academy_app/models/facilitator.dart';
@@ -9,9 +11,10 @@ import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_scr
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_profile_specific.dart';
 import 'package:mahathir_academy_app/screens/student/student_profile_specific.dart';
-import 'amend_exp.dart';
+import 'edit_student_bottomSheet.dart';
 import '../../student/student_profile.dart';
-import 'assign_coach_add_students_bottomSheet.dart';
+import 'assign_coach_students_bottomSheet.dart';
+import 'transfer_coach_students_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -91,7 +94,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
                   showModal(coachBuildBottomSheet);
                 });
               },
-              label: 'Add Coach',
+              label: 'Assign Coach',
               labelStyle: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
@@ -106,7 +109,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
                   showModal(facilitatorBuildBottomSheet);
                 });
               },
-              label: 'Add Facilitator',
+              label: 'Assign Facilitator',
               labelStyle: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
@@ -136,7 +139,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
                   showModal(studentBuildBottomSheet);
                 });
               },
-              label: 'Add Student',
+              label: 'Assign Student',
               labelStyle: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
@@ -200,6 +203,123 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
     );
   }
 
+  Future<void> removeData(String userIdForDelete, String identifier) async {
+    CollectionReference classes =
+        FirebaseFirestore.instance.collection('classes');
+    CollectionReference coaches = _firestore.collection('coaches');
+    CollectionReference students = _firestore.collection('students');
+
+    if (identifier == 'coach') {
+      await classes
+          .where('classId', isEqualTo: targetClassId)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.update({"coachId": ""});
+        });
+      });
+
+      await coaches
+          .where('coachId', isEqualTo: userIdForDelete)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.update({
+            "classIds": FieldValue.arrayRemove([targetClassId])
+          });
+        });
+      });
+    } else if (identifier == 'facilitator') {
+      await classes
+          .where('classId', isEqualTo: targetClassId)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.update({"facilitatorId": ""});
+        });
+      });
+
+      await coaches
+          .where('coachId', isEqualTo: userIdForDelete)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.update({
+            "classIds": FieldValue.arrayRemove([targetClassId])
+          });
+        });
+      });
+    } else if (identifier == 'student') {
+      await classes
+          .where('classId', isEqualTo: targetClassId)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.update({
+            "studentIds": FieldValue.arrayRemove([userIdForDelete])
+          });
+        });
+      });
+
+      await students
+          .where('studentId', isEqualTo: userIdForDelete)
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.update({
+            "classIds": FieldValue.arrayRemove([targetClassId])
+          });
+        });
+      });
+
+      List<dynamic> classIds = [];
+
+      await _firestore
+          .collection('students')
+          .doc(userIdForDelete)
+          .get()
+          .then((value) {
+        Map<String, dynamic> data = value.data();
+        classIds = data['classIds'];
+      });
+
+      if (classIds.length == 0) {
+        await students
+            .where('studentId', isEqualTo: userIdForDelete)
+            .get()
+            .then((querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            doc.reference.update({
+              "classIds": FieldValue.arrayUnion(['INACTIVE'])
+            });
+          });
+        });
+      }
+
+      await classes
+          .where('classId', isEqualTo: 'INACTIVE')
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.update({
+            "studentIds": FieldValue.arrayUnion([userIdForDelete])
+          });
+        });
+      });
+    }
+  }
+
+  Future<void> callDeleteFunc(String userIdForDelete, String identifier) async {
+    await removeData(userIdForDelete, identifier);
+    String userDeletedMsg =
+        'You have successfully removed a $identifier from the class.';
+    await PopUpAlertClass.popUpAlert(userDeletedMsg, context);
+    Future.delayed(Duration(milliseconds: 3000), () {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+    });
+  }
+
   FutureBuilder<dynamic> returnFutureBuilder() {
     return FutureBuilder(
       future: widget.retrievedClassData,
@@ -232,9 +352,14 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
                     color: Color(0xFF8A1501),
                   ),
                   onTap: () {
-                    if (coachName != "") {
-                      deleteDialog(context, coachName);
-                    }
+                    String message =
+                        'Are you sure you want to remove ${snapshot.data.coach.coachName} from this class?';
+                    PopUpDialogClass.popUpDialog(message, context, () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      callDeleteFunc(snapshot.data.coach.coachId, 'coach');
+                    }, () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    });
                   },
                 ),
                 onTap: () {
@@ -276,27 +401,24 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
                                             style: kExpTextStyle)),
                                     GestureDetector(
                                       child: Icon(
-                                        Icons.edit,
-                                        color: Color(0xFF8A1501),
-                                      ),
-                                      onTap: () {
-                                        showModalBottomSheet(
-                                            context: context,
-                                            // builder here needs a method to return widget
-                                            builder: amendExpBuildBottomSheet,
-                                            isScrollControlled:
-                                                true // enable the modal take up the full screen
-                                            );
-                                      },
-                                    ),
-                                    GestureDetector(
-                                      child: Icon(
                                         Icons.delete,
                                         color: Color(0xFF8A1501),
                                       ),
                                       onTap: () {
-                                        deleteDialog(
-                                            context, student.studentName);
+                                        String message =
+                                            'Are you sure you want to remove ${student.studentName} from this class?';
+                                        PopUpDialogClass.popUpDialog(
+                                            message, context, () {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop();
+                                          callDeleteFunc(
+                                              student.studentId, 'student');
+                                        }, () {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop();
+                                        });
                                       },
                                     )
                                   ],
@@ -353,7 +475,6 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        print('hey');
         className = doc['className'];
         coachId = doc['coachId'];
         globalClassId = doc['classId'];
@@ -394,6 +515,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
       await _firestore
           .collection('students')
           .where('studentId', isEqualTo: studentIds[i])
+          .where('franchiseId', isEqualTo: franchiseId)
           .get()
           .then((QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((doc) {
@@ -429,147 +551,70 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
   Future callFunc() async {
     return await classData();
   }
-}
 
-dynamic returnFaciSection(
-    bool hasFaci, BuildContext context, AsyncSnapshot snapshot) {
-  Widget sizedBox2 = SizedBox(
-    height: 15.0,
-  );
-  if (snapshot.data.facilitator != null) {
-    facilitatorName = snapshot.data.facilitator.facilitatorName;
-    facilitatorId = snapshot.data.facilitator.facilitatorId;
-  }
-  int studentListLength = 0;
-  if (snapshot.data.studentList != null) {
-    studentListLength = snapshot.data.studentList.length;
-  }
-
-  Widget studentText = Text('${studentListLength} Student(s)',
-      style: kCoachStudentLabelTextStyle);
-
-  if (hasFaci) {
-    Widget sizedBox1 = SizedBox(
+  dynamic returnFaciSection(
+      bool hasFaci, BuildContext context, AsyncSnapshot snapshot) {
+    Widget sizedBox2 = SizedBox(
       height: 15.0,
     );
-    Widget text = Text('Facilitator', style: kCoachStudentLabelTextStyle);
-    Widget container = Container(
-        child: Card(
-      child: Center(
-        child: ListTile(
-          title: Text(facilitatorName, style: kListItemsTextStyle),
-          trailing: GestureDetector(
-            child: Icon(
-              Icons.delete,
-              color: Color(0xFF8A1501),
+    if (snapshot.data.facilitator != null) {
+      facilitatorName = snapshot.data.facilitator.facilitatorName;
+      facilitatorId = snapshot.data.facilitator.facilitatorId;
+    }
+    int studentListLength = 0;
+    if (snapshot.data.studentList != null) {
+      studentListLength = snapshot.data.studentList.length;
+    }
+
+    Widget studentText = Text('${studentListLength} Student(s)',
+        style: kCoachStudentLabelTextStyle);
+
+    if (hasFaci) {
+      Widget sizedBox1 = SizedBox(
+        height: 15.0,
+      );
+      Widget text = Text('Facilitator', style: kCoachStudentLabelTextStyle);
+      Widget container = Container(
+          child: Card(
+        child: Center(
+          child: ListTile(
+            title: Text(facilitatorName, style: kListItemsTextStyle),
+            trailing: GestureDetector(
+              child: Icon(
+                Icons.delete,
+                color: Color(0xFF8A1501),
+              ),
+              onTap: () {
+                if (facilitatorName != '') {
+                  String message =
+                      'Are you sure you want to remove $facilitatorName from this class?';
+                  PopUpDialogClass.popUpDialog(message, context, () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    callDeleteFunc(facilitatorId, 'facilitator');
+                  }, () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                  });
+                }
+              },
             ),
             onTap: () {
-              if (facilitatorName != '') {
-                deleteDialog(
-                    context, snapshot.data.facilitator.facilitatorName);
+              if (facilitatorId != '') {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SpecificCoachProfile(
+                              coachId: snapshot.data.facilitator.facilitatorId,
+                            )));
               }
             },
           ),
-          onTap: () {
-            if (facilitatorId != '') {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SpecificCoachProfile(
-                            coachId: snapshot.data.facilitator.facilitatorId,
-                          )));
-            }
-          },
         ),
-      ),
-    ));
-    return [sizedBox1, text, container, sizedBox2, studentText];
-  } else {
-    return [sizedBox2, studentText];
+      ));
+      return [sizedBox1, text, container, sizedBox2, studentText];
+    } else {
+      return [sizedBox2, studentText];
+    }
   }
-}
-
-deleteDialog(BuildContext context, String itemRemoved) {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Center(
-          child: AlertDialog(
-            content: Stack(
-              overflow: Overflow.visible,
-              children: <Widget>[
-                Positioned(
-                  right: -40.0,
-                  top: -40.0,
-                  child: InkResponse(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: CircleAvatar(
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context, rootNavigator: true).pop();
-                          },
-                          child: Icon(Icons.close)),
-                      backgroundColor: Colors.red,
-                    ),
-                  ),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      'Are you sure you want to remove $itemRemoved?',
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        button('Yes', context),
-                        button('No', context),
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      });
-}
-
-Widget button(String text, BuildContext context) {
-  double _height = MediaQuery.of(context).size.height;
-  double _width = MediaQuery.of(context).size.width;
-
-  return RaisedButton(
-    elevation: 0,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-    onPressed: () {
-      if (text == 'Yes') {
-        // do something
-      } else if (text == 'No') {
-        Navigator.of(context, rootNavigator: true).pop();
-      }
-    },
-    textColor: Colors.white,
-    padding: EdgeInsets.all(0.0),
-    child: Container(
-      alignment: Alignment.center,
-      width: _width / 5,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        gradient: LinearGradient(
-          colors: <Color>[Colors.orange[200], Colors.pinkAccent],
-        ),
-      ),
-      padding: const EdgeInsets.all(12.0),
-      child: Text(text, style: TextStyle(fontSize: 15)),
-    ),
-  );
 }
 
 Widget coachBuildBottomSheet(BuildContext context) {
@@ -580,7 +625,7 @@ Widget coachBuildBottomSheet(BuildContext context) {
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
-      child: AddCoachStudentBottomSheet(
+      child: AssignCoachStudentBottomSheet(
         identifier: identifier,
         classId: globalClassId,
         franchiseId: franchiseId,
@@ -599,7 +644,7 @@ Widget facilitatorBuildBottomSheet(BuildContext context) {
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
-      child: AddCoachStudentBottomSheet(
+      child: AssignCoachStudentBottomSheet(
         identifier: identifier,
         classId: globalClassId,
         franchiseId: franchiseId,
@@ -618,26 +663,13 @@ Widget studentBuildBottomSheet(BuildContext context) {
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
-      child: AddCoachStudentBottomSheet(
+      child: AssignCoachStudentBottomSheet(
         identifier: identifier,
         classId: globalClassId,
         franchiseId: franchiseId,
         title1: franchiseName,
         title2: franchiseLocation,
       ),
-    ),
-  );
-}
-
-Widget amendExpBuildBottomSheet(BuildContext context) {
-  String identifier = 'Amend EXP';
-
-  return SingleChildScrollView(
-    child: Container(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
-      child: AmendExpScreen(identifier: identifier),
     ),
   );
 }

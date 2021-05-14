@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/models/student.dart';
+import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/add_student_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise_admin/view_admin_screen.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bottomSheet.dart';
@@ -19,6 +20,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 final _firestore = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
 String targetAdminId;
+String franchiseId;
+String franchiseName;
+String franchiseLocation;
+String franchiseAdminName;
 
 class ViewFranchiseStudents extends StatefulWidget {
   FloatingActionButton fab;
@@ -46,6 +51,13 @@ class _ViewFranchiseStudentsState extends State<ViewFranchiseStudents> {
   @override
   Widget build(BuildContext context) {
     return SelectStudentTemplate(
+        myFab: FloatingActionButton(
+          onPressed: () {
+            showModal();
+          },
+          backgroundColor: Color(0xFF8A1501),
+          child: Icon(Icons.add),
+        ),
         studentContentTitleBuilder: FutureBuilder(
             future: widget.retrievedStudents,
             builder: (context, snapshot) {
@@ -70,42 +82,60 @@ class _ViewFranchiseStudentsState extends State<ViewFranchiseStudents> {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data[1].length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Center(
-                          child: ListTile(
-                              title: Text(snapshot.data[1][index].studentName),
-                              trailing: Text(
-                                snapshot.data[1][index].className,
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SpecificStudentProfile(
-                                          studentId: snapshot.data[1][index].studentId,
-                                        )
-                                    ));
-                              })),
-                    );
-                  });
+              return SingleChildScrollView(
+                  physics: ScrollPhysics(),
+                  child: Column(children: <Widget>[
+                    ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data[1].length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: Center(
+                                child: ListTile(
+                                    title: Text(
+                                        snapshot.data[1][index].studentName),
+                                    trailing: Text(
+                                      snapshot.data[1][index].exp.toString(),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SpecificStudentProfile(
+                                                    studentId: snapshot
+                                                        .data[1][index]
+                                                        .studentId,
+                                                  )));
+                                    })),
+                          );
+                        }),
+                  ]));
             }));
   }
 
+  void showModal() {
+    Future<void> future = showModalBottomSheet(
+        context: context,
+        // builder here needs a method to return widget
+        builder: studentBuildBottomSheet,
+        isScrollControlled: true // enable the modal take up the full screen
+        );
+    future.then((void value) => closeModal(value));
+  }
+
+  FutureBuilder<dynamic> closeModal(void value) {
+    print('modal closed');
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => super.widget));
+  }
+
   Future<List<dynamic>> studentData() async {
-    String franchiseId;
     String studentName;
-    String className;
-    String classId;
+    int exp;
     String studentId;
-    List<String> studentIds = [];
     List<Student> studentList = [];
-    List<String> classIds = [];
-    List<String> studentNames = [];
-    String franchiseName;
 
     await _firestore
         .collection('franchiseAdmins')
@@ -115,6 +145,8 @@ class _ViewFranchiseStudentsState extends State<ViewFranchiseStudents> {
       Map<String, dynamic> data = value.data();
       franchiseId = data['franchiseId'];
       franchiseName = data['franchiseName'];
+      franchiseLocation = data['franchiseLocation'];
+      franchiseAdminName = data['franchiseAdminName'];
     });
 
     await _firestore
@@ -124,31 +156,35 @@ class _ViewFranchiseStudentsState extends State<ViewFranchiseStudents> {
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         studentName = doc['studentName'];
-        studentNames.add(studentName);
         studentId = doc['studentId'];
-        studentIds.add(studentId);
-        classId = doc['classId'];
-        classIds.add(classId);
+        exp = doc['exp'];
+        Student newStudent = Student(studentName, studentId, exp);
+        studentList.add(newStudent);
       });
     });
-
-    for (int i = 0; i < classIds.length; i++) {
-      await _firestore
-          .collection('classes')
-          .where('classId', isEqualTo: classIds[i])
-          .get()
-          .then((QuerySnapshot querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
-          className = doc['className'];
-          Student newStudent = Student.viewStudent(studentNames[i], studentIds[i], className);
-          studentList.add(newStudent);
-        });
-      });
-    }
     return [franchiseName, studentList];
   }
 
   Future callStuFunc() async {
     return await studentData();
   }
+}
+
+Widget studentBuildBottomSheet(BuildContext context) {
+  String identifier = 'Student';
+
+  return SingleChildScrollView(
+    child: Container(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
+      child: AddStudentBottomSheet(
+        identifier: identifier,
+        franchiseId: franchiseId,
+        franchiseAdminName: franchiseAdminName,
+        title1: franchiseName,
+        title2: franchiseLocation,
+      ),
+    ),
+  );
 }

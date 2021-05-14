@@ -19,6 +19,7 @@ List<dynamic> listClassNames = [];
 List<dynamic> classIds = [];
 String documentId;
 String username;
+String contactNum;
 
 class CoachProfile extends StatefulWidget {
   static String id = "/coachProfile";
@@ -42,7 +43,7 @@ class _CoachProfileState extends State<CoachProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Profile"),
+          title: Text("My Profile"),
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 20),
@@ -75,6 +76,11 @@ class _CoachProfileState extends State<CoachProfile> {
                         icon: "assets/icons/class.svg",
                         press: () {},
                       ),
+                      ProfileMenu(
+                        text: "Contact No: ${snapshot.data.contactNum}",
+                        icon: "assets/icons/contactNum.svg",
+                        press: () {},
+                      ),
                     ],
                   );
                 } else {
@@ -91,6 +97,8 @@ class _CoachProfileState extends State<CoachProfile> {
       coachName = data['coachName'];
       classIds = data['classIds'];
       username = data['username'];
+      contactNum = data['contactNum'];
+      franchiseName = data['franchiseName'];
     });
 
     listClassNames = [];
@@ -102,14 +110,13 @@ class _CoachProfileState extends State<CoachProfile> {
           .get()
           .then((QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((doc) {
-          print('hey');
           listClassNames.add(doc['className']);
         });
       });
     }
 
-    Coach coach = Coach.completeInfo(
-        coachName, username, classIds, franchiseName, listClassNames);
+    Coach coach = Coach.completeInfo(coachName, username, classIds,
+        franchiseName, listClassNames, contactNum);
     return coach;
   }
 

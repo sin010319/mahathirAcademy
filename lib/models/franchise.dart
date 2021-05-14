@@ -1,5 +1,4 @@
-class Franchise{
-
+class Franchise {
   String _franchiseName;
   String _franchiseLocation;
   String _franchiseId;
@@ -7,6 +6,7 @@ class Franchise{
 
   Franchise(this._franchiseName, this._franchiseLocation, this._franchiseId);
 
+  Franchise.forDropdown(this._franchiseName, this._franchiseId);
 
   Franchise.fromFranchise(this._franchiseName, this._franchiseLocation,
       this._franchiseId, this._franchiseAdminId);
