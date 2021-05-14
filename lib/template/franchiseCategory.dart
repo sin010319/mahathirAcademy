@@ -147,8 +147,7 @@ class _franchiseCategoryState extends State<franchiseCategory> {
         studentNames.add(studentName);
         studentId = doc['studentId'];
         studentIds.add(studentId);
-        classId = doc['classId'];
-        classIds.add(classId);
+        classIds = doc['classIds'];
       });
     });
 

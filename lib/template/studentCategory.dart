@@ -154,8 +154,7 @@ class _StudentCategoryState extends State<StudentCategory> {
         studentNames.add(studentName);
         studentId = doc['studentId'];
         studentIds.add(studentId);
-        classId = doc['classId'];
-        classIds.add(classId);
+        classIds = doc['classIds'];
       });
     });
 
