@@ -3,30 +3,54 @@ import 'package:flutter/material.dart';
 
 import 'package:mahathir_academy_app/constants.dart';
 
-class AddAmendTemplate extends StatelessWidget {
+class AddAmendTemplate extends StatefulWidget {
   String identifier;
   List<Widget> content;
   String title1 = '';
   String title2 = '';
+  bool isTransfer = false;
 
   AddAmendTemplate({this.identifier, this.content});
   AddAmendTemplate.fromTemplate(
       {this.identifier, this.content, this.title1, this.title2});
+  AddAmendTemplate.transferTemplate(
+      {this.identifier,
+      this.content,
+      this.isTransfer,
+      this.title1,
+      this.title2});
   AddAmendTemplate.editTemplate({this.identifier, this.content, this.title1});
+
+  @override
+  _AddAmendTemplateState createState() => _AddAmendTemplateState();
+}
+
+class _AddAmendTemplateState extends State<AddAmendTemplate> {
+  bool isTransfer = false;
+
+  @override
+  void initState() {
+    this.isTransfer = widget.isTransfer;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     String title;
     List<Widget> pageSpecificContent = [];
 
-    if (identifier == 'Amend Coach Info' ||
-        identifier == 'Amend Student Info' ||
-        identifier == 'Amend Franchise' ||
-        identifier == 'Amend Class' ||
-        identifier == 'Amend Admin Info') {
-      title = identifier;
+    if (widget.identifier == 'Amend Coach Info' ||
+        widget.identifier == 'Amend Student Info' ||
+        widget.identifier == 'Amend Franchise' ||
+        widget.identifier == 'Amend Class' ||
+        widget.identifier == 'Amend Admin Info') {
+      title = widget.identifier;
     } else {
-      title = 'Add New ' + identifier;
+      if (!isTransfer) {
+        title = 'Add New ' + widget.identifier;
+      } else {
+        title = 'Transfer ' + widget.identifier;
+      }
     }
 
     List<Widget> studentCoachInputContent = [
@@ -36,7 +60,7 @@ class AddAmendTemplate extends StatelessWidget {
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          this.title1,
+          this.widget.title1,
           style: kTitleTextStyle,
         ),
       ),
@@ -46,7 +70,7 @@ class AddAmendTemplate extends StatelessWidget {
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          this.title2,
+          this.widget.title2,
           style: kTitleTextStyle,
         ),
       )
@@ -59,7 +83,7 @@ class AddAmendTemplate extends StatelessWidget {
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          this.title1,
+          this.widget.title1,
           style: kTitleTextStyle,
         ),
       ),
@@ -72,7 +96,7 @@ class AddAmendTemplate extends StatelessWidget {
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          this.title1,
+          this.widget.title1,
           style: kTitleTextStyle,
         ),
       ),
@@ -82,23 +106,24 @@ class AddAmendTemplate extends StatelessWidget {
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          this.title2,
+          this.widget.title2,
           style: kTitleTextStyle,
         ),
       )
     ];
 
-    if (identifier == 'Student' ||
-        identifier == 'Coach' ||
-        identifier == 'Facilitator') {
+    if (widget.identifier == 'Student' ||
+        widget.identifier == 'Coach' ||
+        widget.identifier == 'Facilitator') {
       pageSpecificContent = studentCoachInputContent;
-    } else if (identifier == 'Amend Coach Info' ||
-        identifier == 'Amend Student Info' ||
-        identifier == 'Amend Admin Info') {
+    } else if (widget.identifier == 'Amend Coach Info' ||
+        widget.identifier == 'Amend Student Info' ||
+        widget.identifier == 'Amend Admin Info') {
       pageSpecificContent = editStudentCoachInputContent;
-    } else if (identifier == 'Class' || identifier == 'Amend Class') {
+    } else if (widget.identifier == 'Class' ||
+        widget.identifier == 'Amend Class') {
       pageSpecificContent = franchiseClassInputContent;
-    } else if (identifier == 'Admin') {
+    } else if (widget.identifier == 'Admin') {
       pageSpecificContent = franchiseClassInputContent;
     } else {
       pageSpecificContent = [];
@@ -129,7 +154,7 @@ class AddAmendTemplate extends StatelessWidget {
                 ),
               ] +
               pageSpecificContent +
-              content,
+              widget.content,
         ),
       ),
     );

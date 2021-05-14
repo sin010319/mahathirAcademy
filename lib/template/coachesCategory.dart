@@ -23,8 +23,8 @@ String targetAdminId;
 String targetFranchiseId;
 String targetFranchiseName;
 int noOfStudents;
-List <String> studentNames = [];
-String title ="";
+List<String> studentNames = [];
+String title = "";
 
 class coachesCategory extends StatefulWidget {
   static const String id = '/coachesCategory';
@@ -41,7 +41,6 @@ class coachesCategory extends StatefulWidget {
 }
 
 class _coachesCategoryState extends State<coachesCategory> {
-
   @override
   void initState() {
     targetAdminId = _auth.currentUser.uid;
@@ -52,7 +51,6 @@ class _coachesCategoryState extends State<coachesCategory> {
     print(targetFranchiseId);
     print("????");
     super.initState();
-
   }
 
   @override
@@ -76,7 +74,8 @@ class _coachesCategoryState extends State<coachesCategory> {
         myFutureBuilder: FutureBuilder(
             future: widget.retrievedStudents,
             builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
@@ -87,8 +86,7 @@ class _coachesCategoryState extends State<coachesCategory> {
                     return SingleChildScrollView(
                       child: Center(
                           child: ListTile(
-                              title: Text(
-                                  snapshot.data[index].studentName),
+                              title: Text(snapshot.data[index].studentName),
                               trailing: Text(
                                 snapshot.data[index].exp.toString(),
                               ),
@@ -96,27 +94,26 @@ class _coachesCategoryState extends State<coachesCategory> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SpecificStudentProfile(
-                                          studentId: snapshot.data[index].studentId,
-                                        )
-                                    ));
-                              }
-                          )
-                      ),
+                                        builder: (context) =>
+                                            SpecificStudentProfile(
+                                              studentId: snapshot
+                                                  .data[index].studentId,
+                                            )));
+                              })),
                     );
                   });
-            })
-    );}
+            }));
+  }
 
   Future<Franchise> getCoach() async {
-    await _firestore.collection('coaches')
+    await _firestore
+        .collection('coaches')
         .doc(targetAdminId)
         .get()
         .then((value) {
       Map<String, dynamic> data = value.data();
       targetFranchiseName = data['franchiseName'];
       targetFranchiseId = data['franchiseId'];
-
     });
   }
 
@@ -128,14 +125,11 @@ class _coachesCategoryState extends State<coachesCategory> {
     List<Student> studentList = [];
     List<dynamic> classIds = [];
     List<String> studentIds = [];
-    List <String>studentNames = [];
+    List<String> studentNames = [];
     int studentExp;
     List<int> studentExps = [];
     String studentRank;
     String rank;
-
-
-
 
     await _firestore
         .collection('students')
@@ -147,12 +141,11 @@ class _coachesCategoryState extends State<coachesCategory> {
         studentNames.add(studentName);
         studentId = doc['studentId'];
         studentIds.add(studentId);
-        classId = doc['classId'];
-        classIds.add(classId);
+        classIds = doc['classIds'];
       });
     });
 
-    for (int i = 0; i < studentIds.length; i++){
+    for (int i = 0; i < studentIds.length; i++) {
       await _firestore
           .collection('students')
           .where('studentId', isEqualTo: studentIds[i])
@@ -161,7 +154,8 @@ class _coachesCategoryState extends State<coachesCategory> {
         querySnapshot.docs.forEach((doc) {
           studentExp = doc['exp'];
           rank = decideRank(studentExp);
-          if (doc['franchiseId'] == targetFranchiseId && (doc['exp'] >= widget.minMark && doc['exp'] < widget.maxMark)) {
+          if (doc['franchiseId'] == targetFranchiseId &&
+              (doc['exp'] >= widget.minMark && doc['exp'] < widget.maxMark)) {
             Student newStudent =
                 Student(studentNames[i], studentIds[i], studentExp);
             studentList.add(newStudent);
@@ -172,44 +166,30 @@ class _coachesCategoryState extends State<coachesCategory> {
 
     studentList.sort((b, a) => a.exp.compareTo(b.exp));
 
-
-
     return studentList;
   }
 
   String decideRank(int exp) {
     String retRank = "";
-    if (exp >= 0 && exp < 500){
+    if (exp >= 0 && exp < 500) {
       retRank = "Bronze Speaker";
-    }
-    else if (exp >= 500 && exp < 1000){
+    } else if (exp >= 500 && exp < 1000) {
       retRank = "Silver Speaker";
-    }
-    else if (exp >= 1000 && exp < 1500){
+    } else if (exp >= 1000 && exp < 1500) {
       retRank = "Gold Speaker";
-    }
-    else if (exp >= 1500 && exp < 2000){
+    } else if (exp >= 1500 && exp < 2000) {
       retRank = "Platinum Speaker";
-    }
-    else if (exp >= 2000 && exp < 3000){
+    } else if (exp >= 2000 && exp < 3000) {
       retRank = "Ruby Speaker";
-    }
-    else if (exp >= 3000 && exp < 4000){
+    } else if (exp >= 3000 && exp < 4000) {
       retRank = "Diamond Speaker";
-    }
-    else if (exp >= 4000){
+    } else if (exp >= 4000) {
       retRank = "Elite Speaker";
     }
     return retRank;
   }
 
-
-
   Future callStuFunc() async {
     return await studentData();
   }
-
 }
-
-
-

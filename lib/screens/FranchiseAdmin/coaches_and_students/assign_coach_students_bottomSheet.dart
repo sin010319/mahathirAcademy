@@ -69,6 +69,7 @@ class _AssignCoachStudentBottomSheetState
   String franchiseName;
 
   List<dynamic> IdForCheck = [];
+  List<dynamic> duplicateIds = [];
 
   List<dynamic> usersCollected = [];
 
@@ -80,6 +81,7 @@ class _AssignCoachStudentBottomSheetState
     franchiseId = widget.franchiseId;
     classId = widget.classId;
     callCheckFunc();
+    callAvoidDuplicateFunc();
 
     if (this.identifier.toLowerCase() == 'student') {
       retrievedUsers = _firestore
@@ -168,33 +170,37 @@ class _AssignCoachStudentBottomSheetState
                     var coachName = item.data()['coachName'];
                     var coachId = item.data()['coachId'];
 
-                    var newItem = DropdownMenuItem(
-                      // dropdown menu item has a child of text widget
-                      child: Text(coachName),
-                      value:
-                          coachId, // pass in the currency value when onChanged() is triggered
-                    );
-                    // add the item created to a list
-                    dropdownItems.add(newItem);
-                    Coach newCoach = Coach.fromCoach(coachName, coachId);
-                    usersCollected.add(newCoach);
+                    if (!duplicateIds.contains(coachId)) {
+                      var newItem = DropdownMenuItem(
+                        // dropdown menu item has a child of text widget
+                        child: Text(coachName),
+                        value:
+                            coachId, // pass in the currency value when onChanged() is triggered
+                      );
+                      // add the item created to a list
+                      dropdownItems.add(newItem);
+                      Coach newCoach = Coach.fromCoach(coachName, coachId);
+                      usersCollected.add(newCoach);
+                    }
                   }
                 } else if (this.identifier.toLowerCase() == 'facilitator') {
                   for (var item in items) {
                     var facilitatorName = item.data()['coachName'];
                     var facilitatorId = item.data()['coachId'];
 
-                    var newItem = DropdownMenuItem(
-                      // dropdown menu item has a child of text widget
-                      child: Text(facilitatorName),
-                      value:
-                          facilitatorId, // pass in the currency value when onChanged() is triggered
-                    );
-                    // add the item created to a list
-                    dropdownItems.add(newItem);
-                    Facilitator newFacilitator = Facilitator.fromFacilitator(
-                        facilitatorName, facilitatorId);
-                    usersCollected.add(newFacilitator);
+                    if (!duplicateIds.contains(facilitatorId)) {
+                      var newItem = DropdownMenuItem(
+                        // dropdown menu item has a child of text widget
+                        child: Text(facilitatorName),
+                        value:
+                            facilitatorId, // pass in the currency value when onChanged() is triggered
+                      );
+                      // add the item created to a list
+                      dropdownItems.add(newItem);
+                      Facilitator newFacilitator = Facilitator.fromFacilitator(
+                          facilitatorName, facilitatorId);
+                      usersCollected.add(newFacilitator);
+                    }
                   }
                 }
                 // create and return a new dropdown list for user selection
@@ -419,5 +425,22 @@ class _AssignCoachStudentBottomSheetState
         });
       });
     }
+  }
+
+  Future callAvoidDuplicateFunc() async {
+    await checkIfNoDuplicate();
+  }
+
+  Future<void> checkIfNoDuplicate() async {
+    await _firestore
+        .collection('classes')
+        .where('classId', isEqualTo: classId)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        duplicateIds.add(doc['coachId']);
+        duplicateIds.add(doc['facilitatorId']);
+      });
+    });
   }
 }

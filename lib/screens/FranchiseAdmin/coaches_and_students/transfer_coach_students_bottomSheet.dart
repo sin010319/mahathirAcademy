@@ -178,9 +178,10 @@ class _TransferCoachStudentBottomSheetState
           }),
     ];
 
-    return AddAmendTemplate.fromTemplate(
+    return AddAmendTemplate.transferTemplate(
       identifier: widget.identifier,
       content: retContent,
+      isTransfer: true,
       title1: this.widget.title1,
       title2: this.widget.title2,
     );

@@ -122,6 +122,24 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
               onTap: () {
                 setState(() {
                   // do smt
+                  if (facilitatorName == '') {
+                    String message =
+                        'There is no facilitator available in the class to be upgraded.';
+                    PopUpAlertClass.popUpAlert(message, context);
+                  } else if (facilitatorName != '' && coachName != '') {
+                    String message =
+                        'There is a coach currently existing in this class. Kindly remove this coach if you wish to upgrade the facilitator to coach.';
+                    PopUpAlertClass.popUpAlert(message, context);
+                  } else if (facilitatorName != '' && coachName == '') {
+                    String message =
+                        'Are you sure you want to upgrade current facilitator to the coach for this class?';
+                    PopUpDialogClass.popUpDialog(message, context, () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      callUpgradeFaci(facilitatorId);
+                    }, () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    });
+                  }
                 });
               },
               label: 'Upgrade Facilitator',
@@ -314,6 +332,29 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
     String userDeletedMsg =
         'You have successfully removed a $identifier from the class.';
     await PopUpAlertClass.popUpAlert(userDeletedMsg, context);
+    Future.delayed(Duration(milliseconds: 3000), () {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+    });
+  }
+
+  Future<void> upgradeFaci(String faciIdForUpdate) async {
+    await _firestore
+        .collection('classes')
+        .where('classId', isEqualTo: targetClassId)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        doc.reference.update({"facilitatorId": "", "coachId": faciIdForUpdate});
+      });
+    });
+  }
+
+  Future<void> callUpgradeFaci(String faciIdForUpdate) async {
+    await upgradeFaci(faciIdForUpdate);
+    String upgradeFacidMsg =
+        'You have successfully updated a facilitator to a coach for this class.';
+    await PopUpAlertClass.popUpAlert(upgradeFacidMsg, context);
     Future.delayed(Duration(milliseconds: 3000), () {
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext context) => super.widget));

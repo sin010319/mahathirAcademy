@@ -23,8 +23,8 @@ String targetStudentId;
 String targetFranchiseId;
 String targetFranchiseName;
 int noOfStudents;
-List <String> studentNames = [];
-String title ="";
+List<String> studentNames = [];
+String title = "";
 String studentRank = "";
 int targetStudentExp;
 
@@ -43,7 +43,6 @@ class StudentCategory extends StatefulWidget {
 }
 
 class _StudentCategoryState extends State<StudentCategory> {
-
   @override
   void initState() {
     targetStudentId = _auth.currentUser.uid;
@@ -56,7 +55,6 @@ class _StudentCategoryState extends State<StudentCategory> {
     print(studentRank);
     print("yesssorrr");
     super.initState();
-
   }
 
   @override
@@ -80,7 +78,8 @@ class _StudentCategoryState extends State<StudentCategory> {
         myFutureBuilder: FutureBuilder(
             future: widget.retrievedStudents,
             builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
@@ -91,8 +90,7 @@ class _StudentCategoryState extends State<StudentCategory> {
                     return SingleChildScrollView(
                       child: Center(
                           child: ListTile(
-                              title: Text(
-                                  snapshot.data[index].studentName),
+                              title: Text(snapshot.data[index].studentName),
                               trailing: Text(
                                 snapshot.data[index].exp.toString(),
                               ),
@@ -100,20 +98,20 @@ class _StudentCategoryState extends State<StudentCategory> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SpecificStudentProfile(
-                                          studentId: snapshot.data[index].studentId,
-                                        )
-                                    ));
-                              }
-                          )
-                      ),
+                                        builder: (context) =>
+                                            SpecificStudentProfile(
+                                              studentId: snapshot
+                                                  .data[index].studentId,
+                                            )));
+                              })),
                     );
                   });
-            })
-    );}
+            }));
+  }
 
   Future<Student> getStudent() async {
-    await _firestore.collection('students')
+    await _firestore
+        .collection('students')
         .doc(targetStudentId)
         .get()
         .then((value) {
@@ -123,8 +121,6 @@ class _StudentCategoryState extends State<StudentCategory> {
       targetStudentExp = data['exp'];
       studentRank = decideRank(targetStudentExp);
       print(studentRank);
-
-
     });
   }
 
@@ -141,9 +137,6 @@ class _StudentCategoryState extends State<StudentCategory> {
     List<int> studentExps = [];
     String rank;
 
-
-
-
     await _firestore
         .collection('students')
         .where('franchiseId', isEqualTo: targetFranchiseId)
@@ -154,12 +147,11 @@ class _StudentCategoryState extends State<StudentCategory> {
         studentNames.add(studentName);
         studentId = doc['studentId'];
         studentIds.add(studentId);
-        classId = doc['classId'];
-        classIds.add(classId);
+        classIds = doc['classIds'];
       });
     });
 
-    for (int i = 0; i < studentIds.length; i++){
+    for (int i = 0; i < studentIds.length; i++) {
       await _firestore
           .collection('students')
           .where('studentId', isEqualTo: studentIds[i])
@@ -170,57 +162,41 @@ class _StudentCategoryState extends State<StudentCategory> {
           rank = decideRank(studentExp);
           print(rank);
           if (rank == studentRank) {
-            Student newStudent = Student(studentNames[i], studentIds[i], studentExp);
+            Student newStudent =
+                Student(studentNames[i], studentIds[i], studentExp);
             print(newStudent.exp);
             studentList.add(newStudent);
           }
-
         });
       });
     }
 
     studentList.sort((b, a) => a.exp.compareTo(b.exp));
 
-
-
-
-
     return studentList;
   }
 
   String decideRank(int exp) {
     String retRank = "";
-    if (exp >= 0 && exp < 500){
+    if (exp >= 0 && exp < 500) {
       retRank = "Bronze Speaker";
-    }
-    else if (exp >= 500 && exp < 1000){
+    } else if (exp >= 500 && exp < 1000) {
       retRank = "Silver Speaker";
-    }
-    else if (exp >= 1000 && exp < 1500){
+    } else if (exp >= 1000 && exp < 1500) {
       retRank = "Gold Speaker";
-    }
-    else if (exp >= 1500 && exp < 2000){
+    } else if (exp >= 1500 && exp < 2000) {
       retRank = "Platinum Speaker";
-    }
-    else if (exp >= 2000 && exp < 3000){
+    } else if (exp >= 2000 && exp < 3000) {
       retRank = "Ruby Speaker";
-    }
-    else if (exp >= 3000 && exp < 4000){
+    } else if (exp >= 3000 && exp < 4000) {
       retRank = "Diamond Speaker";
-    }
-    else if (exp >= 4000){
+    } else if (exp >= 4000) {
       retRank = "Elite Speaker";
     }
     return retRank;
   }
 
-
-
   Future callStuFunc() async {
     return await studentData();
   }
-
 }
-
-
-

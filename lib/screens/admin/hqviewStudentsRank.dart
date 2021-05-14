@@ -21,18 +21,18 @@ final _auth = FirebaseAuth.instance;
 String targetAdminId;
 String targetFranchiseId;
 int noOfStudents;
-List <String> studentNames = [];
-String title ="";
+List<String> studentNames = [];
+String title = "";
 
 class HQViewStudentsRank extends StatefulWidget {
-
   int minMark;
   int maxMark;
   String franchiseId;
   String franchiseName;
 
   static const String id = '/HQViewStudentRank';
-  HQViewStudentsRank({this.franchiseId, this.franchiseName, this.minMark, this.maxMark});
+  HQViewStudentsRank(
+      {this.franchiseId, this.franchiseName, this.minMark, this.maxMark});
 
   @override
   _HQViewStudentsRankState createState() => _HQViewStudentsRankState();
@@ -41,7 +41,6 @@ class HQViewStudentsRank extends StatefulWidget {
 }
 
 class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
-
   @override
   void initState() {
     targetAdminId = _auth.currentUser.uid;
@@ -71,7 +70,8 @@ class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
         myFutureBuilder: FutureBuilder(
             future: widget.retrievedStudents,
             builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
@@ -82,8 +82,7 @@ class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
                     return Card(
                       child: Center(
                           child: ListTile(
-                              title: Text(
-                                  snapshot.data[index].studentName),
+                              title: Text(snapshot.data[index].studentName),
                               trailing: Text(
                                 snapshot.data[index].exp.toString(),
                               ),
@@ -91,17 +90,16 @@ class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SpecificStudentProfile(
-                                          studentId: snapshot.data[index].studentId,
-                                        )
-                                    ));
-                              }
-                          )
-                      ),
+                                        builder: (context) =>
+                                            SpecificStudentProfile(
+                                              studentId: snapshot
+                                                  .data[index].studentId,
+                                            )));
+                              })),
                     );
                   });
-            })
-    );}
+            }));
+  }
 
   Future<List<Student>> studentData() async {
     String studentName;
@@ -117,7 +115,6 @@ class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
     String studentRank;
     String rank;
 
-
     await _firestore
         .collection('students')
         .where('franchiseId', isEqualTo: targetFranchiseId)
@@ -128,12 +125,11 @@ class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
         studentNames.add(studentName);
         studentId = doc['studentId'];
         studentIds.add(studentId);
-        classId = doc['classId'];
-        classIds.add(classId);
+        classIds = doc['classIds'];
       });
     });
 
-    for (int i = 0; i < studentIds.length; i++){
+    for (int i = 0; i < studentIds.length; i++) {
       await _firestore
           .collection('students')
           .where('studentId', isEqualTo: studentIds[i])
@@ -142,9 +138,10 @@ class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
         querySnapshot.docs.forEach((doc) {
           studentExp = doc['exp'];
           rank = decideRank(studentExp);
-          if (doc['franchiseId'] == targetFranchiseId && (doc['exp'] >= widget.minMark && doc['exp'] < widget.maxMark)) {
+          if (doc['franchiseId'] == targetFranchiseId &&
+              (doc['exp'] >= widget.minMark && doc['exp'] < widget.maxMark)) {
             Student newStudent =
-            Student(studentNames[i], studentIds[i], studentExp);
+                Student(studentNames[i], studentIds[i], studentExp);
             studentList.add(newStudent);
           }
         });
@@ -153,32 +150,24 @@ class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
 
     studentList.sort((b, a) => a.exp.compareTo(b.exp));
 
-
-
     return studentList;
   }
 
   String decideRank(int exp) {
     String retRank = "";
-    if (exp >= 0 && exp < 500){
+    if (exp >= 0 && exp < 500) {
       retRank = "Bronze Speaker";
-    }
-    else if (exp >= 500 && exp < 1000){
+    } else if (exp >= 500 && exp < 1000) {
       retRank = "Silver Speaker";
-    }
-    else if (exp >= 1000 && exp < 1500){
+    } else if (exp >= 1000 && exp < 1500) {
       retRank = "Gold Speaker";
-    }
-    else if (exp >= 1500 && exp < 2000){
+    } else if (exp >= 1500 && exp < 2000) {
       retRank = "Platinum Speaker";
-    }
-    else if (exp >= 2000 && exp < 3000){
+    } else if (exp >= 2000 && exp < 3000) {
       retRank = "Ruby Speaker";
-    }
-    else if (exp >= 3000 && exp < 4000){
+    } else if (exp >= 3000 && exp < 4000) {
       retRank = "Diamond Speaker";
-    }
-    else if (exp >= 4000){
+    } else if (exp >= 4000) {
       retRank = "Elite Speaker";
     }
     return retRank;
@@ -188,6 +177,3 @@ class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
     return await studentData();
   }
 }
-
-
-
