@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -40,12 +42,21 @@ class _AddFranchiseBottomSheetState extends State<AddFranchiseBottomSheet> {
     CollectionReference franchises = _firestore.collection('franchises');
     bool showSpinner = false;
 
-    Future<void> addtoFranchises() async {
-      final QuerySnapshot qSnap =
-          await _firestore.collection('franchises').get();
-      final int docLength = qSnap.docs.length;
-      this.franchiseId = "00" + (docLength + 1).toString();
-      this.docId = this.franchiseId;
+    Future<void> addToFranchises() async {
+      List<int> franchiseIds = [];
+
+      await _firestore
+          .collection('franchises')
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          franchiseIds.add(int.parse(doc.id));
+        });
+      });
+
+      int largestFranchiseId = franchiseIds.fold(franchiseIds[0], max);
+      this.franchiseId = '00${largestFranchiseId + 1}';
+      this.docId = '00${largestFranchiseId + 1}';
 
       // Call the user's CollectionReference to add a new user
       return franchises
@@ -62,7 +73,7 @@ class _AddFranchiseBottomSheetState extends State<AddFranchiseBottomSheet> {
     }
 
     Future<void> callFunc() async {
-      await addtoFranchises();
+      await addToFranchises();
       String franchiseAddedMessage =
           'You have successfully added a new franchise. Please close this page to view the newly updated franchises.';
       PopUpAlertClass.popUpAlert(franchiseAddedMessage, context);

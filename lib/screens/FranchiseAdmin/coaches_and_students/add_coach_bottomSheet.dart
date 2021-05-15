@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/components/input_box.dart';
+import 'package:mahathir_academy_app/components/input_box_for_digit.dart';
 import 'package:mahathir_academy_app/components/pop_up_alert.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/round_button.dart';
@@ -177,7 +178,7 @@ class _AddCoachBottomSheetState extends State<AddCoachBottomSheet> {
       SizedBox(
         height: 20.0,
       ),
-      inputBox(
+      digitinputBox(
           icon: Icons.phone,
           label: 'Contact Number',
           function: (newText) {
@@ -197,10 +198,11 @@ class _AddCoachBottomSheetState extends State<AddCoachBottomSheet> {
               if (!currentFocus.hasPrimaryFocus) {
                 currentFocus.unfocus();
               }
-              if (this.password.length < 6){
-                String message = "Please provide a password with at least 6 characters.";
+              if (this.password.length < 6) {
+                String message =
+                    "Please provide a password with at least 6 characters.";
                 PopUpAlertClass.popUpAlert(message, context);
-              }else{
+              } else {
                 String message =
                     'Are you sure you want to add a new ${this.identifier} to the ${this.franchiseName}?';
                 PopUpDialogClass.popUpDialog(message, context, () {

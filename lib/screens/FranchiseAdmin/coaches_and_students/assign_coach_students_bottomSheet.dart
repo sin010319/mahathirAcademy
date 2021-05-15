@@ -432,15 +432,17 @@ class _AssignCoachStudentBottomSheetState
   }
 
   Future<void> checkIfNoDuplicate() async {
-    await _firestore
-        .collection('classes')
-        .where('classId', isEqualTo: classId)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
-        duplicateIds.add(doc['coachId']);
-        duplicateIds.add(doc['facilitatorId']);
+    if (classId != 'INACTIVE') {
+      await _firestore
+          .collection('classes')
+          .where('classId', isEqualTo: classId)
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          duplicateIds.add(doc['coachId']);
+          duplicateIds.add(doc['facilitatorId']);
+        });
       });
-    });
+    }
   }
 }

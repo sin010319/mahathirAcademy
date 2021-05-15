@@ -19,7 +19,6 @@ List<dynamic> listClassNames;
 String targetCoachId;
 
 class SelectClassGeneral extends StatefulWidget {
-
   static const String id = '/selectClassGeneral';
   // List<String> classes = ['Class1', 'Class2', 'Class3'];
 
@@ -35,7 +34,6 @@ class SelectClassGeneral extends StatefulWidget {
 }
 
 class _SelectClassGeneralState extends State<SelectClassGeneral> {
-
   bool showSpinner = false; // to figure out when should our spinner spins
 
   @override
@@ -49,45 +47,51 @@ class _SelectClassGeneralState extends State<SelectClassGeneral> {
   Widget build(BuildContext context) {
     String classContentTitle = widget.textForDisplay;
     return SelectClassTemplateFixed(
-      myFab: null,
-      textForDisplay: classContentTitle,
-      classItemBuilder: FutureBuilder(
-          future: widget.retrievedClassNames,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
-              print('error3');
-              return Center(child: CircularProgressIndicator());
-            }
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: Center(
-                        child: ListTile(
-                            title: Text(
-                                snapshot.data[index], style: kListItemsTextStyle),
-                            onTap: (){
-                              print('contentTitle');
-                              print(snapshot.data[index]);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AwardExp(
-                                        contentTitle: snapshot.data[index]
-                                    ),
-                                  ));
-                            }
-                        )
-                    ),
-                  );
-                });
-          })
-    );
+        myFab: null,
+        textForDisplay: classContentTitle,
+        classItemBuilder: FutureBuilder(
+            future: widget.retrievedClassNames,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
+                print('error3');
+                return Center(child: CircularProgressIndicator());
+              }
+              return SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Column(
+                  children: <Widget>[
+                    ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: Center(
+                                child: ListTile(
+                                    title: Text(snapshot.data[index],
+                                        style: kListItemsTextStyle),
+                                    onTap: () {
+                                      print('contentTitle');
+                                      print(snapshot.data[index]);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => AwardExp(
+                                                contentTitle:
+                                                    snapshot.data[index]),
+                                          ));
+                                    })),
+                          );
+                        })
+                  ],
+                ),
+              );
+            }));
   }
 
   Future<List<String>> classData() async {
-    List <String> classIds = [];
+    List<String> classIds = [];
     List<String> listClassNames = [];
 
     await _firestore
@@ -103,7 +107,8 @@ class _SelectClassGeneralState extends State<SelectClassGeneral> {
     });
 
     for (var eachClassId in classIds) {
-      await _firestore.collection('classes')
+      await _firestore
+          .collection('classes')
           .where('classId', isEqualTo: eachClassId)
           .get()
           .then((QuerySnapshot querySnapshot) {
@@ -116,8 +121,7 @@ class _SelectClassGeneralState extends State<SelectClassGeneral> {
     return listClassNames;
   }
 
-  callFunc() async{
+  callFunc() async {
     return await classData();
   }
-
 }

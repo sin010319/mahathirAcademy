@@ -157,69 +157,78 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
-              return Expanded(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: Center(
-                            child: ListTile(
-                                title: Text(snapshot.data[index].franchiseName),
-                                trailing: Wrap(
-                                  spacing: 8,
-                                  children: [
-                                    GestureDetector(
-                                      child: Icon(
-                                        Icons.edit,
-                                        color: Color(0xFF8A1501),
-                                      ),
-                                      onTap: () {
-                                        selectedFranchiseId =
-                                            snapshot.data[index].franchiseId;
-                                        selectedFranchiseLocation = snapshot
-                                            .data[index].franchiseLocation;
-                                        selectedFranchiseName =
-                                            snapshot.data[index].franchiseName;
-                                        showModal(
-                                            editFranchiseBuildBottomSheet);
-                                      },
-                                    ),
-                                    GestureDetector(
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: Color(0xFF8A1501),
-                                      ),
-                                      onTap: () {
-                                        String message =
-                                            'Are you sure you want to remove ${snapshot.data[index].franchiseName}? Note that when you remove this franchise, all the classes, students and coaches who are still under this franchise will be removed.';
-                                        PopUpDialogClass.popUpDialog(
-                                            message, context, () {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop();
-                                          callDeleteFunc(
-                                              snapshot.data[index].franchiseId);
-                                        }, () {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop();
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ViewAdminScreen(
-                                          franchiseInfo: snapshot.data[index],
+              return SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Column(
+                  children: <Widget>[
+                    ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: Center(
+                                child: ListTile(
+                                    title: Text(
+                                        snapshot.data[index].franchiseName),
+                                    trailing: Wrap(
+                                      spacing: 8,
+                                      children: [
+                                        GestureDetector(
+                                          child: Icon(
+                                            Icons.edit,
+                                            color: Color(0xFF8A1501),
+                                          ),
+                                          onTap: () {
+                                            selectedFranchiseId = snapshot
+                                                .data[index].franchiseId;
+                                            selectedFranchiseLocation = snapshot
+                                                .data[index].franchiseLocation;
+                                            selectedFranchiseName = snapshot
+                                                .data[index].franchiseName;
+                                            showModal(
+                                                editFranchiseBuildBottomSheet);
+                                          },
                                         ),
-                                      ));
-                                })),
-                      );
-                    }),
+                                        GestureDetector(
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Color(0xFF8A1501),
+                                          ),
+                                          onTap: () {
+                                            String message =
+                                                'Are you sure you want to remove ${snapshot.data[index].franchiseName}? Note that when you remove this franchise, all the classes, students and coaches who are still under this franchise will be removed.';
+                                            PopUpDialogClass.popUpDialog(
+                                                message, context, () {
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop();
+                                              callDeleteFunc(snapshot
+                                                  .data[index].franchiseId);
+                                            }, () {
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop();
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewAdminScreen(
+                                              franchiseInfo:
+                                                  snapshot.data[index],
+                                            ),
+                                          ));
+                                    })),
+                          );
+                        })
+                  ],
+                ),
               );
             }));
   }

@@ -79,35 +79,45 @@ class _InactiveClassScreenState extends State<InactiveClassScreen> {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Center(
-                          child: ListTile(
-                        title: Text(snapshot.data[index].studentName,
-                            style: kListItemsTextStyle),
-                        trailing: Wrap(
-                          spacing: 8,
-                          children: [
-                            Container(
-                                child: Text(snapshot.data[index].exp.toString(),
-                                    style: kExpTextStyle)),
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SpecificStudentProfile(
-                                        studentId:
-                                            snapshot.data[index].studentId,
-                                      )));
-                        },
-                      )),
-                    );
-                  });
+              return SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Column(
+                  children: <Widget>[
+                    ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: Center(
+                                child: ListTile(
+                              title: Text(snapshot.data[index].studentName,
+                                  style: kListItemsTextStyle),
+                              trailing: Wrap(
+                                spacing: 8,
+                                children: [
+                                  Container(
+                                      child: Text(
+                                          snapshot.data[index].exp.toString(),
+                                          style: kExpTextStyle)),
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SpecificStudentProfile(
+                                              studentId: snapshot
+                                                  .data[index].studentId,
+                                            )));
+                              },
+                            )),
+                          );
+                        })
+                  ],
+                ),
+              );
             }));
   }
 

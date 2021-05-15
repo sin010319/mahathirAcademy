@@ -55,28 +55,39 @@ class _SelectFranchiseToViewAllStudentsState
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Center(
-                          child: ListTile(
-                              title: Text(snapshot.data[index].franchiseName),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            HQViewFranchiseStudents(
-                                              franchiseId: snapshot
-                                                  .data[index].franchiseId,
-                                              franchiseName: snapshot
-                                                  .data[index].franchiseName,
-                                            )));
-                              })),
-                    );
-                  });
+              return SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Column(
+                  children: <Widget>[
+                    ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: Center(
+                                child: ListTile(
+                                    title: Text(
+                                        snapshot.data[index].franchiseName),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  HQViewFranchiseStudents(
+                                                    franchiseId: snapshot
+                                                        .data[index]
+                                                        .franchiseId,
+                                                    franchiseName: snapshot
+                                                        .data[index]
+                                                        .franchiseName,
+                                                  )));
+                                    })),
+                          );
+                        })
+                  ],
+                ),
+              );
             }));
   }
 
@@ -87,7 +98,7 @@ class _SelectFranchiseToViewAllStudentsState
     List<Franchise> franchisesList = [];
 
     await _firestore
-        .collection('franchiseAdmins')
+        .collection('franchises')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {

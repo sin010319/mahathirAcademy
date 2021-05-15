@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/components/input_box.dart';
+import 'package:mahathir_academy_app/components/input_box_for_digit.dart';
 import 'package:mahathir_academy_app/components/pop_up_alert.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/round_button.dart';
@@ -191,7 +192,7 @@ class _AddStudentBottomSheetState extends State<AddStudentBottomSheet> {
       SizedBox(
         height: 20.0,
       ),
-      inputBox(
+      digitinputBox(
           icon: Icons.phone,
           label: 'Contact Number',
           function: (newText) {

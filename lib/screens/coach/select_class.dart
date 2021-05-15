@@ -17,7 +17,6 @@ List<dynamic> listClassNames;
 String targetCoachId;
 
 class SelectClass extends StatefulWidget {
-
   static const String id = '/selectClass';
   // List<String> classes = ['Class1', 'Class2', 'Class3'];
 
@@ -33,7 +32,6 @@ class SelectClass extends StatefulWidget {
 }
 
 class _SelectClassState extends State<SelectClass> {
-
   bool showSpinner = false; // to figure out when should our spinner spins
 
   @override
@@ -52,30 +50,36 @@ class _SelectClassState extends State<SelectClass> {
         classItemBuilder: FutureBuilder(
             future: widget.retrievedClassNames,
             builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Center(
-                          child: ListTile(
-                              title: Text(
-                                  snapshot.data[index], style: kListItemsTextStyle),
-                              onTap: widget.classFunction
-                          )
-                      ),
-                    );
-                  });
-            })
-    );
+              return SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Column(
+                  children: <Widget>[
+                    ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: Center(
+                                child: ListTile(
+                                    title: Text(snapshot.data[index],
+                                        style: kListItemsTextStyle),
+                                    onTap: widget.classFunction)),
+                          );
+                        })
+                  ],
+                ),
+              );
+            }));
   }
 
   Future<List<String>> classData() async {
-    List <String> classIds = [];
+    List<String> classIds = [];
     List<String> listClassNames = [];
 
     await _firestore
@@ -91,7 +95,8 @@ class _SelectClassState extends State<SelectClass> {
     });
 
     for (var eachClassId in classIds) {
-      await _firestore.collection('classes')
+      await _firestore
+          .collection('classes')
           .where('classId', isEqualTo: eachClassId)
           .get()
           .then((QuerySnapshot querySnapshot) {
@@ -104,8 +109,7 @@ class _SelectClassState extends State<SelectClass> {
     return listClassNames;
   }
 
-  callFunc() async{
+  callFunc() async {
     return await classData();
   }
-
 }

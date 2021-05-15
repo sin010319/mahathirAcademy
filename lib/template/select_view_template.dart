@@ -8,14 +8,18 @@ import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bot
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/edit_franchise_bottomSheet.dart';
 
 class SelectViewTemplate extends StatefulWidget {
-
   FloatingActionButton fab;
   String appBarTitle;
   String imageIconLocation;
   FutureBuilder contentTitleBuilder;
   FutureBuilder myFutureBuilder;
 
-  SelectViewTemplate({this.fab, this.appBarTitle, this.imageIconLocation, this.contentTitleBuilder, this.myFutureBuilder});
+  SelectViewTemplate(
+      {this.fab,
+      this.appBarTitle,
+      this.imageIconLocation,
+      this.contentTitleBuilder,
+      this.myFutureBuilder});
 
   static const String id = '/SelectViewTemplate';
 
@@ -24,7 +28,6 @@ class SelectViewTemplate extends StatefulWidget {
 }
 
 class _SelectViewTemplateState extends State<SelectViewTemplate> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,24 +36,25 @@ class _SelectViewTemplateState extends State<SelectViewTemplate> {
         backgroundColor: Color(0xFFDB5D38),
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[Container(
-              padding: EdgeInsets.all(30.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  // wrap the icon in a circle avatar
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    backgroundImage: AssetImage(widget.imageIconLocation),
-                    radius: 30.0,
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  widget.contentTitleBuilder
-                ],
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(30.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // wrap the icon in a circle avatar
+                    CircleAvatar(
+                      backgroundColor: Colors.white,
+                      backgroundImage: AssetImage(widget.imageIconLocation),
+                      radius: 30.0,
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    widget.contentTitleBuilder
+                  ],
+                ),
               ),
-            ),
               Expanded(
                   child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -59,20 +63,15 @@ class _SelectViewTemplateState extends State<SelectViewTemplate> {
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(20.0),
-                              topRight: Radius.circular(20.0)
-                          )
-                      ),
-                      child: ListView(
-                          children: [
-                            SizedBox(height: 10.0,),
-                            widget.myFutureBuilder
-                          ]
-                      )
-                  )
-              )
-            ]
-        )
-    );
+                              topRight: Radius.circular(20.0))),
+                      child: Expanded(
+                        child: ListView(shrinkWrap: true, children: [
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          widget.myFutureBuilder
+                        ]),
+                      )))
+            ]));
   }
 }
-

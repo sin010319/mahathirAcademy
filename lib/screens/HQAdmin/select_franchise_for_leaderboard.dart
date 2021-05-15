@@ -24,8 +24,6 @@ String targetAdminId;
 String _franchiseId;
 
 class SelectFranchiseForLeaderBoard extends StatefulWidget {
-
-
   FloatingActionButton fab;
   Function function;
   Function myItemBuilder;
@@ -34,13 +32,14 @@ class SelectFranchiseForLeaderBoard extends StatefulWidget {
   List<String> franchises = ['Franchise1', 'Franchise2', 'Franchise3'];
 
   @override
-  _SelectFranchiseForLeaderBoardState createState() => _SelectFranchiseForLeaderBoardState();
+  _SelectFranchiseForLeaderBoardState createState() =>
+      _SelectFranchiseForLeaderBoardState();
 
   Future retrievedFranchises;
 }
 
-class _SelectFranchiseForLeaderBoardState extends State<SelectFranchiseForLeaderBoard> {
-
+class _SelectFranchiseForLeaderBoardState
+    extends State<SelectFranchiseForLeaderBoard> {
   @override
   void initState() {
     targetAdminId = _auth.currentUser.uid;
@@ -52,38 +51,50 @@ class _SelectFranchiseForLeaderBoardState extends State<SelectFranchiseForLeader
   Widget build(BuildContext context) {
     return SelectFranchiseTemplateFixed(
         franchiseFab: null,
-        franchiseContentTitle: 'Please select the franchise that you want to view the students:',
+        franchiseContentTitle:
+            'Please select the franchise that you want to view the students:',
         franchiseItemBuilder: FutureBuilder(
             future: widget.retrievedFranchises,
             builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Center(
-                          child: ListTile(
-                              title: Text(
-                                  snapshot.data[index].franchiseName),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HQAdminCategory(
-                                          franchiseId: snapshot.data[index].franchiseId,
-                                          franchiseName: snapshot.data[index].franchiseName,
-                                        )));
-                              }
-                          )
-                      ),
-                    );
-                  });
-            })
-    );
+              return SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Column(
+                  children: <Widget>[
+                    ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: Center(
+                                child: ListTile(
+                                    title: Text(
+                                        snapshot.data[index].franchiseName),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  HQAdminCategory(
+                                                    franchiseId: snapshot
+                                                        .data[index]
+                                                        .franchiseId,
+                                                    franchiseName: snapshot
+                                                        .data[index]
+                                                        .franchiseName,
+                                                  )));
+                                    })),
+                          );
+                        })
+                  ],
+                ),
+              );
+            }));
   }
 
   Future<List<Franchise>> franchiseData() async {
@@ -92,14 +103,16 @@ class _SelectFranchiseForLeaderBoardState extends State<SelectFranchiseForLeader
     String franchiseLocation;
     List<Franchise> franchisesList = [];
 
-    await _firestore.collection('franchiseAdmins')
+    await _firestore
+        .collection('franchiseAdmins')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         franchiseName = doc["franchiseName"];
         franchiseId = doc["franchiseId"];
-        franchiseLocation= doc["franchiseLocation"];
-        Franchise newFranchise = Franchise(franchiseName, franchiseLocation, franchiseId);
+        franchiseLocation = doc["franchiseLocation"];
+        Franchise newFranchise =
+            Franchise(franchiseName, franchiseLocation, franchiseId);
         franchisesList.add(newFranchise);
       });
     });
@@ -110,11 +123,4 @@ class _SelectFranchiseForLeaderBoardState extends State<SelectFranchiseForLeader
   Future callFunc() async {
     return await franchiseData();
   }
-
-
 }
-
-
-
-
-

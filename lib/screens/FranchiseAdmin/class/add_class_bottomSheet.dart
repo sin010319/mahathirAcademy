@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -38,10 +40,21 @@ class _AddClassBottomSheetState extends State<AddClassBottomSheet> {
     CollectionReference classes = _firestore.collection('classes');
 
     Future<void> updateClassIds() async {
-      final QuerySnapshot qSnap = await _firestore.collection('classes').get();
-      final int docLength = qSnap.docs.length;
-      this.classId = ['000${docLength}'];
-      this.docId = '000${docLength}';
+      List<int> classIds = [];
+
+      await _firestore
+          .collection('classes')
+          .where('classId', isNotEqualTo: 'INACTIVE')
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          classIds.add(int.parse(doc.id));
+        });
+      });
+
+      int largestClassId = classIds.fold(classIds[0], max);
+      this.classId = ['000${largestClassId + 1}'];
+      this.docId = '000${largestClassId + 1}';
       this.classIdinStr = this.docId;
 
       return franchises

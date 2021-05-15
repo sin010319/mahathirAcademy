@@ -19,7 +19,6 @@ List<dynamic> listClassNames;
 String targetCoachId;
 
 class SelectClassViewStudents extends StatefulWidget {
-
   static const String id = '/selectClassViewStudents';
   // List<String> classes = ['Class1', 'Class2', 'Class3'];
 
@@ -29,13 +28,13 @@ class SelectClassViewStudents extends StatefulWidget {
   SelectClassViewStudents({this.textForDisplay});
 
   @override
-  _SelectClassViewStudentsState createState() => _SelectClassViewStudentsState();
+  _SelectClassViewStudentsState createState() =>
+      _SelectClassViewStudentsState();
 
   Future retrievedClassNames;
 }
 
 class _SelectClassViewStudentsState extends State<SelectClassViewStudents> {
-
   bool showSpinner = false; // to figure out when should our spinner spins
 
   @override
@@ -49,45 +48,51 @@ class _SelectClassViewStudentsState extends State<SelectClassViewStudents> {
   Widget build(BuildContext context) {
     String classContentTitle = widget.textForDisplay;
     return SelectClassTemplateFixed(
-      myFab: null,
-      textForDisplay: classContentTitle,
+        myFab: null,
+        textForDisplay: classContentTitle,
         classItemBuilder: FutureBuilder(
             future: widget.retrievedClassNames,
             builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done || snapshot.hasError) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasError) {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Center(
-                          child: ListTile(
-                              title: Text(
-                                  snapshot.data[index], style: kListItemsTextStyle),
-                            onTap: (){
-                              print('contentTitle');
-                              print(snapshot.data[index]);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ViewStudents(
-                                        contentTitle: snapshot.data[index]
-                                    ),
-                                  ));
-                            },
-                          )
-                      ),
-                    );
-                  });
-            })
-    );
+              return SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Column(
+                  children: <Widget>[
+                    ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: Center(
+                                child: ListTile(
+                              title: Text(snapshot.data[index],
+                                  style: kListItemsTextStyle),
+                              onTap: () {
+                                print('contentTitle');
+                                print(snapshot.data[index]);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ViewStudents(
+                                          contentTitle: snapshot.data[index]),
+                                    ));
+                              },
+                            )),
+                          );
+                        })
+                  ],
+                ),
+              );
+            }));
   }
 
   Future<List<String>> classData() async {
-    List <String> classIds = [];
+    List<String> classIds = [];
     List<String> listClassNames = [];
 
     await _firestore
@@ -103,7 +108,8 @@ class _SelectClassViewStudentsState extends State<SelectClassViewStudents> {
     });
 
     for (var eachClassId in classIds) {
-      await _firestore.collection('classes')
+      await _firestore
+          .collection('classes')
           .where('classId', isEqualTo: eachClassId)
           .get()
           .then((QuerySnapshot querySnapshot) {
@@ -116,9 +122,7 @@ class _SelectClassViewStudentsState extends State<SelectClassViewStudents> {
     return listClassNames;
   }
 
-  callFunc() async{
+  callFunc() async {
     return await classData();
   }
-
 }
-

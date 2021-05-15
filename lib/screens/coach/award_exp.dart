@@ -153,7 +153,8 @@ class _AwardExpState extends State<AwardExp> {
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20.0),
                             topRight: Radius.circular(20.0))),
-                    child: Expanded(
+                    child: SingleChildScrollView(
+                      physics: ScrollPhysics(),
                       child: Column(children: <Widget>[
                         SizedBox(
                           height: 10.0,
@@ -183,7 +184,7 @@ class _AwardExpState extends State<AwardExp> {
 
     await _firestore
         .collection('students')
-        .where('classId', isEqualTo: selectedClassId)
+        .where('classIds', arrayContains: selectedClassId)
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
@@ -231,77 +232,83 @@ class _AwardExpState extends State<AwardExp> {
           return Center(child: CircularProgressIndicator());
         }
         return SingleChildScrollView(
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, index) {
-                return IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Checkbox(
-                        // When this checkboxState value changes, it is going to trigger this callback and pass in the latest state of checkbox
-                        activeColor: Colors.orangeAccent,
-                        // color of tick
-                        value: state[index],
-                        // if true, checked; else unchecked
-                        // once the user clicks on the checkbox, swap the state
-                        onChanged: (bool newValue) {
-                          setState(() {
-                            state[index] = !state[index];
-                            Student studentObj = snapshot.data[index];
-                            if (state[index] &&
-                                !tickedStudents.contains(studentObj)) {
-                              tickedStudents.add(studentObj);
-                            } else if (!state[index]) {
-                              tickedStudents.remove(studentObj);
-                            }
-                          });
-                        },
-                      ),
-                      Expanded(
-                        flex: 7,
-                        child: Container(
-                          height: 70.0,
-                          child: Card(
-                            child: Center(
-                              child: ListTile(
-                                title: Text(
-                                  snapshot.data[index].studentName,
-                                  style: kListItemsTextStyle,
+          physics: ScrollPhysics(),
+          child: Column(
+            children: <Widget>[
+              ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    return IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Checkbox(
+                            // When this checkboxState value changes, it is going to trigger this callback and pass in the latest state of checkbox
+                            activeColor: Colors.orangeAccent,
+                            // color of tick
+                            value: state[index],
+                            // if true, checked; else unchecked
+                            // once the user clicks on the checkbox, swap the state
+                            onChanged: (bool newValue) {
+                              setState(() {
+                                state[index] = !state[index];
+                                Student studentObj = snapshot.data[index];
+                                if (state[index] &&
+                                    !tickedStudents.contains(studentObj)) {
+                                  tickedStudents.add(studentObj);
+                                } else if (!state[index]) {
+                                  tickedStudents.remove(studentObj);
+                                }
+                              });
+                            },
+                          ),
+                          Expanded(
+                            flex: 7,
+                            child: Container(
+                              height: 70.0,
+                              child: Card(
+                                child: Center(
+                                  child: ListTile(
+                                    title: Text(
+                                      snapshot.data[index].studentName,
+                                      style: kListItemsTextStyle,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Card(
+                                  child: TextFormField(
+                                    initialValue:
+                                        snapshot.data[index].exp.toString(),
+                                    style: kExpTextStyle,
+                                    enabled: false,
+                                    //Not clickable and not editable
+                                    readOnly: true,
+                                    textAlign: TextAlign.center,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Card(
-                              child: TextFormField(
-                                initialValue:
-                                    snapshot.data[index].exp.toString(),
-                                style: kExpTextStyle,
-                                enabled: false,
-                                //Not clickable and not editable
-                                readOnly: true,
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
+                    );
+                  })
+            ],
+          ),
         );
       },
     );
