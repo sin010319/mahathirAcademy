@@ -26,14 +26,7 @@ class HQAdminCategory extends StatefulWidget {
   HQAdminCategory({this.franchiseId, this.franchiseName});
 
   List<String> classes = [
-    '🔴 Elite',
-    '🟠 Diamond',
-    '🟡 Ruby',
-    '🟢 Platinum',
-    '🟣 Gold',
-    '🔵 Silver',
-    '🟤 Bronze',
-    '🏆 Overall'
+    '🟣 Elite', '🔵 Diamond', '🔴 Ruby', '🟠 Platinum', '🟡 Gold', '⚪ Silver', '🟤 Bronze', '🏆 Overall'
   ];
 
   @override

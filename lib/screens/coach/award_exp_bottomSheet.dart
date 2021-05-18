@@ -43,7 +43,7 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
   Widget build(BuildContext context) {
     // platform specific UI
     // method to produce ANDROID Material dropdown button: androidDropdown()
-    DropdownButton<String> methodDropdownList() {
+    Widget methodDropdownList() {
       List<DropdownMenuItem<String>> dropdownItems = [];
       // extract a list of DropdownMenuItems from the currenciesList
       for (int i = 0; i < methods.length; i++) {
@@ -58,22 +58,32 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
         dropdownItems.add(newItem);
       }
 
-      // create and return a new dropdown list for user selection
-      // specify data type of items in dropdown list which is String in this case
-      return DropdownButton<String>(
-        hint: Text('Select a method to award EXP'),
-        value: widget.selectedMethod,
-        // start out with the default value
-        // items expect a list of DropdownMenuItem widget
-        items: dropdownItems,
-        // onChanged will get triggered when the user selects a new item from that dropdown
-        onChanged: (String newValue) {
-          setState(() {
-            DropdownMenuList.dropdownItems.clear();
-            widget.selectedMethod = newValue;
-            DropdownMenuList.expDropdownList(newValue);
-          });
-        },
+      return Container(
+        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+            border: Border.all(
+              color: Colors.black,
+              width: 1,
+            ),
+            color: Colors.white),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            hint: Text('Select a method to award EXP'),
+            value: widget.selectedMethod,
+            // start out with the default value
+            // items expect a list of DropdownMenuItem widget
+            items: dropdownItems,
+            // onChanged will get triggered when the user selects a new item from that dropdown
+            onChanged: (String newValue) {
+              setState(() {
+                DropdownMenuList.dropdownItems.clear();
+                widget.selectedMethod = newValue;
+                DropdownMenuList.expDropdownList(newValue);
+              });
+            },
+          )
+        ),
       );
     }
 
