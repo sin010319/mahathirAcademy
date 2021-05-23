@@ -72,13 +72,12 @@ class _SelectViewTemplateFixedState extends State<SelectViewTemplateFixed> {
                               topLeft: Radius.circular(20.0),
                               topRight: Radius.circular(20.0))),
                       child: SingleChildScrollView(
-                          physics: ScrollPhysics(),
                           child: Column(children: [
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            widget.myFutureBuilder
-                          ]))))
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        widget.myFutureBuilder
+                      ]))))
             ]));
   }
 }

@@ -1,19 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/screens/admin/hqviewStudentsRank.dart';
-import 'package:mahathir_academy_app/screens/leaderboard.dart';
-import 'package:mahathir_academy_app/template/franchiseCategory.dart';
-import 'level_template.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mahathir_academy_app/models/coach.dart';
-import 'package:mahathir_academy_app/models/student.dart';
 import 'package:mahathir_academy_app/models/franchise.dart';
-import 'coachesCategory.dart';
-import 'package:mahathir_academy_app/template/HQAdminCategory.dart';
 
-//🥇
-//🥈
-//🥉
 final _auth = FirebaseAuth.instance;
 String targetAdminId;
 String targetFranchiseId;
@@ -26,7 +16,14 @@ class HQAdminCategory extends StatefulWidget {
   HQAdminCategory({this.franchiseId, this.franchiseName});
 
   List<String> classes = [
-    '🟣 Elite', '🔵 Diamond', '🔴 Ruby', '🟠 Platinum', '🟡 Gold', '⚪ Silver', '🟤 Bronze', '🏆 Overall'
+    '🟣 Elite',
+    '🔵 Diamond',
+    '🔴 Ruby',
+    '🟠 Platinum',
+    '🟡 Gold',
+    '⚪ Silver',
+    '🟤 Bronze',
+    '🏆 Overall'
   ];
 
   @override

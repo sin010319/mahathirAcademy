@@ -37,6 +37,7 @@ dependencies:
   flutter_speed_dial: ^3.0.5
   fluttertoast: ^8.0.3
   collection: ^1.15.0
+  multi_select_flutter: ^4.0.0
 
 dev_dependencies:
   flutter_test:

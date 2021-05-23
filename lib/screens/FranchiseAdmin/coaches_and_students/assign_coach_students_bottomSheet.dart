@@ -80,23 +80,13 @@ class _AssignCoachStudentBottomSheetState
     identifier = widget.identifier;
     franchiseId = widget.franchiseId;
     classId = widget.classId;
-    callCheckFunc();
-    callAvoidDuplicateFunc();
 
-    if (this.identifier.toLowerCase() == 'student') {
-      retrievedUsers = _firestore
-          .collection('students')
-          .where('franchiseId', isEqualTo: this.franchiseId)
-          .get()
-          .asStream();
-    } else if (this.identifier.toLowerCase() == 'coach' ||
-        this.identifier.toLowerCase() == 'facilitator') {
-      retrievedUsers = _firestore
-          .collection('coaches')
-          .where('franchiseId', isEqualTo: this.franchiseId)
-          .get()
-          .asStream();
-    }
+    callAvoidDuplicateFunc();
+    retrievedUsers = _firestore
+        .collection('coaches')
+        .where('franchiseId', isEqualTo: this.franchiseId)
+        .get()
+        .asStream();
     super.initState();
   }
 
@@ -143,29 +133,7 @@ class _AssignCoachStudentBottomSheetState
                 List<DropdownMenuItem<dynamic>> dropdownItems = [];
                 final items = snapshot.data.docs;
 
-                if (this.identifier.toLowerCase() == 'student') {
-                  // extract a list of DropdownMenuItems from the currenciesList
-
-                  for (var item in items) {
-                    var franchiseId = item.data()['franchiseId'];
-                    var studentName = item.data()['studentName'];
-                    var studentId = item.data()['studentId'];
-                    if (!IdForCheck.contains(studentId) &&
-                        franchiseId == this.franchiseId) {
-                      var newItem = DropdownMenuItem(
-                        // dropdown menu item has a child of text widget
-                        child: Text(studentName),
-                        value:
-                            studentId, // pass in the currency value when onChanged() is triggered
-                      );
-                      // add the item created to a list
-                      dropdownItems.add(newItem);
-                      Student newStudent =
-                          Student.simpleStudent(studentName, studentId);
-                      usersCollected.add(newStudent);
-                    }
-                  }
-                } else if (this.identifier.toLowerCase() == 'coach') {
+                if (this.identifier.toLowerCase() == 'coach') {
                   for (var item in items) {
                     var coachName = item.data()['coachName'];
                     var coachId = item.data()['coachId'];
@@ -230,7 +198,6 @@ class _AssignCoachStudentBottomSheetState
       RoundButton(
           label: 'Add ${widget.identifier}',
           function: () async {
-            print(usersCollected);
             String currentCoachId;
             String currentFacilitatorId;
             await _firestore
@@ -245,12 +212,11 @@ class _AssignCoachStudentBottomSheetState
             if ((this.identifier.toLowerCase() == 'coach' &&
                     currentCoachId == "") ||
                 (this.identifier.toLowerCase() == 'facilitator' &&
-                    currentFacilitatorId == "") ||
-                (this.identifier.toLowerCase() == 'student')) {
+                    currentFacilitatorId == "")) {
               if (usersCollected.length > 0) {
                 if (selectedUserId != null) {
                   String message =
-                      'Are you sure you want to add a new ${this.identifier} to this class?';
+                      'Are you sure you want to add a new ${this.identifier.toLowerCase()} to this class?';
                   PopUpDialogClass.popUpDialog(message, context, () {
                     Navigator.of(context, rootNavigator: true).pop();
                     callFunc();
@@ -259,7 +225,7 @@ class _AssignCoachStudentBottomSheetState
                   });
                 } else {
                   String message =
-                      'Kindly choose an item from the dropdown list before adding a new ${this.identifier.toLowerCase()} to the franchise.';
+                      'Kindly choose a ${this.identifier.toLowerCase()} from the dropdown list before adding a new ${this.identifier.toLowerCase()} to the class.';
                   PopUpAlertClass.popUpAlert(message, context);
                 }
               } else {
@@ -284,76 +250,11 @@ class _AssignCoachStudentBottomSheetState
   }
 
   Future<void> callFunc() async {
-    if (this.identifier.toLowerCase() == 'student') {
-      await addToStudents();
-    } else if (this.identifier.toLowerCase() == 'coach' ||
-        this.identifier.toLowerCase() == 'facilitator') {
-      await addToCoaches();
-    }
+    await addToCoaches();
     await updateClasses();
     String addedMessage =
         'You have successfully added a new ${this.identifier.toLowerCase()} to this class. Please close this page to view the newly updated class info';
     PopUpAlertClass.popUpAlert(addedMessage, context);
-  }
-
-  Future<void> addToStudents() async {
-    CollectionReference users = _firestore.collection('students');
-    List<dynamic> classIds = [];
-
-    await _firestore
-        .collection('students')
-        .doc(selectedUserId)
-        .get()
-        .then((value) {
-      Map<String, dynamic> data = value.data();
-      classIds = data['classIds'];
-    });
-
-    // add a student to inactive
-    if (this.classId == 'INACTIVE') {
-      return users
-          .doc(selectedUserId)
-          .update({
-            'classIds': [this.classId]
-          })
-          .then((value) => print("Student Added"))
-          .catchError((error) => print("Failed to update user: $error"));
-    }
-    // add to normal class
-    else {
-      // if a student initially in inactive class and add to normal class
-      if (classIds.contains('INACTIVE')) {
-        await _firestore
-            .collection('classes')
-            .where('classId', isEqualTo: 'INACTIVE')
-            .get()
-            .then((QuerySnapshot querySnapshot) {
-          querySnapshot.docs.forEach((doc) {
-            doc.reference.update({
-              "studentIds": FieldValue.arrayRemove([selectedUserId])
-            });
-          });
-        });
-
-        return users
-            .doc(selectedUserId)
-            .update({
-              'classIds': [this.classId]
-            })
-            .then((value) => print("Student Added"))
-            .catchError((error) => print("Failed to update user: $error"));
-      }
-      // add student to normal class
-      else {
-        return users
-            .doc(selectedUserId)
-            .update({
-              'classIds': FieldValue.arrayUnion([this.classId])
-            })
-            .then((value) => print("Student Added"))
-            .catchError((error) => print("Failed to update user: $error"));
-      }
-    }
   }
 
   Future<void> addToCoaches() async {
@@ -372,28 +273,7 @@ class _AssignCoachStudentBottomSheetState
     CollectionReference classes = _firestore.collection('classes');
     List<dynamic> classIds = [];
 
-    if (this.identifier.toLowerCase() == 'student') {
-      if (this.classId == 'INACTIVE') {
-        await _firestore
-            .collection('classes')
-            .where('studentIds', arrayContains: selectedUserId)
-            .get()
-            .then((QuerySnapshot querySnapshot) {
-          querySnapshot.docs.forEach((doc) {
-            doc.reference.update({
-              "studentIds": FieldValue.arrayRemove([selectedUserId])
-            });
-          });
-        });
-      }
-      return classes
-          .doc(this.classId)
-          .update({
-            'studentIds': FieldValue.arrayUnion([selectedUserId])
-          })
-          .then((value) => print("User Updated"))
-          .catchError((error) => print("Failed to update user: $error"));
-    } else if (this.identifier.toLowerCase() == 'coach') {
+    if (this.identifier.toLowerCase() == 'coach') {
       return classes
           .doc(this.classId)
           .update({'coachId': selectedUserId})
@@ -405,25 +285,6 @@ class _AssignCoachStudentBottomSheetState
           .update({'facilitatorId': selectedUserId})
           .then((value) => print("Facilitator Updated"))
           .catchError((error) => print("Failed to update user: $error"));
-    }
-  }
-
-  Future callCheckFunc() async {
-    await checkIfExists();
-  }
-
-  Future<void> checkIfExists() async {
-    if (this.identifier.toLowerCase() == 'student') {
-      await _firestore
-          .collection('students')
-          .where('franchiseId', isEqualTo: this.franchiseId)
-          .where('classIds', arrayContains: classId)
-          .get()
-          .then((QuerySnapshot querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
-          IdForCheck.add(doc['studentId']);
-        });
-      });
     }
   }
 

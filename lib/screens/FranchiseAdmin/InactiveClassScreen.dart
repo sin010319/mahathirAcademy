@@ -14,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mahathir_academy_app/template/select_student_template.dart';
 
 import 'coaches_and_students/assign_coach_students_bottomSheet.dart';
+import 'coaches_and_students/multi_assign_student_bottom_sheet.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -50,7 +51,7 @@ class _InactiveClassScreenState extends State<InactiveClassScreen> {
     return SelectStudentTemplate(
         myFab: FloatingActionButton(
           onPressed: () {
-            showModal(studentBuildBottomSheet);
+            showModal(multiStudentBuildBottomSheet);
           },
           backgroundColor: Color(0xFF8A1501),
           child: Icon(Icons.add),
@@ -175,16 +176,15 @@ class _InactiveClassScreenState extends State<InactiveClassScreen> {
   }
 }
 
-Widget studentBuildBottomSheet(BuildContext context) {
+Widget multiStudentBuildBottomSheet(BuildContext context) {
   String identifier = 'Student';
-  print(franchiseIdForTransfer);
 
   return SingleChildScrollView(
     child: Container(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
-      child: AssignCoachStudentBottomSheet(
+      child: MultiAssignStudentBottomSheet(
         identifier: identifier,
         classId: targetClassId,
         franchiseId: franchiseIdForTransfer,

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 const kBottomContainerHeight = 80.0;
 const kActiveCardColour = Color(0xFF1D1E33);
-const kInactiveCardColour = Color(0xFF111328);  // this is the color of the card when it is tapped
+const kInactiveCardColour =
+    Color(0xFF111328); // this is the color of the card when it is tapped
 const kBottomContainerColour = Color(0xFFEB1555);
 
 const kLabelTextStyle = TextStyle(
@@ -21,32 +22,20 @@ const kLargeButtonTextStyle = TextStyle(
 );
 
 const kCoachStudentLabelTextStyle = TextStyle(
-  fontSize: 25.0,
-  fontWeight: FontWeight.bold,
-  color: Color(0xFF8A1501)
-);
+    fontSize: 25.0, fontWeight: FontWeight.bold, color: Color(0xFF8A1501));
 
 const kExpTextStyle = TextStyle(
-  fontSize: 18.0,
-    fontWeight: FontWeight.bold,
-  color: Colors.redAccent
-);
+    fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.redAccent);
 
 const kListItemsTextStyle = TextStyle(
-    fontSize: 18.0,
+  fontSize: 18.0,
 );
 
 const kTitleTextStyle = TextStyle(
-    color: Color(0xFF8A1501),
-    fontWeight: FontWeight.w700,
-    fontSize: 23.0
-);
+    color: Color(0xFF8A1501), fontWeight: FontWeight.w700, fontSize: 23.0);
 
 const kSubtitleTextStyle = TextStyle(
-    color: Color(0xFF8A1501),
-    fontWeight: FontWeight.w600,
-    fontSize: 20.0
-);
+    color: Color(0xFF8A1501), fontWeight: FontWeight.w600, fontSize: 20.0);
 
 const kMessageContainerDecoration = BoxDecoration(
   border: Border(
@@ -64,4 +53,12 @@ const kSendButtonTextStyle = TextStyle(
   color: Color(0xFF8A1501),
   fontWeight: FontWeight.bold,
   fontSize: 18.0,
+);
+
+const kDropdownTitleTextStyle =
+    TextStyle(fontSize: 16.0, color: Color(0xFF5E5E5E));
+
+const kChipTitleTextStyle = TextStyle(
+  color: Colors.white,
+  fontSize: 14.0,
 );

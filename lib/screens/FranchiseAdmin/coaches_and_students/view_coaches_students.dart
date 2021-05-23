@@ -14,6 +14,7 @@ import 'package:mahathir_academy_app/screens/student/student_profile_specific.da
 import 'edit_student_bottomSheet.dart';
 import '../../student/student_profile.dart';
 import 'assign_coach_students_bottomSheet.dart';
+import 'multi_assign_student_bottom_sheet.dart';
 import 'transfer_coach_students_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -154,7 +155,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
               backgroundColor: Color(0xFFC61F00),
               onTap: () {
                 setState(() {
-                  showModal(studentBuildBottomSheet);
+                  showModal(multiStudentBuildBottomSheet);
                 });
               },
               label: 'Assign Student',
@@ -697,7 +698,7 @@ Widget facilitatorBuildBottomSheet(BuildContext context) {
   );
 }
 
-Widget studentBuildBottomSheet(BuildContext context) {
+Widget multiStudentBuildBottomSheet(BuildContext context) {
   String identifier = 'Student';
 
   return SingleChildScrollView(
@@ -705,7 +706,7 @@ Widget studentBuildBottomSheet(BuildContext context) {
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
-      child: AssignCoachStudentBottomSheet(
+      child: MultiAssignStudentBottomSheet(
         identifier: identifier,
         classId: globalClassId,
         franchiseId: franchiseId,

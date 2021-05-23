@@ -64,12 +64,18 @@ class _SelectViewTemplateState extends State<SelectViewTemplate> {
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(20.0),
                               topRight: Radius.circular(20.0))),
-                      child: Expanded(
-                        child: ListView(shrinkWrap: true, children: [
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          widget.myFutureBuilder
+                      child: SingleChildScrollView(
+                        physics: ScrollPhysics(),
+                        child: Column(children: <Widget>[
+                          ListView(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              children: [
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                widget.myFutureBuilder
+                              ]),
                         ]),
                       )))
             ]));
