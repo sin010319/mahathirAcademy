@@ -63,12 +63,14 @@ class _franchiseCategoryState extends State<franchiseCategory> {
                   snapshot.hasError) {
                 return Container();
               }
-              return Text(
-                '$targetFranchiseName \n${snapshot.data.length} Students',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18.0),
+              return Center(
+                child: Text(
+                  '$targetFranchiseName \n${snapshot.data.length} Students',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18.0),
+                ),
               );
             }),
         myFutureBuilder: FutureBuilder(

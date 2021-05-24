@@ -64,7 +64,8 @@ class _ViewFranchiseStudentsState extends State<ViewFranchiseStudents> {
               if (snapshot.connectionState != ConnectionState.done ||
                   snapshot.hasError) {
                 print('error3');
-                return Container();
+                return Container(
+                );
               }
               return Text(
                 '${snapshot.data[0]} \n${snapshot.data[1].length} students',
