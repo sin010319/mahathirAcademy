@@ -52,7 +52,10 @@ class _AddClassBottomSheetState extends State<AddClassBottomSheet> {
         });
       });
 
-      int largestClassId = classIds.fold(classIds[0], max);
+      int largestClassId = 0;
+      if (classIds.length > 0) {
+        largestClassId = classIds.fold(classIds[0], max);
+      }
       this.classId = ['000${largestClassId + 1}'];
       this.docId = '000${largestClassId + 1}';
       this.classIdinStr = this.docId;
