@@ -20,13 +20,13 @@ class FranchiseBasedCategory extends StatefulWidget {
   static const String id = '/franchiseBasedCategory';
 
   List<String> classes = [
-    '🟣 Elite',
-    '🔵 Diamond',
+    '🔶 Elite',
+    '🔷 Diamond',
     '🔴 Ruby',
-    '🟠 Platinum',
-    '🟡 Gold',
+    '🔵 Platinum',
+    '🔸 Gold',
     '⚪ Silver',
-    '🟤 Bronze',
+    '⚫️ Bronze',
     '🏆 Overall'
   ];
 
