@@ -3,10 +3,6 @@ import 'package:mahathir_academy_app/screens/leaderboard.dart';
 import 'level_template.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-//🥇
-//🥈
-//🥉
-
 class Category extends StatefulWidget {
 
 

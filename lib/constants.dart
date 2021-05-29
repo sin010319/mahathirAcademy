@@ -25,7 +25,7 @@ const kCoachStudentLabelTextStyle = TextStyle(
     fontSize: 25.0, fontWeight: FontWeight.bold, color: Color(0xFF8A1501));
 
 const kExpTextStyle = TextStyle(
-    fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.redAccent);
+    fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.redAccent);
 
 const kListItemsTextStyle = TextStyle(
   fontSize: 18.0,
@@ -36,6 +36,8 @@ const kTitleTextStyle = TextStyle(
 
 const kSubtitleTextStyle = TextStyle(
     color: Color(0xFF8A1501), fontWeight: FontWeight.w600, fontSize: 20.0);
+
+const kTimestampSubtitleTextStyle = TextStyle(fontSize: 12.0);
 
 const kMessageContainerDecoration = BoxDecoration(
   border: Border(

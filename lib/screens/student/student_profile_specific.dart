@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/components/customised_pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/pop_up_alert.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
+import 'package:mahathir_academy_app/components/pop_up_dialog_delete.dart';
 import 'package:mahathir_academy_app/components/profile_menu.dart';
 import 'package:mahathir_academy_app/components/profile_pic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +14,7 @@ import 'package:mahathir_academy_app/models/student.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/edit_student_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/transfer_coach_students_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/admin/viewFranchiseStudents.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -87,6 +89,7 @@ class _SpecificStudentProfileState extends State<SpecificStudentProfile> {
               ),
               onPressed: () {
                 // do something
+
                 String message =
                     'Are you sure you wish to delete this student info from the franchise completely?';
                 PopUpDialogClass.popUpDialog(message, context, () {
@@ -246,6 +249,21 @@ class _SpecificStudentProfileState extends State<SpecificStudentProfile> {
         .then((value) => print("Student Removed"))
         .catchError((error) => print("Failed to remove student: $error"));
   }
+
+  // Future<void> callDeleteAccountFunc(String studentIdForDelete) async {
+  //   String email = username + emailIdentifier;
+  //   String password = passwordToDelete;
+  //   print(email);
+  //   print(password);
+  //   dynamic result = await AuthService().deleteUser(email, password);
+  //   if (result != null && result == true) {
+  //     callDeleteAccountFunc(studentIdForDelete);
+  //   } else {
+  //     String message =
+  //         'Please input correct user password for account deletion.';
+  //     PopUpAlertClass.popUpAlert(message, context);
+  //   }
+  // }
 
   Future<void> callDeleteFunc(String studentIdForDelete) async {
     await removeStudentData(studentIdForDelete);

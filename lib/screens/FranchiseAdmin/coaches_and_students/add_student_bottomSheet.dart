@@ -143,6 +143,7 @@ class _AddStudentBottomSheetState extends State<AddStudentBottomSheet> {
             'franchiseAdminName': this.franchiseAdminName,
             'username': this.username,
             'exp': 0,
+            'timestamp': new DateTime.now()
           })
           .then((value) => print("Student Added"))
           .catchError((error) => print("Failed to add user: $error"));

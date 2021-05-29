@@ -7,8 +7,12 @@ class Student {
   String _rank;
   String _username;
   String _contactNum;
+  String _timestamp;
 
   Student(this._studentName, this._studentId, this._exp);
+
+  Student.withTimestamp(
+      this._studentName, this._studentId, this._exp, this._timestamp);
 
   Student.completeStudentInfo(this._studentName, this._username, this._exp,
       this._franchiseLocation, this._classNames, this._rank, this._contactNum);
@@ -68,5 +72,11 @@ class Student {
 
   set contactNum(String value) {
     _contactNum = value;
+  }
+
+  String get timestamp => _timestamp;
+
+  set timestamp(String value) {
+    _timestamp = value;
   }
 }

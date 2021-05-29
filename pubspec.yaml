@@ -38,6 +38,7 @@ dependencies:
   fluttertoast: ^8.0.3
   collection: ^1.15.0
   multi_select_flutter: ^4.0.0
+  cloud_functions: ^1.1.0
 
 dev_dependencies:
   flutter_test:

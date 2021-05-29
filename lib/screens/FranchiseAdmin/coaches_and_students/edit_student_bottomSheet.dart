@@ -49,9 +49,7 @@ class _EditStudentBottomSheetState extends State<EditStudentBottomSheet> {
     Future<void> updateExp() async {
       return students
           .doc(widget.studentId)
-          .update({
-            'exp': this.newExp,
-          })
+          .update({'exp': this.newExp, "timestamp": new DateTime.now()})
           .then((value) => print("Exp Updated"))
           .catchError((error) => print("Failed to add user: $error"));
     }

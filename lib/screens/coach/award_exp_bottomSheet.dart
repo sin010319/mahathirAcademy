@@ -22,7 +22,6 @@ class AwardExpBottomSheet extends StatefulWidget {
   Future retrievedStudents;
   Future<dynamic> function;
 
-
   AwardExpBottomSheet({this.tickedStudents});
 
   @override
@@ -68,22 +67,21 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
             ),
             color: Colors.white),
         child: DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-            hint: Text('Select a method to award EXP'),
-            value: widget.selectedMethod,
-            // start out with the default value
-            // items expect a list of DropdownMenuItem widget
-            items: dropdownItems,
-            // onChanged will get triggered when the user selects a new item from that dropdown
-            onChanged: (String newValue) {
-              setState(() {
-                DropdownMenuList.dropdownItems.clear();
-                widget.selectedMethod = newValue;
-                DropdownMenuList.expDropdownList(newValue);
-              });
-            },
-          )
-        ),
+            child: DropdownButton<String>(
+          hint: Text('Select a method to award EXP'),
+          value: widget.selectedMethod,
+          // start out with the default value
+          // items expect a list of DropdownMenuItem widget
+          items: dropdownItems,
+          // onChanged will get triggered when the user selects a new item from that dropdown
+          onChanged: (String newValue) {
+            setState(() {
+              DropdownMenuList.dropdownItems.clear();
+              widget.selectedMethod = newValue;
+              DropdownMenuList.expDropdownList(newValue);
+            });
+          },
+        )),
       );
     }
 
@@ -237,7 +235,6 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
         ));
   }
 
-
   Future update(int awardedExp) async {
     WriteBatch batch = _firestore.batch();
 
@@ -251,7 +248,10 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
           markBefore = doc.data()["exp"];
           rankBefore = decideRank(markBefore);
 
-          batch.update(doc.reference, {"exp": doc.data()["exp"] + awardedExp});
+          batch.update(doc.reference, {
+            "exp": doc.data()["exp"] + awardedExp,
+            "timestamp": new DateTime.now()
+          });
           markAfter = doc.data()["exp"] + awardedExp;
           rankAfter = decideRank(markAfter);
           targetFranchiseAdminName = doc.data()['franchiseAdminName'];
@@ -267,15 +267,15 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
     }
 
     if (rankBefore != rankAfter) {
-      String studentRankUp = "Student has leveled up from $rankBefore to $rankAfter!";
+      String studentRankUp =
+          "Student has leveled up from $rankBefore to $rankAfter!";
       PopUpAlertClass.popUpAlert(studentRankUp, context);
-      _firestore.collection('announcements').add(
-          {'message' : "Congratulation! You have ranked up!",
-            'sender' : targetFranchiseAdminName,
-            'timestamp': new DateTime.now(),
-            'target' : targetStudentId
-
-          });
+      _firestore.collection('announcements').add({
+        'message': "Congratulation! You have ranked up!",
+        'sender': targetFranchiseAdminName,
+        'timestamp': new DateTime.now(),
+        'target': targetStudentId
+      });
     }
 
     String expAwardedMessage =
@@ -286,25 +286,19 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
 
   String decideRank(int exp) {
     String retRank = "";
-    if (exp >= 0 && exp < 500){
+    if (exp >= 0 && exp < 500) {
       retRank = "Bronze Speaker";
-    }
-    else if (exp >= 500 && exp < 1000){
+    } else if (exp >= 500 && exp < 1000) {
       retRank = "Silver Speaker";
-    }
-    else if (exp >= 1000 && exp < 1500){
+    } else if (exp >= 1000 && exp < 1500) {
       retRank = "Gold Speaker";
-    }
-    else if (exp >= 1500 && exp < 2000){
+    } else if (exp >= 1500 && exp < 2000) {
       retRank = "Platinum Speaker";
-    }
-    else if (exp >= 2000 && exp < 3000){
+    } else if (exp >= 2000 && exp < 3000) {
       retRank = "Ruby Speaker";
-    }
-    else if (exp >= 3000 && exp < 4000){
+    } else if (exp >= 3000 && exp < 4000) {
       retRank = "Diamond Speaker";
-    }
-    else if (exp >= 4000){
+    } else if (exp >= 4000) {
       retRank = "Elite Speaker";
     }
     return retRank;
