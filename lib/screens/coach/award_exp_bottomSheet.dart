@@ -68,6 +68,8 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
             color: Colors.white),
         child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
+          isExpanded: true,
+          itemHeight: 50.0,
           hint: Text('Select a method to award EXP'),
           value: widget.selectedMethod,
           // start out with the default value
