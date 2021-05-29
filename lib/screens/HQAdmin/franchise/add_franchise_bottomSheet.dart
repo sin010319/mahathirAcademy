@@ -54,7 +54,11 @@ class _AddFranchiseBottomSheetState extends State<AddFranchiseBottomSheet> {
         });
       });
 
-      int largestFranchiseId = franchiseIds.fold(franchiseIds[0], max);
+      int largestFranchiseId = 0;
+      if (franchiseIds.length > 0) {
+        largestFranchiseId = franchiseIds.fold(franchiseIds[0], max);
+      }
+
       this.franchiseId = '00${largestFranchiseId + 1}';
       this.docId = '00${largestFranchiseId + 1}';
 
