@@ -8,10 +8,10 @@ import 'package:mahathir_academy_app/models/student.dart';
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
 final _auth = FirebaseAuth.instance;
-String targetCoachId="";
+String targetCoachId = "";
 String targetStudentName;
 String targetAdminName;
-String targetAdminId="";
+String targetAdminId = "";
 String targetFranchiseId;
 String targetCoachFranchise;
 
@@ -21,7 +21,6 @@ class CoachAnnouncement extends StatelessWidget {
   String messageText;
 
   static const String id = '/coachAnnouncement';
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,36 +39,32 @@ class CoachAnnouncement extends StatelessWidget {
           children: [
             MessagesStream(),
           ],
-
         ),
-
       ),
     );
   }
 
   Future<Student> getCoach() async {
-    await _firestore.collection('coaches')
+    await _firestore
+        .collection('coaches')
         .doc(targetCoachId)
         .get()
         .then((value) {
       Map<String, dynamic> data = value.data();
       targetCoachFranchise = data['franchiseAdminName'];
       print(targetStudentName);
-      print("hahahhah");
-
-
-
-
     });
   }
-
-
 }
+
 class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('announcements').orderBy('timestamp').snapshots(),
+      stream: _firestore
+          .collection('announcements')
+          .orderBy('timestamp')
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -87,36 +82,28 @@ class MessagesStream extends StatelessWidget {
           print(messageSender);
           print(targetCoachFranchise);
 
-          if ((messageSender == targetCoachFranchise && messageTarget == 'franchiseStudent')  || messageSender == "hqAdmin") {
-            final messageBubble = MessageBubble(sender: messageSender??'default value', text: messageText??'default value');
+          if ((messageSender == targetCoachFranchise &&
+                  messageTarget == 'franchiseStudent') ||
+              messageSender == "hqAdmin") {
+            final messageBubble = MessageBubble(
+                sender: messageSender ?? 'default value',
+                text: messageText ?? 'default value');
             messageBubbles.add(messageBubble);
-
           }
-
-
-
-
-
-
-        };
+        }
+        ;
         return Expanded(
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             children: messageBubbles,
           ),
         );
-
       },
-
     );
-
   }
-
 }
 
-
 class MessageBubble extends StatelessWidget {
-
   MessageBubble({this.sender, this.text, this.target});
 
   final String sender;
@@ -131,17 +118,20 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom:5.0),
-            child: Text(sender,
+            padding: EdgeInsets.only(bottom: 5.0),
+            child: Text(
+              sender,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-
               ),
             ),
           ),
           Material(
-            borderRadius: BorderRadius.only(topRight: Radius.circular(30), bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30)),
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30)),
             elevation: 5.0,
             color: Colors.red[900],
             child: Padding(
@@ -154,11 +144,9 @@ class MessageBubble extends StatelessWidget {
                 ),
               ),
             ),
-
-          )],
+          )
+        ],
       ),
     );
   }
-
 }
-

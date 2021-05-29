@@ -50,6 +50,24 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "cloud_functions",
+      "rootUri": "file:///D:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_functions-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "cloud_functions_platform_interface",
+      "rootUri": "file:///D:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_functions_platform_interface-5.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "cloud_functions_web",
+      "rootUri": "file:///D:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_functions_web-4.0.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "collection",
       "rootUri": "file:///D:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0",
       "packageUri": "lib/",
@@ -87,19 +105,19 @@
     },
     {
       "name": "firebase_core",
-      "rootUri": "file:///D:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.1.0",
+      "rootUri": "file:///D:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "firebase_core_platform_interface",
-      "rootUri": "file:///D:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_platform_interface-4.0.0",
+      "rootUri": "file:///D:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_platform_interface-4.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "firebase_core_web",
-      "rootUri": "file:///D:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.0.2",
+      "rootUri": "file:///D:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -284,7 +302,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-05-23T12:05:23.233669Z",
+  "generated": "2021-05-24T05:57:17.946677Z",
   "generator": "pub",
   "generatorVersion": "2.12.3"
 }

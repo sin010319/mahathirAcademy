@@ -5,6 +5,7 @@ import 'package:mahathir_academy_app/components/pop_up_alert.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:mahathir_academy_app/models/StringExtension.dart';
 import 'package:mahathir_academy_app/models/student.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'award_exp_bottomSheet.dart';
@@ -191,7 +192,9 @@ class _AwardExpState extends State<AwardExp> {
         String name = doc['studentName'];
         String studentId = doc['studentId'];
         int exp = doc['exp'];
-        var student = Student(name, studentId, exp);
+        String timestamp =
+            DateTime.parse(doc['timestamp'].toDate().toString()).toString();
+        var student = Student.withTimestamp(name, studentId, exp, timestamp);
         studentList.add(student);
       });
     });
@@ -274,6 +277,10 @@ class _AwardExpState extends State<AwardExp> {
                                     title: Text(
                                       snapshot.data[index].studentName,
                                       style: kListItemsTextStyle,
+                                    ),
+                                    subtitle: Text(
+                                      'Last Updated: ${StringExtension.displayTimeAgoFromTimestamp(snapshot.data[index].timestamp)}',
+                                      style: kTimestampSubtitleTextStyle,
                                     ),
                                   ),
                                 ),

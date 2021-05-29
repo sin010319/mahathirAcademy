@@ -37,6 +37,8 @@ const kTitleTextStyle = TextStyle(
 const kSubtitleTextStyle = TextStyle(
     color: Color(0xFF8A1501), fontWeight: FontWeight.w600, fontSize: 20.0);
 
+const kTimestampSubtitleTextStyle = TextStyle(fontSize: 12.0);
+
 const kMessageContainerDecoration = BoxDecoration(
   border: Border(
     top: BorderSide(color: Color(0xFF8A1501), width: 2.0),

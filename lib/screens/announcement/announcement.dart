@@ -7,7 +7,7 @@ import 'package:mahathir_academy_app/models/admin.dart';
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
 final _auth = FirebaseAuth.instance;
-String targetAdminId="";
+String targetAdminId = "";
 String targetAdminName;
 
 class Announcement extends StatelessWidget {
@@ -17,14 +17,9 @@ class Announcement extends StatelessWidget {
 
   static const String id = '/announcement';
 
-
   @override
   Widget build(BuildContext context) {
     targetAdminId = _auth.currentUser.uid;
-    print(targetAdminName);
-    print("what");
-    print("what");
-    print(targetAdminId);
     return Scaffold(
       appBar: AppBar(
         title: Text('Announcement'),
@@ -46,7 +41,6 @@ class Announcement extends StatelessWidget {
                       onChanged: (value) {
                         messageText = value;
                         print(messageText);
-                        print("lamo");
                       },
                       decoration: kMessageTextFieldDecoration,
                     ),
@@ -54,12 +48,11 @@ class Announcement extends StatelessWidget {
                   FlatButton(
                     onPressed: () {
                       messageTextController.clear();
-                      _firestore.collection('announcements').add(
-                          {'message' : messageText,
-                            'sender' : targetAdminName,
-                            'timestamp': new DateTime.now()
-
-                          });
+                      _firestore.collection('announcements').add({
+                        'message': messageText,
+                        'sender': targetAdminName,
+                        'timestamp': new DateTime.now()
+                      });
                     },
                     child: Text(
                       'Send',
@@ -69,24 +62,21 @@ class Announcement extends StatelessWidget {
                 ],
               ),
             ),
-
           ],
-
         ),
-
       ),
     );
   }
-
-
-
-
 }
+
 class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('announcements').orderBy('timestamp').snapshots(),
+      stream: _firestore
+          .collection('announcements')
+          .orderBy('timestamp')
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -101,28 +91,24 @@ class MessagesStream extends StatelessWidget {
           final messageText = message.data()['message'];
           final messageSender = message.data()['sender'];
 
-          final messageBubble = MessageBubble(sender: messageSender?? 'default value', text: messageText?? 'default value');
+          final messageBubble = MessageBubble(
+              sender: messageSender ?? 'default value',
+              text: messageText ?? 'default value');
           messageBubbles.add(messageBubble);
-
-        };
+        }
+        ;
         return Expanded(
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             children: messageBubbles,
           ),
         );
-
       },
-
     );
-
   }
-
 }
 
-
 class MessageBubble extends StatelessWidget {
-
   MessageBubble({this.sender, this.text});
 
   final String sender;
@@ -136,17 +122,20 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom:5.0),
-            child: Text(sender,
+            padding: EdgeInsets.only(bottom: 5.0),
+            child: Text(
+              sender,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-
               ),
             ),
           ),
           Material(
-            borderRadius: BorderRadius.only(topRight: Radius.circular(30), bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30)),
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30)),
             elevation: 5.0,
             color: Colors.red[900],
             child: Padding(
@@ -159,11 +148,9 @@ class MessageBubble extends StatelessWidget {
                 ),
               ),
             ),
-
-          )],
+          )
+        ],
       ),
     );
   }
-
 }
-
