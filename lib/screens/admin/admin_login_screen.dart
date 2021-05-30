@@ -9,9 +9,7 @@ import 'HQAdmin_navigation.dart';
 import 'franchiseAdmin_navigation.dart';
 import 'package:mahathir_academy_app/screens/login_screen.dart';
 
-
 class AdminLoginScreen extends StatefulWidget {
-
   static const String id = '/admin_login';
 
   @override
@@ -19,7 +17,6 @@ class AdminLoginScreen extends StatefulWidget {
 }
 
 class _AdminLoginScreenState extends State<AdminLoginScreen> {
-
   // create an authentication instance
   // use this auth object to use the associated methods with sign in
   final _auth = FirebaseAuth.instance;
@@ -33,7 +30,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
 
@@ -59,16 +55,18 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         left: _width / 12.0,
                         right: _width / 12.0,
                         top: _height / 15.0),
-                    child: Column(children: <Widget> [
+                    child: Column(children: <Widget>[
                       emailBox(),
                       SizedBox(height: _height / 40.0),
-                      passwordBox(),])
-                ),
+                      passwordBox(),
+                    ])),
                 SizedBox(height: _height / 12),
                 Column(
                   children: [
                     Text('Sign in as an:'),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -79,30 +77,24 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     ),
                   ],
                 ),
-
                 SizedBox(height: 10),
                 RichText(
                   text: TextSpan(
-                      style: TextStyle(
-                          fontSize: 13
-                      ),
+                      style: TextStyle(fontSize: 13),
                       children: <TextSpan>[
-                        TextSpan(text: 'I am not an admin. ',
-                            style: TextStyle(
-                                color: Colors.black
-                            )),
+                        TextSpan(
+                            text: 'I am not an admin. ',
+                            style: TextStyle(color: Colors.black)),
                         TextSpan(
                             text: 'Click here.',
                             style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.redAccent,
-                                decoration: TextDecoration.underline
-                            ),
+                                decoration: TextDecoration.underline),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () => Navigator.pushNamed(context, LoginScreen.id)
-                        )
-                      ]
-                  ),
+                              ..onTap = () =>
+                                  Navigator.pushNamed(context, LoginScreen.id))
+                      ]),
                 )
               ],
             ),
@@ -112,7 +104,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     );
   }
 
-  Widget image(){
+  Widget image() {
     return Container(
         margin: EdgeInsets.only(top: _height / 15.0),
         height: 100.0,
@@ -123,7 +115,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         child: new Image.asset('assets/images/login.png'));
   }
 
-  Widget welcomeText(){
+  Widget welcomeText() {
     return Container(
       padding: EdgeInsets.only(top: 10),
       child: Row(
@@ -165,11 +157,11 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     );
   }
 
-  Widget emailBox(){
+  Widget emailBox() {
     return Material(
       borderRadius: BorderRadius.circular(30.0),
       elevation: 10,
-      child:TextField(
+      child: TextField(
         onChanged: (input) => _email = input,
         keyboardType: TextInputType.emailAddress,
         cursorColor: Colors.redAccent,
@@ -182,15 +174,14 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
               borderSide: BorderSide.none),
         ),
       ),
-
     );
   }
 
-  Widget passwordBox(){
+  Widget passwordBox() {
     return Material(
       borderRadius: BorderRadius.circular(30.0),
       elevation: 10,
-      child:TextField(
+      child: TextField(
         onChanged: (input) => _password = input,
         keyboardType: TextInputType.visiblePassword,
         cursorColor: Colors.redAccent,
@@ -209,27 +200,28 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           hintText: "Password",
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),
-              borderSide: BorderSide.none
-          ),
+              borderSide: BorderSide.none),
         ),
       ),
     );
   }
-
 
   Widget franchiseAdminButton() {
     String name;
     return RaisedButton(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      onPressed: (){
-        RegExp regExp = new RegExp(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
-        if(_email == null || _email.isEmpty){
+      onPressed: () {
+        RegExp regExp = new RegExp(
+            r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
+        if (_email == null || _email.isEmpty) {
           showAlertDialog(context);
-        }else if(_password == null || _password.length < 6){
+        } else if (_password == null || _password.length < 6) {
           showAlertDialog(context);
-        }else{
-          setState((){showSpinner = true;});
+        } else {
+          setState(() {
+            showSpinner = true;
+          });
           franchiseAdminSignIn();
         }
       },
@@ -237,7 +229,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       padding: EdgeInsets.all(0.0),
       child: Container(
         alignment: Alignment.center,
-        width: _width/3,
+        width: _width / 3,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           gradient: LinearGradient(
@@ -245,7 +237,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text('FRANCHISE ADMIN',style: TextStyle(fontSize: 12)),
+        child: Text('FRANCHISE ADMIN', style: TextStyle(fontSize: 12)),
       ),
     );
   }
@@ -255,14 +247,17 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     return RaisedButton(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      onPressed: (){
-        RegExp regExp = new RegExp(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
-        if(_email == null || _email.isEmpty){
+      onPressed: () {
+        RegExp regExp = new RegExp(
+            r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
+        if (_email == null || _email.isEmpty) {
           showAlertDialog(context);
-        }else if(_password == null || _password.length < 6){
+        } else if (_password == null || _password.length < 6) {
           showAlertDialog(context);
-        }else{
-          setState((){showSpinner = true;});
+        } else {
+          setState(() {
+            showSpinner = true;
+          });
           HQAdminSignIn();
         }
       },
@@ -270,7 +265,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       padding: EdgeInsets.all(0.0),
       child: Container(
         alignment: Alignment.center,
-        width: _width/3,
+        width: _width / 3,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           gradient: LinearGradient(
@@ -278,21 +273,26 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text('HQ ADMIN',style: TextStyle(fontSize: 12)),
+        child: Text('HQ ADMIN', style: TextStyle(fontSize: 12)),
       ),
     );
   }
 
   Future<void> franchiseAdminSignIn() async {
     _email = _email + franchiseAdmin;
-    try{
-      final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      if (user != null){
+    try {
+      final user = await _auth.signInWithEmailAndPassword(
+          email: _email, password: _password);
+      if (user != null) {
         Navigator.pushNamed(context, franchiseAdminNavigation.id);
-        setState((){showSpinner = false;});
+        setState(() {
+          showSpinner = false;
+        });
       }
-    }catch(e){
-      setState((){showSpinner = false;});
+    } catch (e) {
+      setState(() {
+        showSpinner = false;
+      });
       showAlertDialog(context);
       print(e.message);
       Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.message)));
@@ -300,17 +300,22 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   }
 
   Future<void> HQAdminSignIn() async {
-    _email = _email + hqAdmin;
-    try{
-      final user = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
+    // _email = _email + hqAdmin;
+    _email = _email + "@gmail.com";
+    try {
+      final user = await _auth.signInWithEmailAndPassword(
+          email: _email, password: _password);
 
-      if (user != null){
+      if (user != null) {
         Navigator.pushNamed(context, HQAdminNavigation.id);
-        setState((){showSpinner = false;});
+        setState(() {
+          showSpinner = false;
+        });
       }
-
-    }catch(e){
-      setState((){showSpinner = false;});
+    } catch (e) {
+      setState(() {
+        showSpinner = false;
+      });
       showAlertDialog(context);
       print(e.message);
       Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.message)));
@@ -318,7 +323,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   }
 
   showAlertDialog(BuildContext c) {
-
     // set up the button
     Widget okButton = FlatButton(
       child: Text("OK"),
@@ -344,6 +348,4 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       },
     );
   }
-
-
 }
