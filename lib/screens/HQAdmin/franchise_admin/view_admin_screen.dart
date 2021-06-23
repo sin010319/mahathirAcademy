@@ -1,20 +1,14 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/components/pop_up_alert.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
-import 'package:mahathir_academy_app/models/admin.dart';
 import 'package:mahathir_academy_app/models/franchise.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/view_coaches_students.dart';
-import 'package:mahathir_academy_app/screens/leaderboard.dart';
-import 'package:mahathir_academy_app/template/select_view_template.dart';
 import 'package:mahathir_academy_app/template/select_view_template_fixed.dart';
 import 'edit_admin_bottomSheet.dart';
 import 'add_admin_bottomSheet.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -135,7 +129,7 @@ class _ViewAdminScreenState extends State<ViewAdminScreen> {
     return Scaffold(
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_home,
-          animatedIconTheme: IconThemeData(size: 22, color: Colors.white),
+          animatedIconTheme: IconThemeData(size: 18.sp, color: Colors.white),
           backgroundColor: Color(0xFF8A1501),
           visible: true,
           curve: Curves.bounceIn,
@@ -157,7 +151,7 @@ class _ViewAdminScreenState extends State<ViewAdminScreen> {
                 labelStyle: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
-                    fontSize: 16.0),
+                    fontSize: 11.0.sp),
                 labelBackgroundColor: Color(0xFFFF3700)),
             // FAB 2
             SpeedDialChild(
@@ -176,7 +170,7 @@ class _ViewAdminScreenState extends State<ViewAdminScreen> {
                 labelStyle: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
-                    fontSize: 16.0),
+                    fontSize: 11.0.sp),
                 labelBackgroundColor: Color(0xFFFF3700)),
             SpeedDialChild(
                 child: Icon(Icons.delete, color: Colors.white),
@@ -201,7 +195,7 @@ class _ViewAdminScreenState extends State<ViewAdminScreen> {
                 labelStyle: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
-                    fontSize: 16.0),
+                    fontSize: 11.0.sp),
                 labelBackgroundColor: Color(0xFFFF3700)),
           ],
         ),

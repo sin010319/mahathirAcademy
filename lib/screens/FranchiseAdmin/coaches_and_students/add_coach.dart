@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mahathir_academy_app/components/pop_up_alert.dart';
-import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
-import 'package:mahathir_academy_app/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mahathir_academy_app/models/coach.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/edit_coach_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_profile_specific.dart';
 import 'package:mahathir_academy_app/template/select_coach_template.dart';
-
 import 'add_coach_bottomSheet.dart';
-import 'transfer_coach_students_bottomSheet.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -62,7 +56,7 @@ class _AddCoachScreenState extends State<AddCoachScreen> {
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
-                    fontSize: 18.0),
+                    fontSize: 13.5.sp),
               );
             }),
         myFutureBuilder: FutureBuilder(

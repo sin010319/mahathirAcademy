@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mahathir_academy_app/constants.dart';
+import 'package:sizer/sizer.dart';
 
-class digitinputBox extends StatelessWidget {
-  digitinputBox({this.icon, this.label, this.function});
+class DigitInputBox extends StatelessWidget {
+  DigitInputBox({this.icon, this.label, this.function});
 
   final IconData icon;
   final String label;
@@ -12,7 +12,7 @@ class digitinputBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      borderRadius: BorderRadius.circular(30.0),
+      borderRadius: BorderRadius.circular(30.0.sp),
       elevation: 10,
       child: TextFormField(
         enabled: true,
@@ -20,10 +20,10 @@ class digitinputBox extends StatelessWidget {
         inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
         textAlign: TextAlign.start,
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.red[900], size: 20),
+          prefixIcon: Icon(icon, color: Colors.red[900], size: 14.sp),
           hintText: label,
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
+              borderRadius: BorderRadius.circular(30.0.sp),
               borderSide: BorderSide.none),
         ),
         onChanged: function,

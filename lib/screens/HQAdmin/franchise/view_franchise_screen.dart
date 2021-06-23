@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/components/pop_up_alert.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
-import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/models/franchise.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise_admin/view_admin_screen.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/HQAdmin/franchise/edit_franchise_bottomSheet.dart';
-import 'package:mahathir_academy_app/template/select_franchise_template.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mahathir_academy_app/template/select_franchise_template_fixed.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -172,7 +169,7 @@ class _ViewFranchiseScreenState extends State<ViewFranchiseScreen> {
                                     title: Text(
                                         snapshot.data[index].franchiseName),
                                     trailing: Wrap(
-                                      spacing: 8,
+                                      spacing: 8.sp,
                                       children: [
                                         GestureDetector(
                                           child: Icon(

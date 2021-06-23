@@ -4,11 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/models/admin.dart';
 import 'package:mahathir_academy_app/screens/admin/hqviewStudentsRank.dart';
+import 'package:sizer/sizer.dart';
 
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
 final _auth = FirebaseAuth.instance;
-String targetAdminId="";
+String targetAdminId = "";
 String targetFranchiseAdminName;
 
 class FranchiseAnnouncement extends StatelessWidget {
@@ -18,7 +19,6 @@ class FranchiseAnnouncement extends StatelessWidget {
 
   static const String id = '/franchiseAnnouncement';
 
-
   @override
   Widget build(BuildContext context) {
     targetAdminId = _auth.currentUser.uid;
@@ -27,7 +27,24 @@ class FranchiseAnnouncement extends StatelessWidget {
     print(targetAdminId);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Announcement'),
+        centerTitle: true,
+        title: Container(
+          child: Row(
+            children: [
+              Image.asset("assets/images/brand_logo.png",
+                  fit: BoxFit.contain, height: 5.5.h),
+              SizedBox(
+                width: 1.5.w,
+              ),
+              Flexible(
+                child: Text('Announcement',
+                    style: TextStyle(
+                      fontSize: 13.5.sp,
+                    )),
+              )
+            ],
+          ),
+        ),
       ),
       body: SafeArea(
         child: Column(
@@ -46,7 +63,6 @@ class FranchiseAnnouncement extends StatelessWidget {
                       onChanged: (value) {
                         messageText = value;
                         print(messageText);
-                        print("lamo");
                       },
                       decoration: kMessageTextFieldDecoration,
                     ),
@@ -54,13 +70,12 @@ class FranchiseAnnouncement extends StatelessWidget {
                   FlatButton(
                     onPressed: () {
                       messageTextController.clear();
-                      _firestore.collection('announcements').add(
-                          {'message' : messageText,
-                            'sender' : targetFranchiseAdminName,
-                            'timestamp': new DateTime.now(),
-                            'target': 'franchiseStudent'
-
-                          });
+                      _firestore.collection('announcements').add({
+                        'message': messageText,
+                        'sender': targetFranchiseAdminName,
+                        'timestamp': new DateTime.now(),
+                        'target': 'franchiseStudent'
+                      });
                     },
                     child: Text(
                       'Send',
@@ -70,17 +85,15 @@ class FranchiseAnnouncement extends StatelessWidget {
                 ],
               ),
             ),
-
           ],
-
         ),
-
       ),
     );
   }
 
   Future<Admin> getFranchiseAdmin() async {
-    await _firestore.collection('franchiseAdmins')
+    await _firestore
+        .collection('franchiseAdmins')
         .doc(targetAdminId)
         .get()
         .then((value) {
@@ -88,21 +101,18 @@ class FranchiseAnnouncement extends StatelessWidget {
       targetFranchiseAdminName = data['franchiseAdminName'];
       targetFranchiseId = data['franchiseId'];
       print(targetFranchiseAdminName);
-      print("hahahhah");
-
-
-
-
     });
   }
-
-
 }
+
 class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('announcements').orderBy('timestamp').snapshots(),
+      stream: _firestore
+          .collection('announcements')
+          .orderBy('timestamp')
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -118,32 +128,29 @@ class MessagesStream extends StatelessWidget {
           final messageSender = message.data()['sender'];
           final messageTarget = message.data()['target'];
 
-          if (messageSender == 'hqAdmin' || (messageSender == targetFranchiseAdminName && messageTarget == 'franchiseStudent')) {
-            final messageBubble = MessageBubble(sender: messageSender, text: messageText, target: messageTarget);
+          if (messageSender == 'hqAdmin' ||
+              (messageSender == targetFranchiseAdminName &&
+                  messageTarget == 'franchiseStudent')) {
+            final messageBubble = MessageBubble(
+                sender: messageSender,
+                text: messageText,
+                target: messageTarget);
             messageBubbles.add(messageBubble);
           }
-
-
-
-        };
+        }
+        ;
         return Expanded(
           child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
             children: messageBubbles,
           ),
         );
-
       },
-
     );
-
   }
-
 }
 
-
 class MessageBubble extends StatelessWidget {
-
   MessageBubble({this.sender, this.text, this.target});
 
   final String sender;
@@ -153,39 +160,40 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(5.0.sp),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom:5.0),
-            child: Text(sender,
+            padding: EdgeInsets.only(bottom: 5.0.sp),
+            child: Text(
+              sender,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w700,
-
               ),
             ),
           ),
           Material(
-            borderRadius: BorderRadius.only(topRight: Radius.circular(30), bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30)),
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30.sp),
+                bottomLeft: Radius.circular(30.sp),
+                bottomRight: Radius.circular(30.sp)),
             elevation: 5.0,
             color: Colors.red[900],
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+              padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 3.w),
               child: Text(
                 '$text',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 25,
+                  fontSize: 14.sp,
                 ),
               ),
             ),
-
-          )],
+          )
+        ],
       ),
     );
   }
-
 }
-

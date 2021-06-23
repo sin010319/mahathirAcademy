@@ -1,13 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/constants.dart';
-import 'package:mahathir_academy_app/screens/coach/coach_navigation.dart';
-import 'package:mahathir_academy_app/screens/coach/view_students.dart';
-import 'package:mahathir_academy_app/template/select_class_template.dart';
 import 'package:mahathir_academy_app/template/select_class_template_fixed.dart';
-import 'package:mahathir_academy_app/template/select_view_template.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // for storing data into cloud firebase

@@ -9,6 +9,7 @@ import 'package:mahathir_academy_app/components/round_button.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/template/add_amend_bottomSheet_template.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -57,7 +58,7 @@ class _EditClassBottomSheetState extends State<EditClassBottomSheet> {
   Widget build(BuildContext context) {
     List<Widget> retContent = [
       SizedBox(
-        height: 30.0,
+        height: 4.0.h,
       ),
       Align(
         alignment: Alignment.centerLeft,
@@ -67,9 +68,9 @@ class _EditClassBottomSheetState extends State<EditClassBottomSheet> {
         ),
       ),
       SizedBox(
-        height: 5.0,
+        height: 1.0.h,
       ),
-      inputBox(
+      InputBox(
           icon: FontAwesomeIcons.university,
           label: 'New Class Name',
           function: (newText) {
@@ -77,7 +78,7 @@ class _EditClassBottomSheetState extends State<EditClassBottomSheet> {
             this.newClassName = newText;
           }),
       SizedBox(
-        height: 30.0,
+        height: 4.0.h,
       ),
       RoundButton(
           label: 'Apply Changes',

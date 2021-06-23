@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/components/profile_menu.dart';
 import 'package:mahathir_academy_app/components/profile_pic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mahathir_academy_app/models/coach.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/view_coaches_students.dart';
 
-import '../login_screen.dart';
+import '../change_password_bottom_sheet.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -17,7 +17,7 @@ String coachName;
 String franchiseName;
 List<dynamic> listClassNames = [];
 List<dynamic> classIds = [];
-String documentId;
+String coachId;
 String username;
 String contactNum;
 
@@ -30,11 +30,9 @@ class CoachProfile extends StatefulWidget {
 }
 
 class _CoachProfileState extends State<CoachProfile> {
-  String message = "You have successfully logged out.";
-
   @override
   void initState() {
-    documentId = _auth.currentUser.uid;
+    coachId = _auth.currentUser.uid;
     widget.coachInfo = callCoachFunc();
     super.initState();
   }
@@ -43,10 +41,34 @@ class _CoachProfileState extends State<CoachProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("My Profile"),
-        ),
+            centerTitle: true,
+            title: Container(
+              child: Row(
+                children: [
+                  Image.asset("assets/images/brand_logo.png",
+                      fit: BoxFit.contain, height: 5.5.h),
+                  SizedBox(
+                    width: 1.5.w,
+                  ),
+                  Flexible(
+                    child: Text('My Profile',
+                        style: TextStyle(
+                          fontSize: 13.5.sp,
+                        )),
+                  )
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(FontAwesomeIcons.key),
+                onPressed: () {
+                  showModal();
+                },
+              ),
+            ]),
         body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 20),
+          padding: EdgeInsets.symmetric(vertical: 2.h),
           child: FutureBuilder(
               future: widget.coachInfo,
               builder: (context, snapshot) {
@@ -55,7 +77,7 @@ class _CoachProfileState extends State<CoachProfile> {
                   return Column(
                     children: [
                       ProfilePic(),
-                      SizedBox(height: 20),
+                      SizedBox(height: 2.h),
                       ProfileMenu(
                         text: "Name: ${snapshot.data.coachName}",
                         icon: "assets/icons/userIcon.svg",
@@ -92,7 +114,7 @@ class _CoachProfileState extends State<CoachProfile> {
   }
 
   Future<Coach> getCoach() async {
-    await _firestore.collection('coaches').doc(documentId).get().then((value) {
+    await _firestore.collection('coaches').doc(coachId).get().then((value) {
       Map<String, dynamic> data = value.data();
       coachName = data['coachName'];
       classIds = data['classIds'];
@@ -123,4 +145,36 @@ class _CoachProfileState extends State<CoachProfile> {
   Future callCoachFunc() async {
     return await getCoach();
   }
+
+  void showModal() {
+    Future<void> future = showModalBottomSheet(
+        context: context,
+        // builder here needs a method to return widget
+        builder: changePasswordBottomSheet,
+        isScrollControlled: true // enable the modal take up the full screen
+        );
+    future.then((void value) => closeModal(value));
+  }
+
+  FutureBuilder<dynamic> closeModal(void value) {
+    print('modal closed');
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => super.widget));
+  }
+}
+
+Widget changePasswordBottomSheet(BuildContext context) {
+  String identifier = 'Change Password coach';
+
+  return SingleChildScrollView(
+    child: Container(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
+      child: ChangePasswordBottomSheet(
+        identifier: identifier,
+        userId: coachId,
+      ),
+    ),
+  );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/constants.dart';
+import 'package:sizer/sizer.dart';
 
 class IconContent extends StatelessWidget {
   IconContent({this.icon, this.label});
@@ -15,11 +16,11 @@ class IconContent extends StatelessWidget {
       children: <Widget>[
         Icon(
           icon,
-          size: 55.0,
+          size: 45.0.sp,
           color: Color(0xFF8A1501),
         ),
         SizedBox(
-          height: 15.0,
+          height: 2.0.h,
         ),
         Text(
           label,

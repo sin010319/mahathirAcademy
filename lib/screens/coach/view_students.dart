@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
 import 'package:mahathir_academy_app/constants.dart';
-import 'package:mahathir_academy_app/screens/coach/coach_profile.dart';
-import 'package:mahathir_academy_app/screens/student/student_profile.dart';
 import 'package:mahathir_academy_app/screens/student/student_profile_specific.dart';
 import 'package:mahathir_academy_app/template/select_student_template.dart';
-import 'package:mahathir_academy_app/template/select_student_template_fixed.dart';
-import 'package:mahathir_academy_app/template/select_view_template.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mahathir_academy_app/models/student.dart';
-import 'dart:convert';
+import 'package:sizer/sizer.dart';
 
 String identifier;
 // for storing data into cloud firebase
@@ -52,7 +46,7 @@ class _ViewStudentsState extends State<ViewStudents> {
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
-                    fontSize: 18.0),
+                    fontSize: 13.5.sp),
               );
             }),
         myFutureBuilder: FutureBuilder(
@@ -78,7 +72,7 @@ class _ViewStudentsState extends State<ViewStudents> {
                               title: Text(snapshot.data[index].studentName,
                                   style: kListItemsTextStyle),
                               trailing: Wrap(
-                                spacing: 8,
+                                spacing: 8.sp,
                                 children: [
                                   Container(
                                       child: Text(

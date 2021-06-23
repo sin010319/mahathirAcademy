@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mahathir_academy_app/screens/coach/award_exp.dart';
 import 'update_exp_data.dart';
 import 'package:mahathir_academy_app/constants.dart';
-import 'package:flutter/services.dart';
-import 'award_exp_bottomSheet.dart';
+import 'package:sizer/sizer.dart';
 
 int awardedExp = 0;
 
@@ -20,23 +18,18 @@ class DropdownMenuList extends StatefulWidget {
     switch (methodId) {
       case 1:
         expList = method1ExpValues;
-        // DropdownMenuList.assessmentScore = false;
         break;
       case 2:
         expList = method2ExpValues;
-        // DropdownMenuList.assessmentScore = false;
         break;
       case 3:
         expList = method3ExpValues;
-        // DropdownMenuList.assessmentScore = false;
         break;
       case 4:
         expList = method4ExpValues;
-        // DropdownMenuList.assessmentScore = false;
         break;
       case 5:
         expList = method5ExpValues;
-        // DropdownMenuList.assessmentScore = false;
         break;
     }
 
@@ -86,7 +79,7 @@ class _DropdownMenuListState extends State<DropdownMenuList> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           isExpanded: true,
-          itemHeight: 50.0,
+          itemHeight: 40.0.sp,
           style: kExpTextStyle,
           value: isTrue
               ? selectedExpValue

@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +7,10 @@ import 'package:mahathir_academy_app/components/input_box_for_digit.dart';
 import 'package:mahathir_academy_app/components/pop_up_alert.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/round_button.dart';
-
-import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/template/add_amend_bottomSheet_template.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -156,9 +154,9 @@ class _AddCoachBottomSheetState extends State<AddCoachBottomSheet> {
 
     List<Widget> retContent = [
       SizedBox(
-        height: 30.0,
+        height: 4.0.h,
       ),
-      inputBox(
+      InputBox(
           icon: Icons.person,
           label: 'Name',
           function: (newText) {
@@ -166,9 +164,9 @@ class _AddCoachBottomSheetState extends State<AddCoachBottomSheet> {
             this.name = newText;
           }),
       SizedBox(
-        height: 20.0,
+        height: 3.0.h,
       ),
-      inputBox(
+      InputBox(
           icon: Icons.lock,
           label: 'Password',
           function: (newText) {
@@ -176,9 +174,9 @@ class _AddCoachBottomSheetState extends State<AddCoachBottomSheet> {
             this.password = newText;
           }),
       SizedBox(
-        height: 20.0,
+        height: 3.0.h,
       ),
-      digitinputBox(
+      DigitInputBox(
           icon: Icons.phone,
           label: 'Contact Number',
           function: (newText) {
@@ -186,7 +184,7 @@ class _AddCoachBottomSheetState extends State<AddCoachBottomSheet> {
             this.contactNum = newText;
           }),
       SizedBox(
-        height: 30.0,
+        height: 4.0.h,
       ),
       RoundButton(
           label: 'Add ${widget.identifier}',

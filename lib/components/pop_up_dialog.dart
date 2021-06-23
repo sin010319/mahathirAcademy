@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class PopUpDialogClass extends StatelessWidget {
   PopUpDialogClass({this.message, this.function1, this.function2});
@@ -49,7 +50,7 @@ class PopUpDialogClass extends StatelessWidget {
               children: <Widget>[
                 Text(message),
                 SizedBox(
-                  height: 15.0,
+                  height: 2.0.h,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -71,7 +72,8 @@ class PopUpDialogClass extends StatelessWidget {
 
     return RaisedButton(
       elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0.sp)),
       onPressed: function,
       textColor: Colors.white,
       padding: EdgeInsets.all(0.0),
@@ -79,13 +81,13 @@ class PopUpDialogClass extends StatelessWidget {
         alignment: Alignment.center,
         width: _width / 5,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          borderRadius: BorderRadius.all(Radius.circular(20.0.sp)),
           gradient: LinearGradient(
             colors: <Color>[Colors.orange[200], Colors.pinkAccent],
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text(text, style: TextStyle(fontSize: 15)),
+        child: Text(text, style: TextStyle(fontSize: 11.sp)),
       ),
     );
   }

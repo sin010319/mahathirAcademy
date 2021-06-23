@@ -4,22 +4,12 @@ import 'package:mahathir_academy_app/components/reusable_card.dart';
 import 'package:mahathir_academy_app/screens/announcement/coachAnnouncement.dart';
 import 'package:mahathir_academy_app/screens/coach/select_class_view_students.dart';
 import 'package:mahathir_academy_app/template/coachFranchiseCategory.dart';
-import 'package:mahathir_academy_app/template/select_class_template.dart';
-import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/components/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mahathir_academy_app/screens/coach/award_exp.dart';
-import 'package:mahathir_academy_app/screens/coach/select_class.dart';
 import 'package:mahathir_academy_app/screens/coach/select_class_general.dart';
-import 'package:mahathir_academy_app/template/category_template.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mahathir_academy_app/template/coachesCategory.dart';
-
-import '../student/student_profile.dart';
-import 'view_students.dart';
-import '../leaderboard.dart';
-import '../announcement/announcement.dart';
 import 'coach_profile.dart';
+import 'package:sizer/sizer.dart';
 
 class CoachNavigation extends StatelessWidget {
   static const String id = '/coach';
@@ -43,22 +33,40 @@ class CoachNavigation extends StatelessWidget {
         child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-                title: Text('Home'),
-                automaticallyImplyLeading: false,
-                actions: <Widget>[
-                  // First button - decrement
-                  IconButton(
-                    icon: Icon(Icons.logout), // The "-" icon
-                    onPressed: () {
-                      String message = 'Are you sure you want to log out?';
-                      PopUpDialogClass.popUpDialog(message, context, () {
-                        logout(context);
-                      }, () {
-                        Navigator.of(context, rootNavigator: true).pop();
-                      });
-                    },
-                  ),
-                ]),
+              centerTitle: true,
+              title: Container(
+                child: Row(
+                  children: [
+                    Image.asset("assets/images/brand_logo.png",
+                        fit: BoxFit.contain, height: 5.5.h),
+                    SizedBox(
+                      width: 1.5.w,
+                    ),
+                    Flexible(
+                      child: Text('Home',
+                          style: TextStyle(
+                            fontSize: 13.5.sp,
+                          )),
+                    )
+                  ],
+                ),
+              ),
+              automaticallyImplyLeading: false,
+              actions: <Widget>[
+                // First button - decrement
+                IconButton(
+                  icon: Icon(Icons.logout), // The "-" icon
+                  onPressed: () {
+                    String message = 'Are you sure you want to log out?';
+                    PopUpDialogClass.popUpDialog(message, context, () {
+                      logout(context);
+                    }, () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    });
+                  },
+                ),
+              ],
+            ),
             body: Column(
               crossAxisAlignment: CrossAxisAlignment
                   .stretch, // make the items in each row to stretch itself to fit as much space in the screen
@@ -107,8 +115,7 @@ class CoachNavigation extends StatelessWidget {
                 Expanded(
                   child: ReusableCard(
                     onPress: () {
-                      Navigator.pushNamed(
-                          context, CoachFranchiseCategory.id);
+                      Navigator.pushNamed(context, CoachFranchiseCategory.id);
                     },
                     colour: Colors.white,
                     cardChild: IconContent(
@@ -136,7 +143,7 @@ class CoachNavigation extends StatelessWidget {
                           colour: Colors.white,
                           cardChild: IconContent(
                             icon: FontAwesomeIcons.award,
-                            label: 'AWARD EXP\nand\nACKNOWLEDGEMENT',
+                            label: 'AWARD EXP',
                           ),
                         ),
                       ),

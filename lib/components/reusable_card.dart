@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sizer/sizer.dart';
 
 // extract repeated widget out here as a stateless widget class
 class ReusableCard extends StatelessWidget {
@@ -18,7 +19,8 @@ class ReusableCard extends StatelessWidget {
   // use final, cannot use const
   final Color colour;
   final Widget cardChild;
-  final Function onPress;   // this variable onPress is of type Function, as it is stored as a function
+  final Function
+      onPress; // this variable onPress is of type Function, as it is stored as a function
 
   // Difference between const, final:
   // final can only be assigned once
@@ -47,13 +49,13 @@ class ReusableCard extends StatelessWidget {
             cardChild,
           ],
         ),
-        margin: EdgeInsets.all(10.0),   // set margin for all sides
-        padding: EdgeInsets.all(2.0),
+        margin: EdgeInsets.all(1.0.h), // set margin for all sides
+        padding: EdgeInsets.all(1.0.h),
         // to make our boxes to have rounded corner, we use BoxDecoration
         decoration: BoxDecoration(
           // need to specify the color of the container inside this BoxDecoration if we have one and not inside the container nia
           color: colour,
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(10.0.sp),
         ),
       ),
     );

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter/services.dart';
 import 'package:mahathir_academy_app/components/pop_up_alert.dart';
-import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:mahathir_academy_app/models/StringExtension.dart';
@@ -10,6 +8,7 @@ import 'package:mahathir_academy_app/models/student.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'award_exp_bottomSheet.dart';
 import 'guideline.dart';
+import 'package:sizer/sizer.dart';
 
 double _width;
 
@@ -24,9 +23,6 @@ class AwardExp extends StatefulWidget {
   static bool clear;
 
   static const String id = '/award_exp';
-
-  List<String> students = ['Student1', 'Student2', 'Student3'];
-  List<String> points = ['2002', '1242', '3304'];
   String contentTitle;
 
   AwardExp({this.contentTitle});
@@ -62,7 +58,7 @@ class _AwardExpState extends State<AwardExp> {
     return Scaffold(
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_home,
-          animatedIconTheme: IconThemeData(size: 22, color: Colors.white),
+          animatedIconTheme: IconThemeData(size: 18.sp, color: Colors.white),
           backgroundColor: Color(0xFF8A1501),
           visible: true,
           curve: Curves.bounceIn,
@@ -80,7 +76,7 @@ class _AwardExpState extends State<AwardExp> {
                 labelStyle: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
-                    fontSize: 16.0),
+                    fontSize: 11.0.sp),
                 labelBackgroundColor: Color(0xFFFF3700)),
             // FAB 2
             SpeedDialChild(
@@ -97,33 +93,52 @@ class _AwardExpState extends State<AwardExp> {
                 labelStyle: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
-                    fontSize: 16.0),
+                    fontSize: 11.0.sp),
                 labelBackgroundColor: Color(0xFFFF3700)),
             // FAB 3
           ],
         ),
-        appBar: AppBar(title: Text('Award EXP and Acknowledgment')),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Container(
+            child: Row(
+              children: [
+                Image.asset("assets/images/brand_logo.png",
+                    fit: BoxFit.contain, height: 5.5.h),
+                SizedBox(
+                  width: 1.5.w,
+                ),
+                Flexible(
+                  child: Text('Award EXP',
+                      style: TextStyle(
+                        fontSize: 13.5.sp,
+                      )),
+                )
+              ],
+            ),
+          ),
+        ),
         backgroundColor: Color(0xFFDB5D38),
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.all(30.0),
+                padding: EdgeInsets.all(20.0.sp),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     // wrap the icon in a circle avatar
                     CircleAvatar(
-                      radius: 30.0,
+                      radius: 25.0.sp,
                       backgroundColor: Colors.white,
                       child: Icon(
                         FontAwesomeIcons.award,
-                        size: 30.0,
+                        size: 25.0.sp,
                         color: Color(0xFF8A1501),
                       ),
                     ),
                     SizedBox(
-                      height: 10.0,
+                      height: 2.0.h,
                     ),
                     FutureBuilder(
                         future: widget.retrievedStudents,
@@ -139,7 +154,7 @@ class _AwardExpState extends State<AwardExp> {
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700,
-                                fontSize: 18.0),
+                                fontSize: 13.5.sp),
                           );
                         }),
                   ],
@@ -147,18 +162,18 @@ class _AwardExpState extends State<AwardExp> {
               ),
               Expanded(
                 child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: EdgeInsets.symmetric(horizontal: 5.0.w),
                     // container must have a child to get shown up on screen
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20.0),
-                            topRight: Radius.circular(20.0))),
+                            topLeft: Radius.circular(20.0.sp),
+                            topRight: Radius.circular(20.0.sp))),
                     child: SingleChildScrollView(
                       physics: ScrollPhysics(),
                       child: Column(children: <Widget>[
                         SizedBox(
-                          height: 10.0,
+                          height: 1.0.h,
                         ),
                         returnFutureBuilder()
                         // future: widget.retrievedStudents),
@@ -270,7 +285,7 @@ class _AwardExpState extends State<AwardExp> {
                           Expanded(
                             flex: 7,
                             child: Container(
-                              height: 70.0,
+                              height: 10.0.h,
                               child: Card(
                                 child: Center(
                                   child: ListTile(
@@ -289,25 +304,19 @@ class _AwardExpState extends State<AwardExp> {
                           ),
                           Expanded(
                             flex: 2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Card(
-                                  child: TextFormField(
-                                    initialValue:
-                                        snapshot.data[index].exp.toString(),
-                                    style: kExpTextStyle,
-                                    enabled: false,
-                                    //Not clickable and not editable
-                                    readOnly: true,
-                                    textAlign: TextAlign.center,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                )
-                              ],
+                            child: Card(
+                              child: TextFormField(
+                                initialValue:
+                                    snapshot.data[index].exp.toString(),
+                                style: kExpTextStyle,
+                                enabled: false,
+                                //Not clickable and not editable
+                                readOnly: true,
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
                             ),
                           ),
                         ],

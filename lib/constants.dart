@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 const kBottomContainerHeight = 80.0;
 const kActiveCardColour = Color(0xFF1D1E33);
@@ -25,7 +26,10 @@ const kCoachStudentLabelTextStyle = TextStyle(
     fontSize: 25.0, fontWeight: FontWeight.bold, color: Color(0xFF8A1501));
 
 const kExpTextStyle = TextStyle(
-    fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.redAccent);
+    fontSize: 16.0, fontWeight: FontWeight.w400, color: Colors.redAccent);
+
+const kMethodDropdownTextStyle =
+    TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, color: Colors.black);
 
 const kListItemsTextStyle = TextStyle(
   fontSize: 18.0,

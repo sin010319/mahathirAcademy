@@ -9,6 +9,7 @@ import 'package:mahathir_academy_app/components/round_button.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/template/add_amend_bottomSheet_template.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -140,7 +141,7 @@ class _EditFranchiseBottomSheetState extends State<EditFranchiseBottomSheet> {
 
     List<Widget> retContent = [
       SizedBox(
-        height: 30.0,
+        height: 4.0.h,
       ),
       Align(
         alignment: Alignment.centerLeft,
@@ -150,7 +151,7 @@ class _EditFranchiseBottomSheetState extends State<EditFranchiseBottomSheet> {
         ),
       ),
       SizedBox(
-        height: 5.0,
+        height: 1.0.h,
       ),
       Align(
         alignment: Alignment.centerLeft,
@@ -160,9 +161,9 @@ class _EditFranchiseBottomSheetState extends State<EditFranchiseBottomSheet> {
         ),
       ),
       SizedBox(
-        height: 5.0,
+        height: 1.0.h,
       ),
-      inputBox(
+      InputBox(
           icon: FontAwesomeIcons.university,
           label: 'New Franchise Name',
           function: (newText) {
@@ -170,7 +171,7 @@ class _EditFranchiseBottomSheetState extends State<EditFranchiseBottomSheet> {
             this.newFranchiseName = newText;
           }),
       SizedBox(
-        height: 20.0,
+        height: 3.0.h,
       ),
       Align(
         alignment: Alignment.centerLeft,
@@ -180,7 +181,7 @@ class _EditFranchiseBottomSheetState extends State<EditFranchiseBottomSheet> {
         ),
       ),
       SizedBox(
-        height: 5.0,
+        height: 1.0.h,
       ),
       Align(
         alignment: Alignment.centerLeft,
@@ -190,9 +191,9 @@ class _EditFranchiseBottomSheetState extends State<EditFranchiseBottomSheet> {
         ),
       ),
       SizedBox(
-        height: 5.0,
+        height: 1.0.h,
       ),
-      inputBox(
+      InputBox(
           icon: FontAwesomeIcons.university,
           label: 'New Franchise Location',
           function: (newText) {
@@ -200,7 +201,7 @@ class _EditFranchiseBottomSheetState extends State<EditFranchiseBottomSheet> {
             this.newFranchiseLocation = newText;
           }),
       SizedBox(
-        height: 30.0,
+        height: 4.0.h,
       ),
       RoundButton(
           label: 'Apply Changes',

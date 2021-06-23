@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mahathir_academy_app/components/input_box.dart';
 import 'package:mahathir_academy_app/components/pop_up_alert.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/round_button.dart';
@@ -11,13 +8,10 @@ import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/models/coach.dart';
 import 'package:mahathir_academy_app/models/facilitator.dart';
 import 'package:mahathir_academy_app/models/franchise.dart';
-import 'package:mahathir_academy_app/models/student.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/class_dropdown_menu.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/view_coaches_students.dart';
-import 'package:mahathir_academy_app/screens/announcement/franchiseAnnouncement.dart';
 import 'package:mahathir_academy_app/template/add_amend_bottomSheet_template.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -102,9 +96,7 @@ class _AssignCoachStudentBottomSheetState
     List<Franchise> franchiseList;
 
     List<Widget> retContent = [
-      SizedBox(
-        height: 30.0,
-      ),
+      SizedBox(height: 4.0.h),
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
@@ -112,9 +104,7 @@ class _AssignCoachStudentBottomSheetState
           style: kSubtitleTextStyle,
         ),
       ),
-      SizedBox(
-        height: 10.0,
-      ),
+      SizedBox(height: 1.0.h),
       Align(
         alignment: Alignment.centerLeft,
         child: StreamBuilder<QuerySnapshot>(
@@ -192,9 +182,7 @@ class _AssignCoachStudentBottomSheetState
               }
             }),
       ),
-      SizedBox(
-        height: 30.0,
-      ),
+      SizedBox(height: 4.0.h),
       RoundButton(
           label: 'Add ${widget.identifier}',
           function: () async {

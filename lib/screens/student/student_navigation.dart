@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/reusable_card.dart';
-import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/components/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/screens/announcement/studentAnnouncement.dart';
-import 'package:mahathir_academy_app/template/category_template.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mahathir_academy_app/template/studentCategory.dart';
 
 import 'student_profile.dart';
-import '../coach/view_students.dart';
-import '../leaderboard.dart';
-import '../announcement/announcement.dart';
+import 'package:sizer/sizer.dart';
 
 class StudentNavigation extends StatelessWidget {
   static const String id = '/student';
@@ -36,25 +32,43 @@ class StudentNavigation extends StatelessWidget {
         child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-                title: Text('Home'),
-                automaticallyImplyLeading: false,
-                actions: <Widget>[
-                  // First button - decrement
-                  IconButton(
-                    icon: Icon(Icons.logout), // The "-" icon
-                    onPressed: () {
-                      String message = 'Are you sure you want to log out?';
-                      PopUpDialogClass.popUpDialog(message, context, () {
-                        logout(context);
-                      }, () {
-                        Navigator.of(context, rootNavigator: true).pop();
-                      });
-                    },
-                  ),
-                ]),
+              centerTitle: true,
+              title: Container(
+                child: Row(
+                  children: [
+                    Image.asset("assets/images/brand_logo.png",
+                        fit: BoxFit.contain, height: 5.5.h),
+                    SizedBox(
+                      width: 1.5.w,
+                    ),
+                    Flexible(
+                      child: Text('Home',
+                          style: TextStyle(
+                            fontSize: 13.5.sp,
+                          )),
+                    )
+                  ],
+                ),
+              ),
+              automaticallyImplyLeading: false,
+              actions: <Widget>[
+                // First button - decrement
+                IconButton(
+                  icon: Icon(Icons.logout), // The "-" icon
+                  onPressed: () {
+                    String message = 'Are you sure you want to log out?';
+                    PopUpDialogClass.popUpDialog(message, context, () {
+                      logout(context);
+                    }, () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    });
+                  },
+                ),
+              ],
+            ),
             body: Container(
               margin: EdgeInsets.only(
-                  top: 80.0, bottom: 80.0, right: 25.0, left: 25.0),
+                  top: 8.0.h, bottom: 8.0.h, right: 2.0.w, left: 2.0.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment
                     .stretch, // make the items in each row to stretch itself to fit as much space in the screen
@@ -62,8 +76,7 @@ class StudentNavigation extends StatelessWidget {
                   Expanded(
                     child: ReusableCard(
                       onPress: () {
-                        Navigator.pushNamed(
-                            context, StudentCategory.id);
+                        Navigator.pushNamed(context, StudentCategory.id);
                       },
                       colour: Colors.white,
                       cardChild: IconContent(
@@ -90,7 +103,8 @@ class StudentNavigation extends StatelessWidget {
                         Expanded(
                           child: ReusableCard(
                             onPress: () {
-                              Navigator.pushNamed(context, StudentAnnouncement.id);
+                              Navigator.pushNamed(
+                                  context, StudentAnnouncement.id);
                             },
                             // USE TERNARY OPERATOR HERE
                             // CHANGE THE COLOR OF CARD WHEN SWITCHING BETWEEN TAPPING

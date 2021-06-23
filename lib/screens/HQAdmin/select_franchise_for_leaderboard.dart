@@ -1,21 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/models/franchise.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise_admin/view_admin_screen.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bottomSheet.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise/edit_franchise_bottomSheet.dart';
-import 'package:mahathir_academy_app/screens/admin/hqViewStudentsRank.dart';
-import 'package:mahathir_academy_app/screens/coach/select_class.dart';
 import 'package:mahathir_academy_app/template/HQAdminCategory.dart';
-import 'package:mahathir_academy_app/template/select_franchise_template.dart';
-import 'package:mahathir_academy_app/template/category_template.dart';
-import 'package:mahathir_academy_app/template/select_class_template.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mahathir_academy_app/template/select_franchise_template_fixed.dart';
-import 'package:mahathir_academy_app/screens/admin/hqViewFranchiseStudents.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -104,7 +92,7 @@ class _SelectFranchiseForLeaderBoardState
     List<Franchise> franchisesList = [];
 
     await _firestore
-        .collection('franchiseAdmins')
+        .collection('franchises')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {

@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
-import 'package:mahathir_academy_app/constants.dart';
-import 'package:mahathir_academy_app/screens/coach/coach_profile.dart';
-import 'package:mahathir_academy_app/screens/student/student_profile.dart';
 import 'package:mahathir_academy_app/template/select_view_template.dart';
 
 String identifier;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mahathir_academy_app/constants.dart';
+import 'package:sizer/sizer.dart';
 
 class RoundButton extends StatelessWidget {
   RoundButton({this.label, this.function});
@@ -13,7 +13,8 @@ class RoundButton extends StatelessWidget {
 
     return RaisedButton(
       elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0.sp)),
       onPressed: function,
       textColor: Colors.white,
       padding: EdgeInsets.all(0.0),
@@ -21,13 +22,13 @@ class RoundButton extends StatelessWidget {
         alignment: Alignment.center,
         width: _width / 2,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          borderRadius: BorderRadius.all(Radius.circular(20.0.sp)),
           gradient: LinearGradient(
             colors: <Color>[Colors.red[900], Colors.yellow[900]],
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text(label, style: TextStyle(fontSize: 15)),
+        child: Text(label, style: TextStyle(fontSize: 12.sp)),
       ),
     );
   }

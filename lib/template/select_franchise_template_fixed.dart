@@ -1,11 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mahathir_academy_app/constants.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise_admin/view_admin_screen.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bottomSheet.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise/edit_franchise_bottomSheet.dart';
-import 'package:mahathir_academy_app/template/select_view_template.dart';
 import 'package:mahathir_academy_app/template/select_view_template_fixed.dart';
 
 class SelectFranchiseTemplateFixed extends StatefulWidget {

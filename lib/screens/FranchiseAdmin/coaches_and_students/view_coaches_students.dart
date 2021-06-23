@@ -5,22 +5,17 @@ import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/models/class.dart';
 import 'package:mahathir_academy_app/models/coach.dart';
 import 'package:mahathir_academy_app/models/facilitator.dart';
-import 'package:mahathir_academy_app/models/franchise.dart';
 import 'package:mahathir_academy_app/models/student.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_profile_specific.dart';
 import 'package:mahathir_academy_app/screens/student/student_profile_specific.dart';
-import 'edit_student_bottomSheet.dart';
-import '../../student/student_profile.dart';
 import 'assign_coach_students_bottomSheet.dart';
 import 'multi_assign_student_bottom_sheet.dart';
-import 'transfer_coach_students_bottomSheet.dart';
-import 'package:mahathir_academy_app/screens/coach/coach_profile.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -81,7 +76,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
     return Scaffold(
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_home,
-        animatedIconTheme: IconThemeData(size: 22, color: Colors.white),
+        animatedIconTheme: IconThemeData(size: 18.sp, color: Colors.white),
         backgroundColor: Color(0xFF8A1501),
         visible: true,
         curve: Curves.bounceIn,
@@ -99,7 +94,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
               labelStyle: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
-                  fontSize: 16.0),
+                  fontSize: 11.0.sp),
               labelBackgroundColor: Color(0xFFFF3700)),
           // FAB 3
           SpeedDialChild(
@@ -114,7 +109,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
               labelStyle: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
-                  fontSize: 16.0),
+                  fontSize: 11.0.sp),
               labelBackgroundColor: Color(0xFFFF3700)),
           // FAB 3
           SpeedDialChild(
@@ -147,7 +142,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
               labelStyle: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
-                  fontSize: 16.0),
+                  fontSize: 11.0.sp),
               labelBackgroundColor: Color(0xFFFF3700)),
           // FAB 3
           SpeedDialChild(
@@ -162,17 +157,36 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
               labelStyle: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
-                  fontSize: 16.0),
+                  fontSize: 11.0.sp),
               labelBackgroundColor: Color(0xFFFF3700)),
         ],
       ),
-      appBar: AppBar(title: Text('View Coach and Students')),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Container(
+          child: Row(
+            children: [
+              Image.asset("assets/images/brand_logo.png",
+                  fit: BoxFit.contain, height: 5.5.h),
+              SizedBox(
+                width: 1.5.w,
+              ),
+              Flexible(
+                child: Text('View Coaches & Students',
+                    style: TextStyle(
+                      fontSize: 13.5.sp,
+                    )),
+              )
+            ],
+          ),
+        ),
+      ),
       backgroundColor: Color(0xFFDB5D38),
       body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.all(30.0),
+              padding: EdgeInsets.all(20.0.sp),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -181,10 +195,10 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
                     backgroundColor: Colors.white,
                     backgroundImage:
                         AssetImage("assets/icons/presentation.png"),
-                    radius: 30.0,
+                    radius: 25.0.sp,
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 2.0.h,
                   ),
                   FutureBuilder(
                       future: widget.retrievedClassData,
@@ -199,7 +213,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,
-                              fontSize: 18.0),
+                              fontSize: 13.5.sp),
                         );
                       }),
                 ],
@@ -207,13 +221,13 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
             ),
             Expanded(
                 child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              padding: EdgeInsets.symmetric(horizontal: 5.0.w),
               // container must have a child to get shown up on screen
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.0),
-                      topRight: Radius.circular(20.0))),
+                      topLeft: Radius.circular(20.0.sp),
+                      topRight: Radius.circular(20.0.sp))),
               child: SingleChildScrollView(
                 child: returnFutureBuilder(),
               ),
@@ -380,7 +394,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
         }
         return Column(children: [
           SizedBox(
-            height: 20,
+            height: 2.0.h,
           ),
           Text('Coach', style: kCoachStudentLabelTextStyle),
           Container(
@@ -437,7 +451,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
                                 title: Text(student.studentName,
                                     style: kListItemsTextStyle),
                                 trailing: Wrap(
-                                  spacing: 8,
+                                  spacing: 8.sp,
                                   children: [
                                     Container(
                                         child: Text(student.exp.toString(),
@@ -598,7 +612,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
   dynamic returnFaciSection(
       bool hasFaci, BuildContext context, AsyncSnapshot snapshot) {
     Widget sizedBox2 = SizedBox(
-      height: 15.0,
+      height: 1.5.h,
     );
     if (snapshot.data.facilitator != null) {
       facilitatorName = snapshot.data.facilitator.facilitatorName;
@@ -614,7 +628,7 @@ class _ViewCoachStudentState extends State<ViewCoachStudent> {
 
     if (hasFaci) {
       Widget sizedBox1 = SizedBox(
-        height: 15.0,
+        height: 1.5.h,
       );
       Widget text = Text('Facilitator', style: kCoachStudentLabelTextStyle);
       Widget container = Container(

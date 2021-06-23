@@ -1,18 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mahathir_academy_app/components/input_box.dart';
 import 'package:mahathir_academy_app/components/input_box_for_digit.dart';
 import 'package:mahathir_academy_app/components/pop_up_alert.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/round_button.dart';
 
 import 'package:mahathir_academy_app/constants.dart';
-import 'package:mahathir_academy_app/screens/admin/hqViewFranchiseStudents.dart';
 import 'package:mahathir_academy_app/screens/student/student_profile_specific.dart';
 import 'package:mahathir_academy_app/screens/student/student_profile_specific_hq.dart';
 import 'package:mahathir_academy_app/template/add_amend_bottomSheet_template.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -88,7 +87,7 @@ class _EditStudentBottomSheetState extends State<EditStudentBottomSheet> {
 
     List<Widget> retContent = [
       SizedBox(
-        height: 30.0,
+        height: 4.0.h,
       ),
       Align(
         alignment: Alignment.centerLeft,
@@ -98,7 +97,7 @@ class _EditStudentBottomSheetState extends State<EditStudentBottomSheet> {
         ),
       ),
       SizedBox(
-        height: 5.0,
+        height: 1.0.h,
       ),
       Align(
         alignment: Alignment.centerLeft,
@@ -108,9 +107,9 @@ class _EditStudentBottomSheetState extends State<EditStudentBottomSheet> {
         ),
       ),
       SizedBox(
-        height: 5.0,
+        height: 1.0.h,
       ),
-      digitinputBox(
+      DigitInputBox(
           icon: FontAwesomeIcons.award,
           label: 'New EXP',
           function: (newText) {
@@ -118,7 +117,7 @@ class _EditStudentBottomSheetState extends State<EditStudentBottomSheet> {
             this.newExp = int.parse(newText);
           }),
       SizedBox(
-        height: 20.0,
+        height: 3.0.h,
       ),
       Align(
         alignment: Alignment.centerLeft,
@@ -127,9 +126,7 @@ class _EditStudentBottomSheetState extends State<EditStudentBottomSheet> {
           style: kListItemsTextStyle,
         ),
       ),
-      SizedBox(
-        height: 5.0,
-      ),
+      SizedBox(height: 1.0.h),
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
@@ -137,10 +134,8 @@ class _EditStudentBottomSheetState extends State<EditStudentBottomSheet> {
           style: kListItemsTextStyle,
         ),
       ),
-      SizedBox(
-        height: 5.0,
-      ),
-      digitinputBox(
+      SizedBox(height: 1.0.h),
+      DigitInputBox(
           icon: FontAwesomeIcons.award,
           label: 'New Contact No',
           function: (newText) {
@@ -148,7 +143,7 @@ class _EditStudentBottomSheetState extends State<EditStudentBottomSheet> {
             this.newContactNum = newText;
           }),
       SizedBox(
-        height: 30.0,
+        height: 4.0.h,
       ),
       RoundButton(
           label: 'Apply Changes',

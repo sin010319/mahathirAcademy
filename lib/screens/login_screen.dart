@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'admin/admin_login_screen.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_navigation.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'student/student_navigation.dart';
+import 'package:sizer/sizer.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = '/';
@@ -31,11 +31,28 @@ class _LoginScreenState extends State<LoginScreen> {
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
 
-    return WillPopScope(
+    return new WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Login'),
+          centerTitle: true,
+          title: Container(
+            child: Row(
+              children: [
+                Image.asset("assets/images/brand_logo.png",
+                    fit: BoxFit.contain, height: 5.5.h),
+                SizedBox(
+                  width: 1.5.w,
+                ),
+                Flexible(
+                  child: Text('Login',
+                      style: TextStyle(
+                        fontSize: 13.5.sp,
+                      )),
+                )
+              ],
+            ),
+          ),
           automaticallyImplyLeading: false,
         ),
         body: ModalProgressHUD(
@@ -43,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Container(
             height: _height,
             width: _width,
-            padding: EdgeInsets.only(bottom: 5),
+            padding: EdgeInsets.only(bottom: 3.h),
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
@@ -65,22 +82,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Text('Sign in as:'),
                       SizedBox(
-                        height: 10,
+                        height: 1.h,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CoachButton(),
-                          SizedBox(width: 20),
+                          SizedBox(width: 5.w),
                           StudentButton(),
                         ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 1.h),
                   RichText(
                     text: TextSpan(
-                        style: TextStyle(fontSize: 13),
+                        style: TextStyle(fontSize: 9.sp),
                         children: <TextSpan>[
                           TextSpan(
                               text: 'Are you an admin? ',
@@ -88,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextSpan(
                               text: 'Click here.',
                               style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 9.sp,
                                   color: Colors.redAccent,
                                   decoration: TextDecoration.underline),
                               recognizer: TapGestureRecognizer()
@@ -107,9 +124,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget image() {
     return Container(
-        margin: EdgeInsets.only(top: _height / 15.0),
-        height: 100.0,
-        width: 100.0,
+        margin: EdgeInsets.only(top: _height / 25.0),
+        height: 16.0.h,
+        width: 16.0.h,
         decoration: new BoxDecoration(
           shape: BoxShape.circle,
         ),
@@ -118,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget welcomeText() {
     return Container(
-      padding: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.only(top: 2.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -128,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 50,
+                fontSize: 35.sp,
               ),
             ),
           ),
@@ -149,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.w300,
-                fontSize: 15,
+                fontSize: 12.sp,
               ),
             ),
           ),
@@ -158,25 +175,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Widget form() {
-  //   return Container(
-  //     margin: EdgeInsets.only(
-  //         left: _width / 12.0,
-  //         right: _width / 12.0,
-  //         top: _height / 15.0),
-  //     child: Form(
-  //       key: _key,
-  //       child: Column(
-  //         children: <Widget>[
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget emailBox() {
     return Material(
-      borderRadius: BorderRadius.circular(30.0),
+      borderRadius: BorderRadius.circular(30.0.sp),
       elevation: 10,
       child: TextField(
         onChanged: (input) => _email = input,
@@ -184,11 +185,11 @@ class _LoginScreenState extends State<LoginScreen> {
         cursorColor: Colors.redAccent,
         obscureText: false,
         decoration: InputDecoration(
-          prefixIcon:
-              Icon(Icons.account_box_rounded, color: Colors.red[900], size: 20),
+          prefixIcon: Icon(Icons.account_box_rounded,
+              color: Colors.red[900], size: 15.sp),
           hintText: "User ID",
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
+              borderRadius: BorderRadius.circular(30.0.sp),
               borderSide: BorderSide.none),
         ),
       ),
@@ -197,7 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget passwordBox() {
     return Material(
-      borderRadius: BorderRadius.circular(30.0),
+      borderRadius: BorderRadius.circular(30.0.sp),
       elevation: 10,
       child: TextField(
         onChanged: (input) => _password = input,
@@ -205,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
         cursorColor: Colors.redAccent,
         obscureText: _showPassword,
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.lock, color: Colors.red[900], size: 20),
+          prefixIcon: Icon(Icons.lock, color: Colors.red[900], size: 15.sp),
           suffixIcon: IconButton(
             icon: Icon(
               Icons.remove_red_eye,
@@ -217,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           hintText: "Password",
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
+              borderRadius: BorderRadius.circular(30.0.sp),
               borderSide: BorderSide.none),
         ),
       ),
@@ -227,7 +228,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget CoachButton() {
     return RaisedButton(
       elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0.sp)),
       onPressed: () {
         RegExp regExp = new RegExp(
             r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
@@ -243,18 +245,18 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       textColor: Colors.white,
-      padding: EdgeInsets.all(0.0),
+      padding: EdgeInsets.all(0.0.h),
       child: Container(
         alignment: Alignment.center,
         width: _width / 3,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          borderRadius: BorderRadius.all(Radius.circular(20.0.sp)),
           gradient: LinearGradient(
             colors: <Color>[Colors.red[900], Colors.yellow[900]],
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text('COACH', style: TextStyle(fontSize: 12)),
+        child: Text('COACH', style: TextStyle(fontSize: 9.sp)),
       ),
     );
   }
@@ -263,7 +265,8 @@ class _LoginScreenState extends State<LoginScreen> {
     String name;
     return RaisedButton(
       elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0.sp)),
       onPressed: () {
         RegExp regExp = new RegExp(
             r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
@@ -279,18 +282,18 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       textColor: Colors.white,
-      padding: EdgeInsets.all(0.0),
+      padding: EdgeInsets.all(0.0.h),
       child: Container(
         alignment: Alignment.center,
         width: _width / 3,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          borderRadius: BorderRadius.all(Radius.circular(20.0.sp)),
           gradient: LinearGradient(
             colors: <Color>[Colors.red[900], Colors.yellow[900]],
           ),
         ),
         padding: const EdgeInsets.all(12.0),
-        child: Text('STUDENT', style: TextStyle(fontSize: 12)),
+        child: Text('STUDENT', style: TextStyle(fontSize: 9.sp)),
       ),
     );
   }

@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/models/student.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise_admin/view_admin_screen.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bottomSheet.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise/edit_franchise_bottomSheet.dart';
-import 'package:mahathir_academy_app/screens/student/student_profile.dart';
 import 'package:mahathir_academy_app/screens/student/student_profile_specific.dart';
-import 'package:mahathir_academy_app/template/select_franchise_template.dart';
-import 'package:mahathir_academy_app/template/category_template.dart';
-import 'package:mahathir_academy_app/template/select_class_template.dart';
 import 'package:mahathir_academy_app/template/select_student_template.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -64,7 +55,7 @@ class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
-                    fontSize: 18.0),
+                    fontSize: 13.5.sp),
               );
             }),
         myFutureBuilder: FutureBuilder(
@@ -75,29 +66,35 @@ class _HQViewStudentsRankState extends State<HQViewStudentsRank> {
                 print('error3');
                 return Center(child: CircularProgressIndicator());
               }
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Center(
-                          child: ListTile(
-                              title: Text(snapshot.data[index].studentName),
-                              trailing: Text(
-                                snapshot.data[index].exp.toString(),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            SpecificStudentProfile(
-                                              studentId: snapshot
-                                                  .data[index].studentId,
-                                            )));
-                              })),
-                    );
-                  });
+              return SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Column(children: <Widget>[
+                  ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          child: Center(
+                              child: ListTile(
+                                  title: Text(snapshot.data[index].studentName),
+                                  trailing: Text(
+                                    snapshot.data[index].exp.toString(),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SpecificStudentProfile(
+                                                  studentId: snapshot
+                                                      .data[index].studentId,
+                                                )));
+                                  })),
+                        );
+                      }),
+                ]),
+              );
             }));
   }
 

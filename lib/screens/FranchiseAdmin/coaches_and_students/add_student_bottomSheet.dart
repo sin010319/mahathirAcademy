@@ -173,7 +173,7 @@ class _AddStudentBottomSheetState extends State<AddStudentBottomSheet> {
       SizedBox(
         height: 30.0,
       ),
-      inputBox(
+      InputBox(
           icon: Icons.person,
           label: 'Name',
           function: (newText) {
@@ -183,7 +183,7 @@ class _AddStudentBottomSheetState extends State<AddStudentBottomSheet> {
       SizedBox(
         height: 20.0,
       ),
-      inputBox(
+      InputBox(
           icon: Icons.lock,
           label: 'Password',
           function: (newText) {
@@ -193,7 +193,7 @@ class _AddStudentBottomSheetState extends State<AddStudentBottomSheet> {
       SizedBox(
         height: 20.0,
       ),
-      digitinputBox(
+      DigitInputBox(
           icon: Icons.phone,
           label: 'Contact Number',
           function: (newText) {

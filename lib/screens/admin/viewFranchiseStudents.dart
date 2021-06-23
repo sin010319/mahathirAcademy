@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/models/student.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/add_student_bottomSheet.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise_admin/view_admin_screen.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bottomSheet.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise/edit_franchise_bottomSheet.dart';
-import 'package:mahathir_academy_app/screens/student/student_profile.dart';
 import 'package:mahathir_academy_app/screens/student/student_profile_specific.dart';
-import 'package:mahathir_academy_app/template/select_franchise_template.dart';
-import 'package:mahathir_academy_app/template/category_template.dart';
-import 'package:mahathir_academy_app/template/select_class_template.dart';
 import 'package:mahathir_academy_app/template/select_student_template.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -64,15 +55,14 @@ class _ViewFranchiseStudentsState extends State<ViewFranchiseStudents> {
               if (snapshot.connectionState != ConnectionState.done ||
                   snapshot.hasError) {
                 print('error3');
-                return Container(
-                );
+                return Container();
               }
               return Text(
                 '${snapshot.data[0]} \n${snapshot.data[1].length} students',
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
-                    fontSize: 18.0),
+                    fontSize: 13.5.sp),
               );
             }),
         myFutureBuilder: FutureBuilder(

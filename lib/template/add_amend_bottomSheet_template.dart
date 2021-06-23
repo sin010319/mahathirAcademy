@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:mahathir_academy_app/constants.dart';
+import 'package:sizer/sizer.dart';
 
 class AddAmendTemplate extends StatefulWidget {
   String identifier;
@@ -45,6 +45,8 @@ class _AddAmendTemplateState extends State<AddAmendTemplate> {
         widget.identifier == 'Amend Class' ||
         widget.identifier == 'Amend Admin Info') {
       title = widget.identifier;
+    } else if (widget.identifier.contains("Change Password")) {
+      title = "Change Password";
     } else {
       if (!isTransfer) {
         title = 'Add New ' + widget.identifier;
@@ -53,10 +55,7 @@ class _AddAmendTemplateState extends State<AddAmendTemplate> {
       }
     }
 
-    List<Widget> studentCoachInputContent = [
-      SizedBox(
-        height: 20.0,
-      ),
+    List<Widget> commonInputContent = [
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
@@ -65,7 +64,7 @@ class _AddAmendTemplateState extends State<AddAmendTemplate> {
         ),
       ),
       SizedBox(
-        height: 5.0,
+        height: 1.0.h,
       ),
       Align(
         alignment: Alignment.centerLeft,
@@ -77,9 +76,6 @@ class _AddAmendTemplateState extends State<AddAmendTemplate> {
     ];
 
     List<Widget> editStudentCoachInputContent = [
-      SizedBox(
-        height: 20.0,
-      ),
       Align(
         alignment: Alignment.centerLeft,
         child: Text(
@@ -87,44 +83,18 @@ class _AddAmendTemplateState extends State<AddAmendTemplate> {
           style: kTitleTextStyle,
         ),
       ),
-    ];
-
-    List<Widget> franchiseClassInputContent = [
-      SizedBox(
-        height: 20.0,
-      ),
-      Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          this.widget.title1,
-          style: kTitleTextStyle,
-        ),
-      ),
-      SizedBox(
-        height: 5.0,
-      ),
-      Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          this.widget.title2,
-          style: kTitleTextStyle,
-        ),
-      )
     ];
 
     if (widget.identifier == 'Student' ||
         widget.identifier == 'Coach' ||
-        widget.identifier == 'Facilitator') {
-      pageSpecificContent = studentCoachInputContent;
+        widget.identifier == 'Facilitator' ||
+        widget.identifier == 'Amend Class' ||
+        widget.identifier == 'Admin') {
+      pageSpecificContent = commonInputContent;
     } else if (widget.identifier == 'Amend Coach Info' ||
         widget.identifier == 'Amend Student Info' ||
         widget.identifier == 'Amend Admin Info') {
       pageSpecificContent = editStudentCoachInputContent;
-    } else if (widget.identifier == 'Class' ||
-        widget.identifier == 'Amend Class') {
-      pageSpecificContent = franchiseClassInputContent;
-    } else if (widget.identifier == 'Admin') {
-      pageSpecificContent = franchiseClassInputContent;
     } else {
       pageSpecificContent = [];
     }
@@ -132,31 +102,32 @@ class _AddAmendTemplateState extends State<AddAmendTemplate> {
     return Container(
       color: Colors.red,
       child: Container(
-        padding: EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(20.0))),
-        child: Column(
-          children: <Widget>[
-                Text(
-                  title, // task name
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    color: Color(0xFF8A1501),
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-              ] +
-              pageSpecificContent +
-              widget.content,
-        ),
-      ),
+          padding: EdgeInsets.all(10.0.sp),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.0.sp),
+                  topRight: Radius.circular(20.0.sp))),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                    Text(
+                      title, // task name
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 23.0.sp,
+                        color: Color(0xFF8A1501),
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2.0.h,
+                    ),
+                  ] +
+                  pageSpecificContent +
+                  widget.content,
+            ),
+          )),
     );
   }
 }

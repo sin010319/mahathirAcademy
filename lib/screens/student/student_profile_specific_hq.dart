@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/components/customised_pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/pop_up_alert.dart';
@@ -8,16 +7,11 @@ import 'package:mahathir_academy_app/components/profile_menu.dart';
 import 'package:mahathir_academy_app/components/profile_pic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mahathir_academy_app/models/AuthService.dart';
 import 'package:mahathir_academy_app/models/student.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/edit_student_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/transfer_coach_students_bottomSheet.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise/view_franchise_screen.dart';
 import 'package:mahathir_academy_app/screens/admin/hqViewFranchiseStudents.dart';
-import 'package:mahathir_academy_app/screens/admin/viewFranchiseStudents.dart';
-import 'package:mahathir_academy_app/screens/coach/view_students.dart';
-import 'package:mahathir_academy_app/screens/student/student_profile.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -63,7 +57,24 @@ class _SpecificStudentProfileHQState extends State<SpecificStudentProfileHQ> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Student Profile"),
+          centerTitle: true,
+          title: Container(
+            child: Row(
+              children: [
+                Image.asset("assets/images/brand_logo.png",
+                    fit: BoxFit.contain, height: 5.5.h),
+                SizedBox(
+                  width: 1.5.w,
+                ),
+                Flexible(
+                  child: Text('Student Profile',
+                      style: TextStyle(
+                        fontSize: 13.5.sp,
+                      )),
+                )
+              ],
+            ),
+          ),
           actions: <Widget>[
             IconButton(
               icon: Icon(
@@ -106,7 +117,7 @@ class _SpecificStudentProfileHQState extends State<SpecificStudentProfileHQ> {
           ],
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 20),
+          padding: EdgeInsets.symmetric(vertical: 2.h),
           child: FutureBuilder(
               future: widget.studentInfo,
               builder: (context, snapshot) {
@@ -115,7 +126,7 @@ class _SpecificStudentProfileHQState extends State<SpecificStudentProfileHQ> {
                   return Column(
                     children: [
                       ProfilePic(),
-                      SizedBox(height: 20),
+                      SizedBox(height: 2.h),
                       ProfileMenu(
                         text: "Name: ${snapshot.data.studentName}",
                         icon: "assets/icons/userIcon.svg",

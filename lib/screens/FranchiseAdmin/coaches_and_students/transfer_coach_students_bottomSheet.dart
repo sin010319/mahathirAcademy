@@ -1,21 +1,17 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mahathir_academy_app/components/input_box.dart';
 import 'package:mahathir_academy_app/components/pop_up_alert.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/round_button.dart';
 
 import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/models/franchise.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/class_dropdown_menu.dart';
-import 'package:mahathir_academy_app/screens/announcement/franchiseAnnouncement.dart';
 import 'package:mahathir_academy_app/screens/coach/coach_profile_specific.dart';
 import 'package:mahathir_academy_app/screens/student/student_profile_specific.dart';
 import 'package:mahathir_academy_app/template/add_amend_bottomSheet_template.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -86,7 +82,7 @@ class _TransferCoachStudentBottomSheetState
   Widget build(BuildContext context) {
     List<Widget> retContent = [
       SizedBox(
-        height: 30.0,
+        height: 4.0.h,
       ),
       Align(
         alignment: Alignment.centerLeft,
@@ -96,7 +92,7 @@ class _TransferCoachStudentBottomSheetState
         ),
       ),
       SizedBox(
-        height: 10.0,
+        height: 1.0.h,
       ),
       Align(
         alignment: Alignment.centerLeft,
@@ -155,7 +151,7 @@ class _TransferCoachStudentBottomSheetState
             }),
       ),
       SizedBox(
-        height: 30.0,
+        height: 4.0.h,
       ),
       RoundButton(
           label: 'Transfer Franchise',

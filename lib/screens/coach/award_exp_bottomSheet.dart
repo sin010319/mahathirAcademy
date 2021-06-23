@@ -10,6 +10,7 @@ import 'package:mahathir_academy_app/screens/coach/award_exp.dart';
 import 'update_exp_data.dart';
 import 'dropdownMenuList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -69,7 +70,8 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
         child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
           isExpanded: true,
-          itemHeight: 50.0,
+          itemHeight: 40.0.sp,
+          style: kMethodDropdownTextStyle,
           hint: Text('Select a method to award EXP'),
           value: widget.selectedMethod,
           // start out with the default value
@@ -90,24 +92,24 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
     return Container(
         color: Colors.red,
         child: Container(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(10.0.sp),
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.0),
-                  topRight: Radius.circular(20.0))),
+                  topLeft: Radius.circular(20.0.sp),
+                  topRight: Radius.circular(20.0.sp))),
           child: Column(children: <Widget>[
             Text(
               'Award EXP', // task name
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 30.0,
+                fontSize: 25.0.sp,
                 color: Color(0xFF8A1501),
                 fontWeight: FontWeight.w800,
               ),
             ),
             SizedBox(
-              height: 20.0,
+              height: 2.0.h,
             ),
             Align(
               alignment: Alignment.centerLeft,
@@ -117,7 +119,7 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
               ),
             ),
             SizedBox(
-              height: 5.0,
+              height: 3.0.h,
             ),
             Column(
               children: <Widget>[
@@ -134,7 +136,7 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
                               Expanded(
                                 flex: 7,
                                 child: Container(
-                                  height: 70.0,
+                                  height: 10.0.h,
                                   child: Card(
                                     child: Center(
                                       child: ListTile(
@@ -150,26 +152,20 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
                               ),
                               Expanded(
                                 flex: 2,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Card(
-                                      child: TextFormField(
-                                        initialValue: widget
-                                            .tickedStudents[index].exp
-                                            .toString(),
-                                        style: kExpTextStyle,
-                                        enabled: false,
-                                        //Not clickable and not editable
-                                        readOnly: true,
-                                        textAlign: TextAlign.center,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                                child: Card(
+                                  child: TextFormField(
+                                    initialValue: widget
+                                        .tickedStudents[index].exp
+                                        .toString(),
+                                    style: kExpTextStyle,
+                                    enabled: false,
+                                    //Not clickable and not editable
+                                    readOnly: true,
+                                    textAlign: TextAlign.center,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
@@ -180,7 +176,7 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
               ],
             ),
             SizedBox(
-              height: 30.0,
+              height: 3.0.h,
             ),
             Align(
               alignment: Alignment.centerLeft,
@@ -190,14 +186,14 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
               ),
             ),
             SizedBox(
-              height: 10.0,
+              height: 1.0.h,
             ),
             Align(
               alignment: Alignment.centerLeft,
               child: methodDropdownList(),
             ),
             SizedBox(
-              height: 20.0,
+              height: 2.h,
             ),
             Align(
               alignment: Alignment.centerLeft,
@@ -207,14 +203,14 @@ class _AwardExpBottomSheetState extends State<AwardExpBottomSheet> {
               ),
             ),
             SizedBox(
-              height: 10.0,
+              height: 1.0.h,
             ),
             Align(
               alignment: Alignment.centerLeft,
               child: DropdownMenuList(),
             ),
             SizedBox(
-              height: 30.0,
+              height: 4.0.h,
             ),
             RoundButton(
                 label: 'Award EXP',

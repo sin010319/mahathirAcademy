@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class PopUpAlertClass extends StatelessWidget {
   PopUpAlertClass({this.message});
@@ -42,7 +43,7 @@ class PopUpAlertClass extends StatelessWidget {
               children: <Widget>[
                 Text(message),
                 SizedBox(
-                  height: 15.0,
+                  height: 2.0.h,
                 ),
               ],
             ),

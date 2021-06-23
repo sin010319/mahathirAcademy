@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/components/pop_up_dialog.dart';
 import 'package:mahathir_academy_app/components/reusable_card.dart';
-import 'package:mahathir_academy_app/constants.dart';
 import 'package:mahathir_academy_app/components/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/add_coach.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise/view_franchise_screen.dart';
-import 'package:mahathir_academy_app/screens/HQAdmin/franchise/add_franchise_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
 import 'package:mahathir_academy_app/screens/admin/viewFranchiseStudents.dart';
 import 'package:mahathir_academy_app/screens/announcement/franchiseAnnouncement.dart';
-import 'package:mahathir_academy_app/screens/coach/select_class.dart';
-import 'package:mahathir_academy_app/template/category_template.dart';
-import 'package:mahathir_academy_app/template/coachFranchiseCategory.dart';
 import 'package:mahathir_academy_app/template/franchiseBasedCategory.dart';
-import 'package:mahathir_academy_app/template/franchiseCategory.dart';
-import 'package:mahathir_academy_app/template/select_class_template.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sizer/sizer.dart';
+import '../change_password_bottom_sheet.dart';
 
-import '../student/student_profile.dart';
-import '../coach/view_students.dart';
-import '../leaderboard.dart';
-import '../announcement/announcement.dart';
+final FirebaseAuth _auth = FirebaseAuth.instance;
+String franchiseAdminId;
 
-class franchiseAdminNavigation extends StatelessWidget {
+class franchiseAdminNavigation extends StatefulWidget {
   static const String id = '/franchiseAdmin';
+
+  @override
+  _franchiseAdminNavigationState createState() =>
+      _franchiseAdminNavigationState();
+}
+
+class _franchiseAdminNavigationState extends State<franchiseAdminNavigation> {
+  @override
+  void initState() {
+    franchiseAdminId = _auth.currentUser.uid;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,22 +49,45 @@ class franchiseAdminNavigation extends StatelessWidget {
             child: Scaffold(
               backgroundColor: Colors.transparent,
               appBar: AppBar(
-                  title: Text('Franchise Admin Dashboard'),
-                  automaticallyImplyLeading: false,
-                  actions: <Widget>[
-                    // First button - decrement
-                    IconButton(
-                      icon: Icon(Icons.logout), // The "-" icon
-                      onPressed: () {
-                        String message = 'Are you sure you want to log out?';
-                        PopUpDialogClass.popUpDialog(message, context, () {
-                          logout(context);
-                        }, () {
-                          Navigator.of(context, rootNavigator: true).pop();
-                        });
-                      },
-                    ),
-                  ]),
+                centerTitle: true,
+                title: Container(
+                  child: Row(
+                    children: [
+                      Image.asset("assets/images/brand_logo.png",
+                          fit: BoxFit.contain, height: 5.5.h),
+                      SizedBox(
+                        width: 1.5.w,
+                      ),
+                      Flexible(
+                        child: Text('Home',
+                            style: TextStyle(
+                              fontSize: 13.5.sp,
+                            )),
+                      )
+                    ],
+                  ),
+                ),
+                automaticallyImplyLeading: false,
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(FontAwesomeIcons.key),
+                    onPressed: () {
+                      showModal();
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.logout), // The "-" icon
+                    onPressed: () {
+                      String message = 'Are you sure you want to log out?';
+                      PopUpDialogClass.popUpDialog(message, context, () {
+                        logout(context);
+                      }, () {
+                        Navigator.of(context, rootNavigator: true).pop();
+                      });
+                    },
+                  ),
+                ],
+              ),
               body: Column(
                 crossAxisAlignment: CrossAxisAlignment
                     .stretch, // make the items in each row to stretch itself to fit as much space in the screen
@@ -147,4 +174,36 @@ class franchiseAdminNavigation extends StatelessWidget {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed('/');
   }
+
+  void showModal() {
+    Future<void> future = showModalBottomSheet(
+        context: context,
+        // builder here needs a method to return widget
+        builder: changePasswordBottomSheet,
+        isScrollControlled: true // enable the modal take up the full screen
+        );
+    future.then((void value) => closeModal(value));
+  }
+
+  FutureBuilder<dynamic> closeModal(void value) {
+    print('modal closed');
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => super.widget));
+  }
+}
+
+Widget changePasswordBottomSheet(BuildContext context) {
+  String identifier = 'Change Password franchiseAdmin';
+
+  return SingleChildScrollView(
+    child: Container(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      // make AddTaskScreen class to take a callback to pass the new added task to TaskScreen class
+      child: ChangePasswordBottomSheet(
+        identifier: identifier,
+        userId: franchiseAdminId,
+      ),
+    ),
+  );
 }

@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mahathir_academy_app/models/class.dart';
-import 'package:mahathir_academy_app/models/coach.dart';
-import 'package:mahathir_academy_app/models/facilitator.dart';
-import 'package:mahathir_academy_app/models/franchise.dart';
 import 'package:mahathir_academy_app/models/student.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/class/view_class_screen.dart';
 import 'package:mahathir_academy_app/constants.dart';
-import 'package:mahathir_academy_app/screens/coach/coach_profile_specific.dart';
 import 'package:mahathir_academy_app/screens/student/student_profile_specific.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mahathir_academy_app/template/select_student_template.dart';
-
-import 'coaches_and_students/assign_coach_students_bottomSheet.dart';
 import 'coaches_and_students/multi_assign_student_bottom_sheet.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -69,7 +60,7 @@ class _InactiveClassScreenState extends State<InactiveClassScreen> {
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
-                    fontSize: 18.0),
+                    fontSize: 13.5.sp),
               );
             }),
         myFutureBuilder: FutureBuilder(
@@ -95,7 +86,7 @@ class _InactiveClassScreenState extends State<InactiveClassScreen> {
                               title: Text(snapshot.data[index].studentName,
                                   style: kListItemsTextStyle),
                               trailing: Wrap(
-                                spacing: 8,
+                                spacing: 8.sp,
                                 children: [
                                   Container(
                                       child: Text(

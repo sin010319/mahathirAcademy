@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sizer/sizer.dart';
 
 class ProfilePic extends StatelessWidget {
   const ProfilePic({
@@ -9,8 +9,8 @@ class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 80,
-      width: 80,
+      height: 60.sp,
+      width: 60.sp,
       child: Stack(
         fit: StackFit.expand,
         overflow: Overflow.visible,

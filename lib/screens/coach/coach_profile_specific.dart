@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mahathir_academy_app/components/customised_pop_up_dialog.dart';
@@ -9,14 +8,11 @@ import 'package:mahathir_academy_app/components/profile_menu.dart';
 import 'package:mahathir_academy_app/components/profile_pic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mahathir_academy_app/models/coach.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/add_coach.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/edit_coach_bottomSheet.dart';
-import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/edit_student_bottomSheet.dart';
 import 'package:mahathir_academy_app/screens/FranchiseAdmin/coaches_and_students/transfer_coach_students_bottomSheet.dart';
-
-import '../login_screen.dart';
+import 'package:sizer/sizer.dart';
 
 // for storing data into cloud firebase
 final _firestore = FirebaseFirestore.instance;
@@ -59,7 +55,23 @@ class _SpecificCoachProfileState extends State<SpecificCoachProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Coach Profile"),
+          centerTitle: true,
+          title: Container(
+            child: Row(
+              children: [
+                Image.asset("assets/images/brand_logo.png",
+                    fit: BoxFit.contain, height: 5.5.h),
+                SizedBox(
+                  width: 1.5.w,
+                ),
+                Flexible(
+                    child: Text('Coach Profile',
+                        style: TextStyle(
+                          fontSize: 13.5.sp,
+                        )))
+              ],
+            ),
+          ),
           actions: <Widget>[
             IconButton(
               icon: Icon(
@@ -102,7 +114,7 @@ class _SpecificCoachProfileState extends State<SpecificCoachProfile> {
           ],
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 20),
+          padding: EdgeInsets.symmetric(vertical: 2.h),
           child: FutureBuilder(
               future: widget.coachInfo,
               builder: (context, snapshot) {
@@ -111,7 +123,7 @@ class _SpecificCoachProfileState extends State<SpecificCoachProfile> {
                   return Column(
                     children: [
                       ProfilePic(),
-                      SizedBox(height: 20),
+                      SizedBox(height: 2.h),
                       ProfileMenu(
                         text: "Name: ${snapshot.data.coachName}",
                         icon: "assets/icons/userIcon.svg",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class Guideline extends StatelessWidget {
   static const String id = '/guideline';
@@ -6,7 +7,24 @@ class Guideline extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Guidelines"),
+        centerTitle: true,
+        title: Container(
+          child: Row(
+            children: [
+              Image.asset("assets/images/brand_logo.png",
+                  fit: BoxFit.contain, height: 5.5.h),
+              SizedBox(
+                width: 1.5.w,
+              ),
+              Flexible(
+                child: Text('Guidelines',
+                    style: TextStyle(
+                      fontSize: 13.5.sp,
+                    )),
+              )
+            ],
+          ),
+        ),
       ),
       body: OrientationBuilder(
         builder: (context, orientation) {
